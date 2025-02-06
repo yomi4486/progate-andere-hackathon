@@ -33,9 +33,9 @@ export const localStyles = StyleSheet.create({
       position: 'absolute',
       bottom: 0,
       right: 0,
-      width: 10,
-      height: 10,
-      borderRadius: 5,
+      width: 15,
+      height: 15,
+      borderRadius: 10,
       backgroundColor: 'green',
     },
     callDetails: {
@@ -57,4 +57,12 @@ export const localStyles = StyleSheet.create({
     callTime: {
       color: '#A0A0A0',
     },
+    separator: {
+      height: 2, // 下線の太さをさらに変更
+      backgroundColor: '#DDDDDD',
+      marginTop: 10,
+    },
+    callDuration: { // 追加: 通話時間のスタイル
+        color: '#A0A0A0',
+        },
 });
