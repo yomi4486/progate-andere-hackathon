@@ -18,8 +18,10 @@ export default function HistoryScreen() {
           placeholderTextColor="#a0a0a0"
         />
       </View>
-      <CallHistoryItem friendName="yomi" callTimestamp="30分前" isOutgoing={false} callDuration={""} />
-      <CallHistoryItem friendName="mono" callTimestamp="1時間前" isOutgoing={false} callDuration={"1:20:10"} />
+      <CallHistoryItem friendName="yomi" callTimestamp="30分前" isOutgoing={false} callDuration={"1:20:10"} isCaller={false} />
+      <CallHistoryItem friendName="mono" callTimestamp="1時間前" isOutgoing={true} callDuration={"不在だから見えないはず"} isCaller={true} />
+      <CallHistoryItem friendName="まる" callTimestamp="1時間前" isOutgoing={true} callDuration={"不在だから見えないはず"} isCaller={false} />
+      <CallHistoryItem friendName="yomi" callTimestamp="23時間前" isOutgoing={false} callDuration={"30:00"} isCaller={true} />
     </View>
   );
 }

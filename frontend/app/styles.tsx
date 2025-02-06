@@ -48,9 +48,9 @@ export const localStyles = StyleSheet.create({
     callHistoryItem: {
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 10,
+      padding: 20,
       borderBottomWidth: 1,
-      borderBottomColor: '#EEEEEE',
+      borderBottomColor: '#DDDDDD',
     },
     friendIconContainer: {
       position: 'relative',
@@ -60,9 +60,9 @@ export const localStyles = StyleSheet.create({
       position: 'absolute',
       bottom: 0,
       right: 0,
-      width: 10,
-      height: 10,
-      borderRadius: 5,
+      width: 15,
+      height: 15,
+      borderRadius: 10,
       backgroundColor: 'green',
     },
     callDetails: {
