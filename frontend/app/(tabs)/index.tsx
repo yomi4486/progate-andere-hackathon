@@ -77,7 +77,7 @@ const localStyles = StyleSheet.create({
 
 export default function HomeScreen() {
   return (
-    <View>
+    <View style ={{height:"100%"}}>
       <Header
         leftComponent={
           <Text style={{
@@ -91,10 +91,6 @@ export default function HomeScreen() {
         backgroundColor="#222222"
         leftContainerStyle={styles.leftContainer}
       />
-      <View style={styles.container}>
-        
-        {/* ここに要素を追加していく */}
-      </View>
       <View style={localStyles.profileContainer}>
         <FontAwesome name="user-circle" style={localStyles.profileIcon} />
         <Text style={localStyles.profileName}>あなたの名前</Text>
