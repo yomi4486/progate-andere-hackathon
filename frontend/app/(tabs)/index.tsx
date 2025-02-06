@@ -5,8 +5,6 @@ import FriendItem from '../components/FriendItem'; // 追加
 import DefaultHeader from '../components/Header';
 import {profileStyles} from '../styles';
 
-
-
 export default function HomeScreen() {
   return (
     <View style ={{height:"100%"}}>
