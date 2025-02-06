@@ -43,4 +43,4 @@ app.onError((e,c) => {
 })
 export default app;
 
-export type IndexAppRoute = typeof app
+export type AppType = typeof app
