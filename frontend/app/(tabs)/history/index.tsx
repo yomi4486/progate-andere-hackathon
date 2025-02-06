@@ -17,8 +17,8 @@ export default function HistoryScreen() {
           placeholderTextColor="#a0a0a0"
         />
       </View>
-      <CallHistoryItem friendName="yomi" callTime="30分前" />
-      <CallHistoryItem friendName="mono" callTime="1時間前" />
+      <CallHistoryItem friendName="yomi" callTimestamp="30分前" isOutgoing={false} callDuration={""} />
+      <CallHistoryItem friendName="mono" callTimestamp="1時間前" isOutgoing={false} callDuration={"1:20:10"} />
     </View>
   );
 }

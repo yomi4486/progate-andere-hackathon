@@ -5,7 +5,9 @@ import { localStyles } from "../styles";
 
 interface CallHistoryItemProps {
   friendName: string;
-  callTime: string;
+  callTimestamp: string;
+  isOutgoing: boolean;
+  callDuration: string;
 }
 
 // どっちからかけたかbooleanで受け取る
@@ -15,7 +17,9 @@ interface CallHistoryItemProps {
 
 const CallHistoryItem: React.FC<CallHistoryItemProps> = ({
   friendName,
-  callTime,
+  callTimestamp,
+  isOutgoing,
+  callDuration,
 }) => {
   return (
     <View style={localStyles.callHistoryItem}>
@@ -26,11 +30,13 @@ const CallHistoryItem: React.FC<CallHistoryItemProps> = ({
       <View style={localStyles.callDetails}>
         <Text style={localStyles.friendName}>{friendName}</Text>
         <View style={localStyles.missedCallContainer}>
-          <FontAwesome name="phone" size={16} color="red" />
-          <Text style={localStyles.missedCallText}>不在着信</Text>
+          <FontAwesome name="phone" size={16} color={isOutgoing ? "green" : "red"} />
+          <Text style={localStyles.missedCallText}>{isOutgoing ? "発信" : "不在着信"}</Text>
         </View>
+        <Text style={localStyles.callDuration}>{callDuration}</Text>
       </View>
-      <Text style={localStyles.callTime}>{callTime}</Text>
+      <Text style={localStyles.callTime}>{callTimestamp}</Text>
+      <View style={localStyles.separator} /> {/* 追加: 下部の線 */}
     </View>
   );
 };

@@ -84,6 +84,14 @@ export const localStyles = StyleSheet.create({
     callTime: {
       color: '#A0A0A0',
     },
+    separator: {
+        height: 2, // 下線の太さをさらに変更
+        backgroundColor: '#DDDDDD',
+        marginTop: 10,
+    },
+    callDuration: { // 追加: 通話時間のスタイル
+          color: '#A0A0A0',
+    },
 });
 
 export const profileStyles = StyleSheet.create({
