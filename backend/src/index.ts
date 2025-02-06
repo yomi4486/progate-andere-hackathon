@@ -2,15 +2,15 @@ import {Hono} from "hono";
 import {HTTPException} from "hono/http-exception";
 import {ZodError} from "zod";
 import {jwtAuth} from "./lib/auth";
+import {UserRoute} from "./routes/user";
 
 type Bindings = {
     DATABASE_URL: string
 }
 
 const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
-.use("*",async (c, next) => {
-    if (c.req.path.includes("/webhook")) return await next();
 
+.use("*",async (c, next) => {
     let token = c.req.header("Authorization")
     if (!token) throw new HTTPException(401,{message:"Unauthorized"});
 
@@ -20,15 +20,14 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
     c.set("user_id",user_id);
     await next();
 })
+
 .get((c)=>{
     return c.json({status:"success"})
 })
-.get("/test",(c)=>{
-    return c.json({status:"success"})
-})
 
+.route("/user",UserRoute)
 
-app.onError((e,c) => {
+.onError((e,c) => {
     if (e instanceof HTTPException) return c.json({message: e.message},e.status);
     if (e instanceof ZodError) return c.json({message: e.message},400)
     /*
@@ -41,6 +40,6 @@ app.onError((e,c) => {
 
     return c.json({message: "Internal Server Error"}, 500);
 })
-export default app;
 
-export type IndexAppRoute = typeof app
+export default app;
+export type AppType = typeof app
