@@ -11,6 +11,9 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
 .get((c)=>{
     return c.json({status:"success"})
 })
+.get("/test",(c)=>{
+    return c.json({status:"success"})
+})
 
 app.use("*",async (c, next) => {
     if (c.req.path.includes("/webhook")) return await next();

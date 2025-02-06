@@ -7,7 +7,7 @@ export async function jwtAuth(token:string){
     try {
         const validationResult: jwtValidationResponse = await validateToken({
             token: token,
-            domain: "https://monodevcloud-development.us.kinde.com"
+            domain: "https://aicall.kinde.com"
         });
 
         if (!validationResult.valid) throw new HTTPException(401, {message: "Unauthorized"});
