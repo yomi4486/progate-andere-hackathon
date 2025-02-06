@@ -1,14 +1,13 @@
 import {Hono} from "hono";
 import {decodeWebhook} from "@kinde/webhooks";
 
-
-export const kindeRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>();
-
 type Bindings = {
     DATABASE_URL: string
 }
 
-kindeRoute.post("/kinde",async (c) => {
+export const kindeRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
+
+.post("/kinde",async (c) => {
     const body = await c.req.text();
     //const prisma = getPrismaClient(c.env?.DATABASE_URL);
     const decodedWebhook = await decodeWebhook(body);
