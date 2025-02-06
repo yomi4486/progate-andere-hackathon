@@ -8,14 +8,7 @@ type Bindings = {
 }
 
 const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
-.get((c)=>{
-    return c.json({status:"success"})
-})
-.get("/test",(c)=>{
-    return c.json({status:"success"})
-})
-
-app.use("*",async (c, next) => {
+.use("*",async (c, next) => {
     if (c.req.path.includes("/webhook")) return await next();
 
     let token = c.req.header("Authorization")
@@ -26,6 +19,12 @@ app.use("*",async (c, next) => {
 
     c.set("user_id",user_id);
     await next();
+})
+.get((c)=>{
+    return c.json({status:"success"})
+})
+.get("/test",(c)=>{
+    return c.json({status:"success"})
 })
 
 
