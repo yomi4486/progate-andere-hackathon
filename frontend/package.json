@@ -16,6 +16,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^7.0.14",
+    "bootstrap": "^5.3.3",
     "expo": "~52.0.30",
     "expo-font": "~13.0.3",
     "expo-linking": "~7.0.5",
@@ -25,6 +26,7 @@
     "expo-system-ui": "~4.0.7",
     "expo-web-browser": "~14.0.2",
     "react": "18.3.1",
+    "react-bootstrap": "^2.10.9",
     "react-dom": "18.3.1",
     "react-native": "0.76.6",
     "react-native-elements": "^3.4.3",
