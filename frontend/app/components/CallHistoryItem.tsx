@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { localStyles } from "../(tabs)/history/style";
+import { localStyles } from "../styles";
 
 interface CallHistoryItemProps {
   friendName: string;
