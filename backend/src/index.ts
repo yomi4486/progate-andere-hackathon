@@ -6,13 +6,13 @@ import {UserRoute} from "./routes/user";
 import {RoomRoute} from "./routes/room";
 import {kindeRoute} from "./routes/webhook";
 import {FriendRoute} from "./routes/friends";
+import {WsRoute} from "./routes/websocket";
 
 type Bindings = {
     DATABASE_URL: string
 }
 
 const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
-
 .use("*",async (c, next) => {
     let token = c.req.header("Authorization")
     if (!token) throw new HTTPException(401,{message:"Unauthorized"});
@@ -32,6 +32,7 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
 .route("/rooms",RoomRoute)
 .route("/webhook",kindeRoute)
 .route("/friends",FriendRoute)
+.route("/websocket",WsRoute)
 
 .onError((e,c) => {
     if (e instanceof HTTPException) return c.json({message: e.message},e.status);
