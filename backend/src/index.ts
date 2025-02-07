@@ -5,6 +5,7 @@ import {jwtAuth} from "./lib/auth";
 import {UserRoute} from "./routes/user";
 import {RoomRoute} from "./routes/room";
 import {kindeRoute} from "./routes/webhook";
+import {FriendRoute} from "./routes/friends";
 
 type Bindings = {
     DATABASE_URL: string
@@ -30,6 +31,7 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
 .route("/users",UserRoute)
 .route("/rooms",RoomRoute)
 .route("/webhook",kindeRoute)
+.route("/friends",FriendRoute)
 
 .onError((e,c) => {
     if (e instanceof HTTPException) return c.json({message: e.message},e.status);
