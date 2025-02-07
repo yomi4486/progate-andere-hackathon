@@ -100,26 +100,26 @@ export const profileStyles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
     },
-        profileIcon: {
+    profileIcon: {
         fontSize: 100,
         color: '#eeeeee', // アイコンの色を変更
     },
-        profileName: {
+    profileName: {
         fontSize: 18,
         fontWeight: 'bold',
         marginTop: 10,
     },
-        profileStatusContainer: {
+    profileStatusContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 5,
     },
-        activeDot: {
+    activeDot: {
         fontSize: 16,
         color: '#4CAF50',
         marginRight: 5,
     },
-        profileStatus: {
+    profileStatus: {
         fontSize: 16,
         color: '#4CAF50',
         paddingVertical: 5,
@@ -128,7 +128,7 @@ export const profileStyles = StyleSheet.create({
         backgroundColor: '#e0f7e0',
         overflow: 'hidden',
     },
-        statusInputContainer: {
+    statusInputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 10,
@@ -138,25 +138,25 @@ export const profileStyles = StyleSheet.create({
         borderRadius: 20,
         paddingHorizontal: 10,
     },
-        statusInput: {
+    statusInput: {
         flex: 1,
         height: 40,
     },
-        statusEditIcon: {
+    statusEditIcon: {
         fontSize: 20,
         color: '#888',
         marginLeft: 10,
     },
-        friendsContainer: {
+    friendsContainer: {
         marginTop: 20,
         paddingHorizontal: 20,
     },
-        friendsTitle: {
+    friendsTitle: {
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
     },
-        friendsBox: {
+    friendsBox: {
         backgroundColor: '#f1f1f1',
         borderRadius: 20,
         padding: 10,
