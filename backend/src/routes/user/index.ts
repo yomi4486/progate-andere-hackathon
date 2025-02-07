@@ -2,7 +2,7 @@ import {Hono} from "hono";
 import {getPrismaClient} from "../../lib/prisma";
 import {HTTPException} from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
-import {updateUserScheme} from "./scheme";
+import {createUserScheme, updateUserScheme} from "./scheme";
 
 type Bindings = {
     DATABASE_URL: string
@@ -61,6 +61,10 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                 }
             },
         )
+        if (!result){
+            throw new HTTPException(404,{message:"User Not Found"})
+        }
+        
 
         return c.json(result)
     }
@@ -117,13 +121,44 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                 }
             },
         )
+        if (!result){
+            throw new HTTPException(404,{message:"User Not Found"})
+        }
+
+        return c.json(result)
+    }
+)
+
+.post("/",
+    zValidator("json", createUserScheme, (result) => {
+        if (!result.success) {
+            throw new HTTPException(400,{message:"Bad Request"})
+        }
+    }),
+
+    async (c)=> {
+        const prisma = getPrismaClient(process.env.DATABASE_URL)
+        const userId = c.get("user_id")
+        const validData = c.req.valid("json")
+    
+
+        const result = await prisma.user.create({
+            data: {
+                id: userId,
+                username: validData.username,
+                status: validData.status,
+                status_message: validData.status_message,
+                introduction: validData.introduction,
+                icon_url: validData.icon
+            }
+        });
 
         return c.json(result)
     }
 )
 
 .put("/",
-    zValidator("json", updateUserScheme, (result) => {
+    zValidator("json", updateUserScheme, async (result) => {
         if (!result.success) {
             throw new HTTPException(400,{message:"Bad Request"})
         }
@@ -138,6 +173,10 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
             where: {id: userId},
             data: validData,
         });
+
+        if (!result){
+            throw new HTTPException(404,{message:"User Not Found"})
+        }
 
         return c.json(result)
     }
