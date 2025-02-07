@@ -42,7 +42,7 @@ const CallHistoryItem: React.FC<CallHistoryItemProps> = ({
       </View>
 
       <Text style={localStyles.callTime}>{callTimestamp}</Text>
-      <View style={localStyles.separator} /> {/* 追加: 下部の線 */}
+      <View style={localStyles.separator} />
     </View>
   );
 };
