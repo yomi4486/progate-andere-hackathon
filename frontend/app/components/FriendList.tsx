@@ -11,14 +11,16 @@ const FriendList: React.FC<FriendListProps> = ({ name, lastLogin }) => {
   return (
     <View style={styles.friendItem}>
       <View style={styles.iconContainer}>
-        <FontAwesome name="user-circle" size={45} color="#a0a0a0" /> {/* アイコンサイズを大きく */}
+        {/* アイコンサイズを大きく */}
+        <FontAwesome name="user-circle" size={45} color="#a0a0a0" />
         <View style={styles.onlineIndicator} />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.friendName}>{name}</Text>
         <Text style={styles.statusMessage}>ステータスメッセージ</Text>
       </View>
-      <Text style={styles.lastLogin}>{lastLogin}</Text> {/* 右側に最終ログイン時刻を表示 */}
+      {/* 右側に最終ログイン時刻を表示 */}
+      <Text style={styles.lastLogin}>{lastLogin}</Text> 
     </View>
   );
 };

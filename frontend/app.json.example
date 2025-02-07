@@ -19,7 +19,7 @@
       "infoPlist": {
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": ["com.googleusercontent.apps.165387728661-co452vd2hfojg56nnknpu9j8ddksm66l"]
+            "CFBundleURLSchemes": ["reverse_Client_id"]
           }
         ]
       }
