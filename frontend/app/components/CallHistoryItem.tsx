@@ -18,7 +18,6 @@ interface CallHistoryItemProps {
 // expoのタブバーの仕様調べる
 // 三項演算子： { isFlag ? 'hello world' : 'Not hello world' }
 
-
 const CallHistoryItem: React.FC<CallHistoryItemProps> = ({
   friendName,
   callTimestamp,
@@ -27,21 +26,21 @@ const CallHistoryItem: React.FC<CallHistoryItemProps> = ({
   callDuration,
 }) => {
   return (
-    <View style={localStyles.callHistoryItem}>
+    <View style={[localStyles.callHistoryItem, { marginHorizontal: 15, padding: 15 }]}>
       <View style={localStyles.friendIconContainer}>
-        <FontAwesome name="user-circle" size={60} color="#a0a0a0" />
+        <FontAwesome name="user-circle" size={65} color="#a0a0a0" />
         <View style={localStyles.onlineIndicator} />
       </View>
       
       <View style={localStyles.callDetails}>
-        <Text style={localStyles.friendName}>{friendName}</Text>
+        <Text style={[localStyles.friendName, { fontSize: 18 }]}>{friendName}</Text>
         <View style={localStyles.missedCallContainer}>
-          <Icon name={isCaller ? "call-in" : "call-out"} size={16} color={isOutgoing ? "red" : "green"} />
-          <Text style={[localStyles.missedCallText, { color: isOutgoing ? "red" : "green" }]}>{isOutgoing ? "不在着信" : callDuration}</Text>
+          <Icon name={isCaller ? "call-in" : "call-out"} size={18} color={isOutgoing ? "red" : "green"} />
+          <Text style={[localStyles.missedCallText, { color: isOutgoing ? "red" : "green", fontSize: 16 }]}>{isOutgoing ? "不在着信" : callDuration}</Text>
         </View>
       </View>
 
-      <Text style={localStyles.callTime}>{callTimestamp}</Text>
+      <Text style={[localStyles.callTime, { fontSize: 16 }]}>{callTimestamp}</Text>
       <View style={localStyles.separator} />
     </View>
   );
