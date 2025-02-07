@@ -1,5 +1,8 @@
 import {Hono} from "hono";
 import {getPrismaClient} from "../../lib/prisma";
+import {HTTPException} from "hono/http-exception";
+import { zValidator } from "@hono/zod-validator";
+import {updateUserScheme} from "./scheme";
 
 type Bindings = {
     DATABASE_URL: string
@@ -8,32 +11,45 @@ type Bindings = {
 
 export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
 
-.get("/",async (c)=>{
-    const prisma = getPrismaClient()
-    const userId = c.get("user_id")
+.get("/",
+    async(c)=>{
+        const prisma = getPrismaClient()
+        const userId = c.get("user_id")
 
-    const result = await prisma.user.findUnique({where:{id:userId}})
+        const result = await prisma.user.findUnique({where:{id:userId}})
 
-    return c.json(result)
-})
+        return c.json(result)
+    }
+)
 
-.get("/:id",async (c)=>{
-    const prisma = getPrismaClient()
-    const id = c.req.param("id")
+.get("/:id",
+    async (c)=>{
+        const prisma = getPrismaClient()
+        const id = c.req.param("id")
 
-    const result = await prisma.user.findUnique({where:{id:id}})
+        const result = await prisma.user.findUnique({where:{id:id}})
 
-    return c.json(result)
-})
+        return c.json(result)
+    }
+)
 
-.put("/",async (c)=>{
-    const prisma = getPrismaClient()
-    const userId = c.get("user_id")
+.put("/",
+    zValidator("json", updateUserScheme, (result) => {
+        if (!result.success) {
+            throw new HTTPException(400,{message:"Bad Request"})
+        }
+    }),
 
-    const result =  await prisma.user.update({
-        where: { id: userId },
-        data: {},
-    });
+    async (c)=> {
+        const prisma = getPrismaClient()
+        const userId = c.get("user_id")
+        const validData = c.req.valid("json")
 
-    return c.json(result)
-})
+        const result = await prisma.user.update({
+            where: {id: userId},
+            data: validData,
+        });
+
+        return c.json(result)
+    }
+)
