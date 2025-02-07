@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import UserIcon from './UserIcon';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface FriendListProps {
   name: string;
@@ -10,12 +10,17 @@ interface FriendListProps {
 const FriendList: React.FC<FriendListProps> = ({ name, lastLogin }) => {
   return (
     <View style={styles.friendItem}>
-      <UserIcon size={45} isOnline={true} /> {/* UserIconコンポーネントを使用 */}
+      <View style={styles.iconContainer}>
+        {/* アイコンサイズを大きく */}
+        <FontAwesome name="user-circle" size={45} color="#a0a0a0" />
+        <View style={styles.onlineIndicator} />
+      </View>
       <View style={styles.textContainer}>
         <Text style={styles.friendName}>{name}</Text>
         <Text style={styles.statusMessage}>ステータスメッセージ</Text>
       </View>
-      <Text style={styles.lastLogin}>{lastLogin}</Text> {/* 右側に最終ログイン時刻を表示 */}
+      {/* 右側に最終ログイン時刻を表示 */}
+      <Text style={styles.lastLogin}>{lastLogin}</Text> 
     </View>
   );
 };
@@ -28,6 +33,19 @@ const styles = StyleSheet.create({
     padding: 15, // paddingを大きく
     marginVertical: 7, // marginを大きく
     borderRadius: 5,
+  },
+  iconContainer: {
+    position: 'relative',
+    marginRight: 15, // marginを大きく
+  },
+  onlineIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 12, // サイズを大きく
+    height: 12, // サイズを大きく
+    borderRadius: 6, // サイズに合わせて調整
+    backgroundColor: 'green',
   },
   textContainer: {
     flex: 1,
