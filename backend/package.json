@@ -14,6 +14,8 @@
     "@kinde/webhooks": "^1.0.0",
     "@prisma/adapter-d1": "^6.3.1",
     "@prisma/client": "^6.3.1",
+    "@tidbcloud/prisma-adapter": "^5.20.0",
+    "@tidbcloud/serverless": "^0.2.0",
     "hono": "^4.6.20",
     "jsonwebtoken": "^9.0.2",
     "livekit-server-sdk": "^2.9.7",

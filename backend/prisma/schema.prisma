@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -17,7 +17,10 @@ model User {
   status_message String
   introduction   String
 
+  from_users    Friends[]      @relation("from_users")
+  to_users      Friends[]      @relation("to_users")
   created_rooms Room[]
+
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 }
@@ -30,4 +33,23 @@ model Room {
   created_by User     @relation(fields: [owner_id], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+model Friends {
+  id        String @id @default(uuid())
+  from_id   String
+  to_id     String
+  status    FriendStatus
+  from_user User   @relation("from_users", fields: [from_id], references: [id])
+  to_user   User   @relation("to_users", fields: [to_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
 }
