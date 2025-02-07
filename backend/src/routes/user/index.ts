@@ -3,6 +3,7 @@ import {getPrismaClient} from "../../lib/prisma";
 import {HTTPException} from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import {createUserScheme, updateUserScheme} from "./scheme";
+import { idParamsScheme } from "../../lib/scheme";
 
 type Bindings = {
     DATABASE_URL: string
@@ -22,7 +23,6 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                 },
                 select:{
                     id:true,
-                    uuid:true,
                     username:true,
                     icon_url:true,
                     status:true,
@@ -36,7 +36,6 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                             from_user:{
                                 select:{
                                     id:true,
-                                    uuid:true,
                                     icon_url:true,
                                     status:true,
                                 }
@@ -51,7 +50,6 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                             to_user:{
                                 select:{
                                     id:true,
-                                    uuid:true,
                                     icon_url:true,
                                     status:true,
                                 }
@@ -71,18 +69,22 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
 )
 
 .get("/:id",
+    zValidator("param",idParamsScheme,async (result)=>{
+        if (!result.success) {
+            throw new HTTPException(400,{message:"Bad Request"})
+        }
+    }),
     async (c)=>{
         const prisma = getPrismaClient(process.env.DATABASE_URLL)
-        const id = c.req.param("id")
+        const param = c.req.valid("param")
 
         const result = await prisma.user.findUnique(
             {
                 where:{
-                    id:id
+                    id:param.id
                 },
                 select:{
                     id:true,
-                    uuid:true,
                     username:true,
                     icon_url:true,
                     status:true,
@@ -96,7 +98,6 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                             from_user:{
                                 select:{
                                     id:true,
-                                    uuid:true,
                                     icon_url:true,
                                     status:true,
                                 }
@@ -111,7 +112,6 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                             to_user:{
                                 select:{
                                     id:true,
-                                    uuid:true,
                                     icon_url:true,
                                     status:true,
                                 }
