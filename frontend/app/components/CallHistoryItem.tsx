@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
 import { localStyles } from "../styles";
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import UserIcon from './UserIcon';
 
 interface CallHistoryItemProps {
   friendName: string;
@@ -27,10 +27,7 @@ const CallHistoryItem: React.FC<CallHistoryItemProps> = ({
 }) => {
   return (
     <View style={[localStyles.callHistoryItem, { marginHorizontal: 15, padding: 15 }]}>
-      <View style={localStyles.friendIconContainer}>
-        <FontAwesome name="user-circle" size={65} color="#a0a0a0" />
-        <View style={localStyles.onlineIndicator} />
-      </View>
+      <UserIcon size={65} isOnline={true} /> {/* UserIconコンポーネントを使用 */}
       
       <View style={localStyles.callDetails}>
         <Text style={[localStyles.friendName, { fontSize: 18 }]}>{friendName}</Text>

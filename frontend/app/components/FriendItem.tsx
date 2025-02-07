@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import UserIcon from './UserIcon';
 
 interface FriendItemProps {
   name: string;
@@ -11,8 +12,7 @@ const FriendItem: React.FC<FriendItemProps> = ({ name, message }) => {
   return (
     <View style={styles.friend}>
       <View style={styles.friendIconContainer}>
-        <FontAwesome name="user-circle" style={styles.friendIcon} />
-        <FontAwesome name="circle" style={styles.friendActiveDot} />
+        <UserIcon  size={50} isOnline={true} />
       </View>
       <View style={styles.friendInfo}>
         <Text style={styles.friendName}>{name}</Text>
