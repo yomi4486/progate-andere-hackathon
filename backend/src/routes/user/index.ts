@@ -8,7 +8,6 @@ type Bindings = {
     DATABASE_URL: string
 }
 
-
 export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
 
 .get("/",
@@ -16,7 +15,46 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
         const prisma = getPrismaClient(c.env.DATABASE_URL)
         const userId = c.get("user_id")
 
-        const result = await prisma.user.findUnique({where:{id:userId}})
+        const result = await prisma.user.findUnique(
+            {
+                where:{
+                    id:userId
+                },
+                select:{
+                    id:true,
+                    uuid:true,
+                    username:true,
+                    icon_url:true,
+                    status:true,
+                    status_message:true,
+                    introduction:true,
+                    from_users:{
+                        select:{
+                            from_user:{
+                                select:{
+                                    id:true,
+                                    uuid:true,
+                                    icon_url:true,
+                                    status:true,
+                                }
+                            }
+                        }
+                    },
+                    to_users:{
+                        select:{
+                            to_user:{
+                                select:{
+                                    id:true,
+                                    uuid:true,
+                                    icon_url:true,
+                                    status:true,
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        )
 
         return c.json(result)
     }
@@ -27,7 +65,46 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
         const prisma = getPrismaClient(c.env.DATABASE_URL)
         const id = c.req.param("id")
 
-        const result = await prisma.user.findUnique({where:{id:id}})
+        const result = await prisma.user.findUnique(
+            {
+                where:{
+                    id:id
+                },
+                select:{
+                    id:true,
+                    uuid:true,
+                    username:true,
+                    icon_url:true,
+                    status:true,
+                    status_message:true,
+                    introduction:true,
+                    from_users:{
+                        select:{
+                            from_user:{
+                                select:{
+                                    id:true,
+                                    uuid:true,
+                                    icon_url:true,
+                                    status:true,
+                                }
+                            }
+                        }
+                    },
+                    to_users:{
+                        select:{
+                            to_user:{
+                                select:{
+                                    id:true,
+                                    uuid:true,
+                                    icon_url:true,
+                                    status:true,
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        )
 
         return c.json(result)
     }
