@@ -18,7 +18,7 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
         const result = await prisma.user.findUnique(
             {
                 where:{
-                    id:userId
+                    id:userId,
                 },
                 select:{
                     id:true,
@@ -29,6 +29,9 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                     status_message:true,
                     introduction:true,
                     from_users:{
+                        where:{
+                            status:"ACCEPTED"
+                        },
                         select:{
                             from_user:{
                                 select:{
@@ -41,6 +44,9 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                         }
                     },
                     to_users:{
+                        where:{
+                            status:"ACCEPTED"
+                        },
                         select:{
                             to_user:{
                                 select:{
@@ -79,6 +85,9 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                     status_message:true,
                     introduction:true,
                     from_users:{
+                        where:{
+                            status:"ACCEPTED"
+                        },
                         select:{
                             from_user:{
                                 select:{
@@ -91,6 +100,9 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                         }
                     },
                     to_users:{
+                        where:{
+                            status:"ACCEPTED"
+                        },
                         select:{
                             to_user:{
                                 select:{
