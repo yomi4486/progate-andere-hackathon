@@ -3,6 +3,8 @@ import {HTTPException} from "hono/http-exception";
 import {ZodError} from "zod";
 import {jwtAuth} from "./lib/auth";
 import {UserRoute} from "./routes/user";
+import {RoomRoute} from "./routes/room";
+import {kindeRoute} from "./routes/webhook";
 
 type Bindings = {
     DATABASE_URL: string
@@ -25,7 +27,9 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
     return c.json({status:"success"})
 })
 
-.route("/user",UserRoute)
+.route("/users",UserRoute)
+.route("/rooms",RoomRoute)
+.route("/webhook",kindeRoute)
 
 .onError((e,c) => {
     if (e instanceof HTTPException) return c.json({message: e.message},e.status);

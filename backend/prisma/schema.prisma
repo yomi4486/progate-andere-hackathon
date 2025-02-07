@@ -9,11 +9,25 @@ datasource db {
 }
 
 model User {
-  id            String         @id
-  username      String
-  icon_url      String
-  status        String
+  id             String @id
+  uuid           String @unique
+  username       String
+  icon_url       String
+  status         String
+  status_message String
+  introduction   String
 
+  created_rooms Room[]
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model Room {
+  id       String @id
+  roomname String
+  owner_id String
+
+  created_by User     @relation(fields: [owner_id], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
