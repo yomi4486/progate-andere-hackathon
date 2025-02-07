@@ -1,28 +1,31 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "dev": "npx nodemon",
+    "build": "npx tsc --skipLibCheck",
+    "deploy": "gcloud functions deploy mainFunction --runtime nodejs18 --trigger-http --allow-unauthenticated"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.5",
+    "@hono/node-server": "^1.13.8",
     "@hono/zod-validator": "^0.4.2",
-    "@kinde/webhooks": "^1.0.0",
     "@prisma/adapter-d1": "^6.3.1",
     "@prisma/client": "^6.3.1",
     "@tidbcloud/prisma-adapter": "^5.20.0",
     "@tidbcloud/serverless": "^0.2.0",
-    "hono": "^4.6.20",
-    "jsonwebtoken": "^9.0.2",
+    "@upstash/redis": "^1.34.4",
+    "google-auth-library": "^9.15.1",
+    "hono": "^4.7.0",
     "livekit-server-sdk": "^2.9.7",
+    "typescript": "^5.7.3",
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.8",
     "prisma": "^6.3.1"
   }
 }

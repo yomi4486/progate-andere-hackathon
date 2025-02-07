@@ -1,22 +1,18 @@
-import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 import {HTTPException} from "hono/http-exception";
-import { validateToken, type jwtValidationResponse } from "@kinde/jwt-validator";
-
 
 export async function jwtAuth(token:string){
     try {
-        const validationResult: jwtValidationResponse = await validateToken({
-            token: token,
-            domain: "https://aicall.kinde.com"
+        const client = new OAuth2Client();
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
         });
 
-        if (!validationResult.valid) throw new HTTPException(401, {message: "Unauthorized"});
-        const result_jwt = jwt.decode(token);
-        if (!result_jwt || !result_jwt.sub) throw new HTTPException(401, {message: "Unauthorized"});
-
-        return result_jwt.sub.toString();
+        const payload = ticket.getPayload();
+        return payload.sub.toString();
     }catch (e) {
         if (e instanceof HTTPException) throw e;
-        throw new HTTPException(500, {message: "Internal Server Error"});
+        throw new HTTPException(401, {message: "Unauthorized"});
     }
 }

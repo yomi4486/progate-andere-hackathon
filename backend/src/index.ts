@@ -4,15 +4,16 @@ import {ZodError} from "zod";
 import {jwtAuth} from "./lib/auth";
 import {UserRoute} from "./routes/user";
 import {RoomRoute} from "./routes/room";
-import {kindeRoute} from "./routes/webhook";
 import {FriendRoute} from "./routes/friends";
-import {WsRoute} from "./routes/websocket";
+import { http, HttpFunction } from '@google-cloud/functions-framework';
 
 type Bindings = {
     DATABASE_URL: string
 }
 
+
 const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
+
 .use("*",async (c, next) => {
     let token = c.req.header("Authorization")
     if (!token) throw new HTTPException(401,{message:"Unauthorized"});
@@ -24,15 +25,13 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
     await next();
 })
 
-.get((c)=>{
+.get("/",(c)=>{
     return c.json({status:"success"})
 })
 
 .route("/users",UserRoute)
 .route("/rooms",RoomRoute)
-.route("/webhook",kindeRoute)
 .route("/friends",FriendRoute)
-.route("/websocket",WsRoute)
 
 .onError((e,c) => {
     if (e instanceof HTTPException) return c.json({message: e.message},e.status);
@@ -48,5 +47,28 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
     return c.json({message: "Internal Server Error"}, 500);
 })
 
-export default app;
 export type AppType = typeof app
+
+
+export const mainFunction: HttpFunction = async (req, resp) => {
+    const url = new URL(`${req.protocol}://${req.hostname}${req.url}`);
+
+    const headers = new Headers()
+
+    Object.keys(req.headers).forEach((k) => {
+        headers.set(k, req.headers[k] as string);
+    })
+    
+    const body = req.body;
+
+    const newRequest = ["GET", "HEAD"].includes(req.method) ? new Request(url, {
+        headers,
+        method: req.method,
+    }) : new Request(url, {
+        headers,
+        method: req.method,
+        body: Buffer.from((typeof body === "string") ? body : JSON.stringify(body || {})),
+    })
+    const res = await app.fetch(newRequest);
+    resp.json(await res.json());
+};
