@@ -6,6 +6,7 @@ import {UserRoute} from "./routes/user";
 import {RoomRoute} from "./routes/room";
 import {FriendRoute} from "./routes/friends";
 import { http, HttpFunction } from '@google-cloud/functions-framework';
+import { Prisma } from "@prisma/client/edge";
 
 type Bindings = {
     DATABASE_URL: string
@@ -36,13 +37,12 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
 .onError((e,c) => {
     if (e instanceof HTTPException) return c.json({message: e.message},e.status);
     if (e instanceof ZodError) return c.json({message: e.message},400)
-    /*
     if (e instanceof Prisma.PrismaClientValidationError) return c.json({message: e.message},400);
     if (e instanceof Prisma.PrismaClientInitializationError) return c.json({message: e.message},500);
     if (e instanceof Prisma.PrismaClientKnownRequestError) return c.json({message: e.message},500);
     if (e instanceof Prisma.PrismaClientRustPanicError) return c.json({message: e.message},500);
     if (e instanceof Prisma.PrismaClientUnknownRequestError) return c.json({message: e.message},500);
-     */
+    console.log(e.message)
 
     return c.json({message: "Internal Server Error"}, 500);
 })
@@ -54,13 +54,11 @@ export const mainFunction: HttpFunction = async (req, resp) => {
     const url = new URL(`${req.protocol}://${req.hostname}${req.url}`);
 
     const headers = new Headers()
-
     Object.keys(req.headers).forEach((k) => {
         headers.set(k, req.headers[k] as string);
     })
-    
-    const body = req.body;
 
+    const body = req.body;
     const newRequest = ["GET", "HEAD"].includes(req.method) ? new Request(url, {
         headers,
         method: req.method,
@@ -69,6 +67,14 @@ export const mainFunction: HttpFunction = async (req, resp) => {
         method: req.method,
         body: Buffer.from((typeof body === "string") ? body : JSON.stringify(body || {})),
     })
+
     const res = await app.fetch(newRequest);
-    resp.json(await res.json());
+
+    if(res.status == 404){
+        resp.status(res.status)
+        return resp.json({message:"Not Found"})
+    }
+
+    resp.status(res.status)
+    return resp.json(await res.json())
 };

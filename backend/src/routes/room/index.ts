@@ -17,6 +17,9 @@ export const RoomRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
     const id = c.req.param("id")
 
     const result = await prisma.room.findUnique({where:{id:id}})
+    if (!result){
+        throw new HTTPException(404,{message:"Not Found"})
+    }
 
     const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, {
         identity: userId,
@@ -56,6 +59,9 @@ export const RoomRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
                 owner_id: userId,
             }
         })
+        if (!result){
+            throw new HTTPException(404,{message:"Room Not Found"})
+        }
 
 
         const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, {
@@ -88,6 +94,10 @@ export const RoomRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
             owner_id:user_id
         }
     })
+
+    if (!result){
+        throw new HTTPException(404,{message:"Room Not Found"})
+    }
 
     await prisma.room.delete({
         where:{
