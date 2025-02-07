@@ -10,7 +10,7 @@ type Bindings = {
 
 export const FriendRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
 .post("/:id",async (c)=>{
-    const prisma = getPrismaClient(c.env.DATABASE_URL)
+    const prisma = getPrismaClient(process.env.DATABASE_URL)
     const userId = c.get("user_id")
     const id = c.req.param("id")
 
@@ -48,7 +48,7 @@ export const FriendRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bin
     }),
 
     async (c)=>{
-        const prisma = getPrismaClient(c.env.DATABASE_URL)
+        const prisma = getPrismaClient(process.env.DATABASE_URL)
         const userId = c.get("user_id")
         const id = c.req.param("id")
         const json = c.req.valid("json")

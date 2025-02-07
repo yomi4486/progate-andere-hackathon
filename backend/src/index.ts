@@ -4,9 +4,7 @@ import {ZodError} from "zod";
 import {jwtAuth} from "./lib/auth";
 import {UserRoute} from "./routes/user";
 import {RoomRoute} from "./routes/room";
-import {kindeRoute} from "./routes/webhook";
 import {FriendRoute} from "./routes/friends";
-import {WsRoute} from "./routes/websocket";
 import { http, HttpFunction } from '@google-cloud/functions-framework';
 
 type Bindings = {
@@ -27,15 +25,13 @@ const app = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
     await next();
 })
 
-.get((c)=>{
+.get("/",(c)=>{
     return c.json({status:"success"})
 })
 
 .route("/users",UserRoute)
 .route("/rooms",RoomRoute)
-.route("/webhook",kindeRoute)
 .route("/friends",FriendRoute)
-.route("/websocket",WsRoute)
 
 .onError((e,c) => {
     if (e instanceof HTTPException) return c.json({message: e.message},e.status);
