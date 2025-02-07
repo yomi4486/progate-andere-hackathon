@@ -1,6 +1,9 @@
 import {Hono} from "hono";
 import {getPrismaClient} from "../../lib/prisma";
 import {AccessToken, RoomServiceClient} from "livekit-server-sdk";
+import {zValidator} from "@hono/zod-validator";
+import {HTTPException} from "hono/dist/types/http-exception";
+import {createRoomScheme} from "./scheme";
 
 type Bindings = {
     DATABASE_URL: string
@@ -34,37 +37,45 @@ export const RoomRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
     })
 })
 
-.post("/", async (c)=>{
-    const prisma = getPrismaClient()
-    const userId = c.get("user_id")
-    const json:{room_name:string} = await c.req.json()
-
-    const result = await prisma.room.create({
-        data:{
-            id: crypto.randomUUID(),
-            roomname:json.room_name,
-            owner_id: userId,
+.post("/",
+    zValidator("json", createRoomScheme, (result) => {
+        if (!result.success) {
+            throw new HTTPException(400,{message:"Bad Request"})
         }
-    })
+    }),
+
+    async (c)=>{
+        const prisma = getPrismaClient()
+        const userId = c.get("user_id")
+        const validData = c.req.valid("json")
+
+        const result = await prisma.room.create({
+            data:{
+                id: crypto.randomUUID(),
+                roomname:validData.room_name,
+                owner_id: userId,
+            }
+        })
 
 
-    const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, {
-        identity: userId,
-        // Token to expire after 10 minutes
-        ttl: '10m',
-    });
+        const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, {
+            identity: userId,
+            // Token to expire after 10 minutes
+            ttl: '10m',
+        });
 
-    at.addGrant({ roomJoin: true, room: result.roomname });
+        at.addGrant({ roomJoin: true, room: result.roomname });
 
-    return c.json({
-        id: result.id,
-        room_name: result.roomname,
-        access_token: at.toJwt(),
-        owner_id: result.owner_id,
-        created_at: result.created_at,
-        updated_at: result.updated_at
-    })
-})
+        return c.json({
+            id: result.id,
+            room_name: result.roomname,
+            access_token: at.toJwt(),
+            owner_id: result.owner_id,
+            created_at: result.created_at,
+            updated_at: result.updated_at
+        })
+    }
+)
 
 .delete("/:id", async (c)=>{
     const prisma = getPrismaClient()
