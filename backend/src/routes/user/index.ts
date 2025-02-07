@@ -13,7 +13,7 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
 
 .get("/",
     async(c)=>{
-        const prisma = getPrismaClient()
+        const prisma = getPrismaClient(c.env.DATABASE_URL)
         const userId = c.get("user_id")
 
         const result = await prisma.user.findUnique({where:{id:userId}})
@@ -24,7 +24,7 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
 
 .get("/:id",
     async (c)=>{
-        const prisma = getPrismaClient()
+        const prisma = getPrismaClient(c.env.DATABASE_URL)
         const id = c.req.param("id")
 
         const result = await prisma.user.findUnique({where:{id:id}})
@@ -41,7 +41,7 @@ export const UserRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
     }),
 
     async (c)=> {
-        const prisma = getPrismaClient()
+        const prisma = getPrismaClient(c.env.DATABASE_URL)
         const userId = c.get("user_id")
         const validData = c.req.valid("json")
 

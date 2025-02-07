@@ -2,7 +2,7 @@ import {Hono} from "hono";
 import {getPrismaClient} from "../../lib/prisma";
 import {AccessToken, RoomServiceClient} from "livekit-server-sdk";
 import {zValidator} from "@hono/zod-validator";
-import {HTTPException} from "hono/dist/types/http-exception";
+import {HTTPException} from "hono/http-exception";
 import {createRoomScheme} from "./scheme";
 
 type Bindings = {
@@ -12,7 +12,7 @@ type Bindings = {
 export const RoomRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
 
 .get("/:id", async (c)=>{
-    const prisma = getPrismaClient()
+    const prisma = getPrismaClient(c.env.DATABASE_URL)
     const userId = c.get("user_id")
     const id = c.req.param("id")
 
@@ -45,7 +45,7 @@ export const RoomRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
     }),
 
     async (c)=>{
-        const prisma = getPrismaClient()
+        const prisma = getPrismaClient(c.env.DATABASE_URL)
         const userId = c.get("user_id")
         const validData = c.req.valid("json")
 
@@ -78,7 +78,7 @@ export const RoomRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindi
 )
 
 .delete("/:id", async (c)=>{
-    const prisma = getPrismaClient()
+    const prisma = getPrismaClient(c.env.DATABASE_URL)
     const id = c.req.param("id")
     const user_id = c.get("user_id")
 
