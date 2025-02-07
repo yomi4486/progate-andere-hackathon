@@ -1,5 +1,6 @@
 import {Hono} from "hono";
 import { upgradeWebSocket } from 'hono/cloudflare-workers'
+import { Redis } from "@upstash/redis";
 
 type Bindings = {
     DATABASE_URL: string

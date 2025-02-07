@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import * as jwt from 'jsonwebtoken';
 import {HTTPException} from "hono/http-exception";
 import { validateToken, type jwtValidationResponse } from "@kinde/jwt-validator";
 
