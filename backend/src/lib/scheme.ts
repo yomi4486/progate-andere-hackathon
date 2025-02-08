@@ -1,8 +1,8 @@
-import {z} from "zod"
+import { z } from 'zod'
 export const idParamsScheme = z.object({
-    id: z.string()
+	id: z.string(),
 })
 
 export const headerScheme = z.object({
-    Authorization: z.string()
+	Authorization: z.string(),
 })

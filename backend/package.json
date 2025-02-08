@@ -1,35 +1,46 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "scripts": {
-    "dev": "npx nodemon",
-    "build": "npx tsc --skipLibCheck",
-    "deploy": "gcloud functions deploy mainFunction --runtime nodejs22 --trigger-http --allow-unauthenticated",
-    "test": "podman compose up -d && bun test && podman compose down",
-    "coverage": "podman compose up -d && bun test --coverage && podman compose down",
-    "test:docker": "docker compose up -d && bun test && docker compose down"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@google-cloud/functions-framework": "^3.4.5",
-    "@hono/node-server": "^1.13.8",
-    "@hono/zod-validator": "^0.4.2",
-    "@prisma/adapter-d1": "^6.3.1",
-    "@prisma/client": "^6.3.1",
-    "@tidbcloud/prisma-adapter": "^5.20.0",
-    "@tidbcloud/serverless": "^0.2.0",
-    "google-auth-library": "^9.15.1",
-    "hono": "^4.7.0",
-    "livekit-server-sdk": "^2.9.7",
-    "mysql2": "^3.12.0",
-    "zod": "^3.24.1"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "prisma": "^6.3.1",
-    "typescript": "^5.7.3"
-  }
+	"name": "backend",
+	"version": "1.0.0",
+	"main": "dist/index.js",
+	"scripts": {
+		"dev": "npx nodemon",
+		"build": "npx tsc --skipLibCheck",
+		"deploy": "gcloud functions deploy mainFunction --runtime nodejs22 --trigger-http --allow-unauthenticated",
+		"test": "podman compose up -d && bun test && podman compose down",
+		"coverage": "podman compose up -d && bun test --coverage && podman compose down",
+		"test:docker": "docker compose up -d && bun test && docker compose down",
+		"lint": "eslint .",
+		"format": "prettier --write .",
+		"format:check": "prettier --check ."
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@google-cloud/functions-framework": "^3.4.5",
+		"@hono/eslint-config": "^1.0.2",
+		"@hono/node-server": "^1.13.8",
+		"@hono/zod-validator": "^0.4.2",
+		"@prisma/adapter-d1": "^6.3.1",
+		"@prisma/client": "^6.3.1",
+		"@tidbcloud/prisma-adapter": "^5.20.0",
+		"@tidbcloud/serverless": "^0.2.0",
+		"@typescript-eslint/parser": "^8.23.0",
+		"eslint-config-eslint": "^11.0.0",
+		"google-auth-library": "^9.15.1",
+		"hono": "^4.7.0",
+		"livekit-server-sdk": "^2.9.7",
+		"mysql2": "^3.12.0",
+		"typescript-eslint": "^8.23.0",
+		"zod": "^3.24.1"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"eslint": "^9.20.0",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-prettier": "^5.2.3",
+		"prettier": "^3.4.2",
+		"prisma": "^6.3.1",
+		"typescript": "^5.7.3"
+	}
 }
