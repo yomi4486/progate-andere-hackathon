@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "npx nodemon",
     "build": "npx tsc --skipLibCheck",
-    "deploy": "gcloud functions deploy mainFunction --runtime nodejs18 --trigger-http --allow-unauthenticated"
+    "deploy": "gcloud functions deploy mainFunction --runtime nodejs22 --trigger-http --allow-unauthenticated",
+    "test": "podman compose up -d && bun test && podman compose down",
+    "coverage": "podman compose up -d && bun test --coverage && podman compose down",
+    "test:docker": "docker compose up -d && bun test && docker compose down"
   },
   "author": "",
   "license": "ISC",
@@ -18,14 +21,15 @@
     "@prisma/client": "^6.3.1",
     "@tidbcloud/prisma-adapter": "^5.20.0",
     "@tidbcloud/serverless": "^0.2.0",
-    "@upstash/redis": "^1.34.4",
     "google-auth-library": "^9.15.1",
     "hono": "^4.7.0",
     "livekit-server-sdk": "^2.9.7",
-    "typescript": "^5.7.3",
+    "mysql2": "^3.12.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "prisma": "^6.3.1"
+    "@types/bun": "latest",
+    "prisma": "^6.3.1",
+    "typescript": "^5.7.3"
   }
 }
