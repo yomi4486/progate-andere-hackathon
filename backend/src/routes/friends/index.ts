@@ -3,13 +3,9 @@ import {Hono} from "hono";
 import {HTTPException} from "hono/http-exception";
 import {zValidator} from "@hono/zod-validator";
 import {changeFriendStatus} from "./scheme";
-import { idParamsScheme } from "../../lib/scheme";
+import {idParamsScheme} from "../../lib/scheme";
 
-type Bindings = {
-    DATABASE_URL: string
-}
-
-export const FriendRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bindings}>()
+export const FriendRoute = new Hono<{ Variables: {"user_id":string}}>()
 .post("/:id",
     zValidator("param",idParamsScheme,async (result)=>{
         if (!result.success) {
@@ -67,23 +63,22 @@ export const FriendRoute = new Hono<{ Variables: {"user_id":string},Bindings:Bin
         const json = c.req.valid("json")
 
         if (json.status == "REJECTED") {
-            await prisma.friends.delete({
+             await prisma.friends.delete({
                 where:{
                     from_id_to_id:{
-                        from_id:userId,
-                        to_id: param.id
+                        from_id:param.id,
+                        to_id: userId
                     }
                 }
             })
-
             return c.json({message:"Request Rejected Successfully"},200)
         }
 
         await prisma.friends.update({
             where:{
                 from_id_to_id: {
-                    from_id: userId,
-                    to_id:param.id
+                    from_id:param.id,
+                    to_id: userId
                 }
             },
             data:{
