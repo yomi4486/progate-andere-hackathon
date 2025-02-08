@@ -5,7 +5,10 @@ import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
 import DefaultHeader from '../components/Header';
 import { SettingsButtonItem } from './items';
+import { useAuthContext } from '../../utils/authContext';
+
 export default function SettingsScreen() {
+  const { signOut } = useAuthContext();
   return (
     <View style ={{height:"100%"}}>
         <DefaultHeader title="設定" showSettingButton={false} showBackButton={true}/>
@@ -33,7 +36,7 @@ export default function SettingsScreen() {
         <View style={{borderBottomColor: 'gray',borderBottomWidth: 1,width:"50%",}}>
             <Text style={StyleSheet.compose(profileStyles.friendsTitle,{paddingLeft:20,paddingTop:10})}>基本</Text>
         </View>
-        <SettingsButtonItem title="ログアウト" denger={true} event={()=>{}}/>
+        <SettingsButtonItem title="ログアウト" denger={true} event={signOut}/>
     </View>
   );
 }
