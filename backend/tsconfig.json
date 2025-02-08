@@ -1,6 +1,6 @@
 {
-    "compilerOptions": {
-      "moduleResolution": "node",
-      "outDir": "dist",
-    },
-  }
+	"compilerOptions": {
+		"moduleResolution": "node",
+		"outDir": "dist"
+	}
+}
