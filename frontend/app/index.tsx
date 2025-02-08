@@ -18,9 +18,9 @@ export const LoginScreen = () => {
         <Text style={{fontSize:18,paddingBottom:10}}>暇人同士が繋がる通話アプリ</Text>
         <Text style={{fontSize:32,paddingBottom:30,fontWeight:'bold'}}>Imacallaへようこそ</Text>
         <TouchableOpacity onPress={googleSignIn}>
-            <View style={{justifyContent:'center',alignItems:'center',backgroundColor:'#eeeeee',borderRadius:30,padding:15,paddingLeft:30,paddingRight:30,flexDirection:'row'}} >
+            <View style={{justifyContent:'center',alignItems:'center',backgroundColor:'#eeeeee',borderRadius:30,padding:12,paddingLeft:26,paddingRight:26,flexDirection:'row'}} >
                 <FontAwesome name="google" size={25} color="#222222" style={{paddingRight:10}} />
-                <Text style={{fontSize:20}}>Googleでログイン</Text>
+                <Text style={{fontSize:19}}>Googleでログイン</Text>
             </View>
         </TouchableOpacity>
         </View>
