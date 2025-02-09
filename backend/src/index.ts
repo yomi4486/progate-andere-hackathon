@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { ZodError } from 'zod'
-import { jwtAuth } from './lib/auth'
+import * as authModule from './lib/auth'
 import { UserRoute } from './routes/user'
 import { RoomRoute } from './routes/room'
 import { FriendRoute } from './routes/friends'
@@ -14,7 +14,7 @@ const app = new Hono<{ Variables: { user_id: string } }>()
 		if (!token) return c.json({ message: 'Unauthorized' }, 401)
 		token = token.split(' ')[1]
 
-		const user_id = await jwtAuth(token)
+		const user_id = await authModule.jwtAuth(token)
 		if (!user_id) return c.json({ message: 'Unauthorized' }, 401)
 
 		c.set('user_id', user_id)

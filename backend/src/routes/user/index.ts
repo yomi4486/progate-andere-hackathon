@@ -5,13 +5,8 @@ import { zValidator } from '@hono/zod-validator'
 import { createUserScheme, updateUserScheme } from './scheme'
 import { idParamsScheme } from '../../lib/scheme'
 
-type Bindings = {
-	DATABASE_URL: string
-}
-
 export const UserRoute = new Hono<{
 	Variables: { user_id: string }
-	Bindings: Bindings
 }>()
 
 	.get('/', async (c) => {
@@ -59,10 +54,9 @@ export const UserRoute = new Hono<{
 				},
 			},
 		})
+
 		if (!result) {
-			throw new HTTPException(404, {
-				message: 'User Not Found',
-			})
+			return c.json({message:"User Not Found"},404)
 		}
 
 		return c.json(result)
@@ -70,11 +64,9 @@ export const UserRoute = new Hono<{
 
 	.get(
 		'/:id',
-		zValidator('param', idParamsScheme, async (result) => {
+		zValidator('param', idParamsScheme, async (result,c) => {
 			if (!result.success) {
-				throw new HTTPException(400, {
-					message: 'Bad Request',
-				})
+				return c.json({message:"Bad Requestd"},400)
 			}
 		}),
 		async (c) => {
@@ -122,10 +114,9 @@ export const UserRoute = new Hono<{
 					},
 				},
 			})
+
 			if (!result) {
-				throw new HTTPException(404, {
-					message: 'User Not Found',
-				})
+				return c.json({message:"User Not Found"},404)
 			}
 
 			return c.json(result)
@@ -134,17 +125,23 @@ export const UserRoute = new Hono<{
 
 	.post(
 		'/',
-		zValidator('json', createUserScheme, (result) => {
+		zValidator('json', createUserScheme, async (result,c) => {
 			if (!result.success) {
-				throw new HTTPException(400, {
-					message: 'Bad Request',
-				})
+				return c.json({message:"Bad Requestd"},400)
 			}
 		}),
 		async (c) => {
 			const prisma = getPrismaClient(process.env.DATABASE_URL)
 			const userId = c.get('user_id')
 			const validData = c.req.valid('json')
+
+			const query = await prisma.user.findUnique({
+				where:{
+					id: userId,
+				}
+			})
+
+			if (query) return c.json({message:"already Register"},409)
 
 			const result = await prisma.user.create({
 				data: {
@@ -153,7 +150,7 @@ export const UserRoute = new Hono<{
 					status: validData.status,
 					status_message: validData.status_message,
 					introduction: validData.introduction,
-					icon_url: validData.icon,
+					icon_url: validData.icon_url,
 				},
 			})
 
@@ -163,14 +160,11 @@ export const UserRoute = new Hono<{
 
 	.put(
 		'/',
-		zValidator('json', updateUserScheme, async (result) => {
+		zValidator('json', updateUserScheme, async (result,c) => {
 			if (!result.success) {
-				throw new HTTPException(400, {
-					message: 'Bad Request',
-				})
+				return c.json({message:"Bad Requested"},400)
 			}
 		}),
-
 		async (c) => {
 			const prisma = getPrismaClient(process.env.DATABASE_URL)
 			const userId = c.get('user_id')
@@ -182,11 +176,9 @@ export const UserRoute = new Hono<{
 			})
 
 			if (!result) {
-				throw new HTTPException(404, {
-					message: 'User Not Found',
-				})
+				return c.json({message:"User Not Found"},404)
 			}
 
-			return c.json(result)
+			return c.json({message:"User Update Successfully"},200)
 		},
 	)
