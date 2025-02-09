@@ -1,9 +1,7 @@
 import { Hono } from 'hono'
 import { getPrismaClient } from '../../lib/prisma'
-import { HTTPException } from 'hono/http-exception'
 import { zValidator } from '@hono/zod-validator'
 import { createUserScheme, updateUserScheme } from './scheme'
-import { idParamsScheme } from '../../lib/scheme'
 
 export const UserRoute = new Hono<{
 	Variables: { user_id: string }
@@ -64,18 +62,13 @@ export const UserRoute = new Hono<{
 
 	.get(
 		'/:id',
-		zValidator('param', idParamsScheme, async (result,c) => {
-			if (!result.success) {
-				return c.json({message:"Bad Requestd"},400)
-			}
-		}),
 		async (c) => {
 			const prisma = getPrismaClient(process.env.DATABASE_URLL)
-			const param = c.req.valid('param')
+			const id = c.req.param('id')
 
 			const result = await prisma.user.findUnique({
 				where: {
-					id: param.id,
+					id: id,
 				},
 				select: {
 					id: true,
@@ -127,7 +120,7 @@ export const UserRoute = new Hono<{
 		'/',
 		zValidator('json', createUserScheme, async (result,c) => {
 			if (!result.success) {
-				return c.json({message:"Bad Requestd"},400)
+				return c.json({ message: 'Bad Request' }, 400)
 			}
 		}),
 		async (c) => {
@@ -162,7 +155,7 @@ export const UserRoute = new Hono<{
 		'/',
 		zValidator('json', updateUserScheme, async (result,c) => {
 			if (!result.success) {
-				return c.json({message:"Bad Requested"},400)
+				return c.json({ message: 'Bad Request' }, 400)
 			}
 		}),
 		async (c) => {

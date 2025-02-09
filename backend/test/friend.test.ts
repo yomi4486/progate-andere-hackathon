@@ -68,6 +68,24 @@ describe('FriendRoute API', () => {
 		})
 	})
 
+	it('should return 400 if bad request', async () => {
+		const res = await client.friends[':id'].$put(
+			{
+				param: { id: '123' },
+			},
+			{
+				headers: {
+					Authorization: 'Bearer valid_token1',
+				},
+			},
+		)
+
+		expect(res.status).toBe(400)
+		expect(await res.json()).toEqual({
+			message: 'Bad Request',
+		})
+	})
+
 	it('should return 409 if request is already sent', async () => {
 		const res = await client.friends[':id'].$post(
 			{
