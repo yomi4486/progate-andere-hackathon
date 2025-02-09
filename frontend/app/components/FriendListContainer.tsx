@@ -19,7 +19,7 @@ const FriendListContainer: React.FC<FriendListContainerProps> = ({ title, friend
           {friends.length}
         </Text>
       </View>
-      <View style={styles.borderLine} /> {/* ここにボーダーラインを追加 */}
+      <View style={styles.borderLine} />
       {friends.map((friend, index) => (
         <FriendList key={index} name={friend.name} lastLogin={friend.lastLogin} />
       ))}

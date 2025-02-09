@@ -17,7 +17,7 @@ export default function FriendsScreen() {
     { name: 'kuro', lastLogin: '3日前', isActive: false },
   ];
   return (
-    <View>
+    <View style={{height:"100%"}}>
       <View>
           <DefaultHeader title="フレンド" showSettingButton={true}/>
       </View>

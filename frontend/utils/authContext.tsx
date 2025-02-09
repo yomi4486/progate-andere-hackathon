@@ -5,6 +5,7 @@ type Auth = {
     user: User | null;
     loading: boolean;
     googleSignIn: () => Promise<boolean>;
+    signOut :() => Promise<void>;
 };
 
 const AuthContext = createContext<Auth>({} as Auth);
@@ -41,10 +42,16 @@ const useAuthProvider = () => {
         }
     };
 
+    const signOut = async (): Promise<void> => {
+        setUser(null);
+        setLoading(true);
+    };
+
     return {
         user,
         loading,
         googleSignIn,
+        signOut
     };
 }
 

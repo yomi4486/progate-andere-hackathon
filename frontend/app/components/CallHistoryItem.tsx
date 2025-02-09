@@ -27,7 +27,7 @@ const CallHistoryItem: React.FC<CallHistoryItemProps> = ({
 }) => {
   return (
     <View style={[localStyles.callHistoryItem, { marginHorizontal: 15, padding: 15 }]}>
-      <UserIcon size={65} isOnline={true} /> {/* UserIconコンポーネントを使用 */}
+      <UserIcon size={65} isOnline={true} />
       
       <View style={localStyles.callDetails}>
         <Text style={[localStyles.friendName, { fontSize: 18 }]}>{friendName}</Text>
