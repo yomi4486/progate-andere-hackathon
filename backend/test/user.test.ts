@@ -57,6 +57,20 @@ describe('UserRoute API', () => {
 		})
 	})
 
+	it('should fetch the current user details return not found', async () => {
+		const res = await client.users.$get(
+			{},
+			{
+				headers: {
+					Authorization: 'Bearer valid_token123',
+				},
+			},
+		)
+
+		expect(res.status).toBe(404)
+		expect(await res.json()).toEqual({ message: 'User Not Found' })
+	})
+
 	it('should fetch user details by id successfully', async () => {
 		const res = await client.users[':id'].$get(
 			{
@@ -129,6 +143,24 @@ describe('UserRoute API', () => {
 		}))
 	})
 
+	it('should register a new user return 400 if bad request', async () => {
+		const res = await client.users.$post(
+			{
+				json: {},
+			},
+			{
+				headers: {
+					Authorization: 'Bearer valid_token1',
+				},
+			},
+		)
+
+		expect(res.status).toBe(400)
+
+		// @ts-ignore
+		expect(await res.json()).toEqual({ message: 'Bad Request' })
+	})
+
 	it('should return 409 if user already exists', async () => {
 		const newUserData = {
 			username: 'mono',
@@ -173,5 +205,24 @@ describe('UserRoute API', () => {
 
 		expect(res.status).toBe(200)
 		expect(await res.json()).toEqual({message:"User Update Successfully"});
+	})
+
+	it('should update user details return 400 if bad request', async () => {
+		const res = await client.users.$put(
+			{
+				json: {},
+			},
+			{
+				headers: {
+					Authorization: 'Bearer valid_token1',
+				},
+			},
+		)
+
+		// @ts-ignore
+		expect(res.status).toBe(400)
+
+		// @ts-ignore
+		expect(await res.json()).toEqual({ message: 'Bad Request' })
 	})
 })
