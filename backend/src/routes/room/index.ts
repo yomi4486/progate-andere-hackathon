@@ -2,44 +2,30 @@ import { Hono } from 'hono'
 import { getPrismaClient } from '../../lib/prisma'
 import { AccessToken, RoomServiceClient } from 'livekit-server-sdk'
 import { zValidator } from '@hono/zod-validator'
-import { HTTPException } from 'hono/http-exception'
 import { createRoomScheme } from './scheme'
 import { idParamsScheme } from '../../lib/scheme'
-
-type Bindings = {
-	DATABASE_URL: string
-}
+import { HTTPException } from 'hono/http-exception'
 
 export const RoomRoute = new Hono<{
 	Variables: { user_id: string }
-	Bindings: Bindings
 }>()
 
 	.get(
 		'/:id',
-		zValidator('param', idParamsScheme, async (result) => {
-			if (!result.success) {
-				throw new HTTPException(400, {
-					message: 'Bad Request',
-				})
-			}
-		}),
 
 		async (c) => {
 			const prisma = getPrismaClient(process.env.DATABASE_URL)
 			const userId = c.get('user_id')
-			const param = c.req.valid('param')
+			const id = c.req.param('id')
 
 			const result = await prisma.room.findUnique({
 				where: {
-					id: param.id,
+					id: id,
 				},
 			})
 
 			if (!result) {
-				throw new HTTPException(404, {
-					message: 'Not Found',
-				})
+				return c.json({ message: 'Room Not Found' }, 404)
 			}
 
 			const at = new AccessToken(
@@ -57,7 +43,7 @@ export const RoomRoute = new Hono<{
 			return c.json({
 				id: result.id,
 				room_name: result.roomname,
-				access_token: at.toJwt(),
+				access_token: await at.toJwt(),
 				owner_id: result.owner_id,
 				created_at: result.created_at,
 				updated_at: result.updated_at,
@@ -67,11 +53,9 @@ export const RoomRoute = new Hono<{
 
 	.post(
 		'/',
-		zValidator('json', createRoomScheme, (result) => {
+		zValidator('json', createRoomScheme, (result, c) => {
 			if (!result.success) {
-				throw new HTTPException(400, {
-					message: 'Bad Request',
-				})
+				return c.json({ message: 'Bad Request' }, 400)
 			}
 		}),
 
@@ -87,11 +71,6 @@ export const RoomRoute = new Hono<{
 					owner_id: userId,
 				},
 			})
-			if (!result) {
-				throw new HTTPException(404, {
-					message: 'Room Not Found',
-				})
-			}
 
 			const at = new AccessToken(
 				process.env.LIVEKIT_API_KEY,
@@ -108,7 +87,7 @@ export const RoomRoute = new Hono<{
 			return c.json({
 				id: result.id,
 				room_name: result.roomname,
-				access_token: at.toJwt(),
+				access_token: await at.toJwt(),
 				owner_id: result.owner_id,
 				created_at: result.created_at,
 				updated_at: result.updated_at,
@@ -118,35 +97,28 @@ export const RoomRoute = new Hono<{
 
 	.delete(
 		'/:id',
-		zValidator('param', idParamsScheme, async (result) => {
-			if (!result.success) {
-				throw new HTTPException(400, {
-					message: 'Bad Request',
-				})
-			}
-		}),
 
 		async (c) => {
 			const prisma = getPrismaClient(process.env.DATABASE_URL)
-			const param = c.req.valid('param')
+			const id = c.req.param('id')
 			const user_id = c.get('user_id')
 
 			const result = await prisma.room.findUnique({
 				where: {
-					id: param.id,
+					id: id,
 					owner_id: user_id,
 				},
 			})
 
 			if (!result) {
-				throw new HTTPException(404, {
-					message: 'Room Not Found',
-				})
+				if (!result) {
+					return c.json({ message: 'Room Not Found' }, 404)
+				}
 			}
 
 			await prisma.room.delete({
 				where: {
-					id: param.id,
+					id: id,
 					owner_id: user_id,
 				},
 			})
@@ -156,8 +128,9 @@ export const RoomRoute = new Hono<{
 				process.env.LIVEKIT_API_KEY,
 				process.env.LIVEKIT_API_SECRET,
 			)
+
 			await roomService.deleteRoom(result.roomname)
 
-			return c.json({ message: 'success' })
+			return c.json({ message: 'Room Delete Successfully' }, 200)
 		},
 	)
