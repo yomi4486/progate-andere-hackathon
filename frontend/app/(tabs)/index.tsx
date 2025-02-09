@@ -1,17 +1,45 @@
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { useEffect,useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import FriendItem from '../components/FriendItem'; // 追加
 import DefaultHeader from '../components/Header';
 import {profileStyles} from '../styles';
+import {AppType} from '../../../backend/src';
+const { hc } = require("hono/dist/client") as typeof import("hono/client");
+import { useAuthContext } from './../../utils/authContext';
 
 export default function HomeScreen() {
+  const instance = useAuthContext();
+  const base_url:string = `${process.env.EXPO_PUBLIC_BASE_URL}`;
+  const client = hc<AppType>(base_url)
+  const [userData, setUserData] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+        if (instance.idToken != null) {
+            try {
+                console.log(instance.idToken);
+                const result = await client.users.$get({}, {
+                  headers: {
+                    Authorization: instance.idToken,
+                  },
+                });
+                const json = await result.json();
+                setUserData(json);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    };
+    fetchData();
+  }, [instance.idToken]);
+  console.log(userData)
   return (
     <View style ={{height:"100%"}}>
       <DefaultHeader title="あなたのステータス" showSettingButton={true}/>
       <View style={profileStyles.profileContainer}>
         <FontAwesome name="user-circle" style={profileStyles.profileIcon} />
-        <Text style={profileStyles.profileName}>あなたの名前</Text>
+        <Text style={profileStyles.profileName}>{userData ? `${userData}`:"あなたの名前"}</Text>
         <TouchableOpacity style={profileStyles.profileStatusContainer}>
           <FontAwesome name="circle" style={profileStyles.activeDot} />
           <Text style={profileStyles.profileStatus}>アクティブ</Text>
