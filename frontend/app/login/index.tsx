@@ -14,7 +14,6 @@ import { AuthContext, useAuth } from '@/utils/authContext';
 const LoginScreen = () => {
   const router = useRouter();
   const {googleSignIn, isSetupAccount}  = useAuth()
-
   return (
     <SafeAreaView>
         <View style={{height:"100%",justifyContent:'center',alignItems:'center',}}>

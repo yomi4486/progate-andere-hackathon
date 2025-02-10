@@ -36,7 +36,6 @@ export default function NewUserScreen() {
             </View>
         </View>
       );
-  
 }
 
 const styles = StyleSheet.create({

@@ -32,8 +32,6 @@ export async function get(idToken:string|undefined):Promise<HonoResponseType<typ
         throw Error("idToken is undefind")
     }
 }
-
-// 自分のプロフィールを変更
 export async function post(idToken:string|undefined,data:postUserdata):Promise<HonoResponseType<typeof client.users.$post> | null>{
     if (!idToken){
         try{
