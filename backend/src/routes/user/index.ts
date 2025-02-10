@@ -6,7 +6,7 @@ import { createUserScheme, updateUserScheme } from './scheme'
 export const UserRoute = new Hono<{
 	Variables: { user_id: string }
 }>()
-
+	//https://localhost/users/
 	.get('/', async (c) => {
 		const prisma = getPrismaClient(process.env.DATABASE_URL)
 		const userId = c.get('user_id')
@@ -54,71 +54,69 @@ export const UserRoute = new Hono<{
 		})
 
 		if (!result) {
-			return c.json({message:"User Not Found"},404)
+			return c.json({ message: 'User Not Found' }, 404)
 		}
 
 		return c.json(result)
 	})
 
-	.get(
-		'/:id',
-		async (c) => {
-			const prisma = getPrismaClient(process.env.DATABASE_URLL)
-			const id = c.req.param('id')
+	//https://localhost/users/userid
+	.get('/:id', async (c) => {
+		const prisma = getPrismaClient(process.env.DATABASE_URLL)
+		const id = c.req.param('id')
 
-			const result = await prisma.user.findUnique({
-				where: {
-					id: id,
-				},
-				select: {
-					id: true,
-					username: true,
-					icon_url: true,
-					status: true,
-					status_message: true,
-					introduction: true,
-					from_users: {
-						where: {
-							status: 'ACCEPTED',
-						},
-						select: {
-							from_user: {
-								select: {
-									id: true,
-									icon_url: true,
-									status: true,
-								},
-							},
-						},
+		const result = await prisma.user.findUnique({
+			where: {
+				id: id,
+			},
+			select: {
+				id: true,
+				username: true,
+				icon_url: true,
+				status: true,
+				status_message: true,
+				introduction: true,
+				from_users: {
+					where: {
+						status: 'ACCEPTED',
 					},
-					to_users: {
-						where: {
-							status: 'ACCEPTED',
-						},
-						select: {
-							to_user: {
-								select: {
-									id: true,
-									icon_url: true,
-									status: true,
-								},
+					select: {
+						from_user: {
+							select: {
+								id: true,
+								icon_url: true,
+								status: true,
 							},
 						},
 					},
 				},
-			})
+				to_users: {
+					where: {
+						status: 'ACCEPTED',
+					},
+					select: {
+						to_user: {
+							select: {
+								id: true,
+								icon_url: true,
+								status: true,
+							},
+						},
+					},
+				},
+			},
+		})
 
-			if (!result) {
-				return c.json({message:"User Not Found"},404)
-			}
+		if (!result) {
+			return c.json({ message: 'User Not Found' }, 404)
+		}
 
-			return c.json(result)
-		},
-	)
+		return c.json(result)
+	})
 
 	.post(
 		'/',
-		zValidator('json', createUserScheme, async (result,c) => {
+		zValidator('json', createUserScheme, async (result, c) => {
 			if (!result.success) {
 				return c.json({ message: 'Bad Request' }, 400)
 			}
@@ -129,12 +127,12 @@ export const UserRoute = new Hono<{
 			const validData = c.req.valid('json')
 
 			const query = await prisma.user.findUnique({
-				where:{
+				where: {
 					id: userId,
-				}
+				},
 			})
 
-			if (query) return c.json({message:"already Register"},409)
+			if (query) return c.json({ message: 'already Register' }, 409)
 
 			const result = await prisma.user.create({
 				data: {
@@ -153,7 +151,7 @@ export const UserRoute = new Hono<{
 
 	.put(
 		'/',
-		zValidator('json', updateUserScheme, async (result,c) => {
+		zValidator('json', updateUserScheme, async (result, c) => {
 			if (!result.success) {
 				return c.json({ message: 'Bad Request' }, 400)
 			}
@@ -169,9 +167,9 @@ export const UserRoute = new Hono<{
 			})
 
 			if (!result) {
-				return c.json({message:"User Not Found"},404)
+				return c.json({ message: 'User Not Found' }, 404)
 			}
 
-			return c.json({message:"User Update Successfully"},200)
+			return c.json({ message: 'User Update Successfully' }, 200)
 		},
 	)

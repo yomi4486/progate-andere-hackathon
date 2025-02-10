@@ -26,5 +26,4 @@ export async function jwtAuth(token: string) {
 			throw new HTTPException(401, { message: 'Unauthorized' })
 		}
 	}
-
 }
