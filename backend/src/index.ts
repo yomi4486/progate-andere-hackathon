@@ -46,8 +46,6 @@ const app = new Hono<{ Variables: { user_id: string } }>()
 		if (e instanceof Prisma.PrismaClientUnknownRequestError)
 			return c.json({ message: e.message }, 500)
 
-		new Error(e.message)
-
 		return c.json({ message: 'Internal Server Error' }, 500)
 	})
 

@@ -26,6 +26,7 @@
     "expo-status-bar": "~2.0.1",
     "expo-system-ui": "~4.0.7",
     "expo-web-browser": "~14.0.2",
+    "hono": "^4.7.0",
     "react": "18.3.1",
     "react-bootstrap": "^2.10.9",
     "react-dom": "18.3.1",

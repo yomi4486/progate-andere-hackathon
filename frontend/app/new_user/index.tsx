@@ -4,16 +4,13 @@ import { profileStyles } from '../styles';
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
 import DefaultHeader from '../components/Header';
-import { SettingsButtonItem } from './items';
-import { useAuthContext } from '../../utils/authContext';
 
-export default function SettingsScreen() {
-  const { signOut } = useAuthContext();
+export default function NewUserScreen() {
   return (
     <View style ={{height:"100%"}}>
         <DefaultHeader title="設定" showSettingButton={false} showBackButton={true}/>
         <View style={{borderBottomColor: 'gray',borderBottomWidth: 1,width:"50%",}}>
-            <Text style={StyleSheet.compose(profileStyles.friendsTitle,{paddingLeft:20,paddingTop:10})}>プロフィール</Text>
+            <Text style={StyleSheet.compose(profileStyles.friendsTitle,{paddingLeft:20,paddingTop:10})}>プロフィールを作りましょう！</Text>
         </View>
         <View style={profileStyles.profileContainer}>
             <View style={styles.IconContainer}>
@@ -36,7 +33,6 @@ export default function SettingsScreen() {
         <View style={{borderBottomColor: 'gray',borderBottomWidth: 1,width:"50%",}}>
             <Text style={StyleSheet.compose(profileStyles.friendsTitle,{paddingLeft:20,paddingTop:10})}>基本</Text>
         </View>
-        <SettingsButtonItem title="ログアウト" denger={true} event={signOut}/>
     </View>
   );
 }

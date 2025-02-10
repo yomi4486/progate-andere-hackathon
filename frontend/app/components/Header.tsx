@@ -39,7 +39,7 @@ const DefaultHeader: React.FC<DefaultHeaderProps> = ({
                     name='settings' 
                     color='#eeeeee' 
                     style={styles.iconContainer} 
-                    onPress={()=>{router.navigate("../settings",)}}
+                    onPress={()=>{router.navigate("../settings")}}
                 /> : <></>
             }
             backgroundColor="#222222"
