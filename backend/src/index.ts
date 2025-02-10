@@ -7,6 +7,7 @@ import { RoomRoute } from './routes/room'
 import { FriendRoute } from './routes/friends'
 import { HttpFunction } from '@google-cloud/functions-framework'
 import { Prisma } from '@prisma/client'
+import 'newrelic'
 
 const app = new Hono<{ Variables: { user_id: string } }>()
 	.use('*', async (c, next) => {
@@ -44,6 +45,8 @@ const app = new Hono<{ Variables: { user_id: string } }>()
 			return c.json({ message: e.message }, 500)
 		if (e instanceof Prisma.PrismaClientUnknownRequestError)
 			return c.json({ message: e.message }, 500)
+
+		new Error(e.message)
 
 		return c.json({ message: 'Internal Server Error' }, 500)
 	})

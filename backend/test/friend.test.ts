@@ -68,6 +68,25 @@ describe('FriendRoute API', () => {
 		})
 	})
 
+	it('should return 400 if bad request', async () => {
+		const res = await client.friends[':id'].$put(
+			{
+				param: { id: '123' },
+			},
+			{
+				headers: {
+					Authorization: 'Bearer valid_token1',
+				},
+			},
+		)
+
+		// @ts-ignore
+		expect(res.status).toBe(400)
+		expect(await res.json()).toEqual({
+			message: 'Bad Request',
+		})
+	})
+
 	it('should return 409 if request is already sent', async () => {
 		const res = await client.friends[':id'].$post(
 			{
@@ -80,6 +99,7 @@ describe('FriendRoute API', () => {
 			},
 		)
 
+		// @ts-ignore
 		expect(res.status).toBe(409)
 		expect(await res.json()).toEqual({
 			message: 'Already Send Request',
@@ -90,6 +110,7 @@ describe('FriendRoute API', () => {
 		const res = await client.friends[':id'].$put(
 			{
 				param: { id: '1' },
+				// @ts-ignore
 				json: { status: 'REJECTED' },
 			},
 			{
@@ -119,6 +140,7 @@ describe('FriendRoute API', () => {
 		const res = await client.friends[':id'].$put(
 			{
 				param: { id: '1' },
+				// @ts-ignore
 				json: { status: 'ACCEPTED' },
 			},
 			{

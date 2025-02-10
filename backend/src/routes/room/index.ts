@@ -3,8 +3,6 @@ import { getPrismaClient } from '../../lib/prisma'
 import { AccessToken, RoomServiceClient } from 'livekit-server-sdk'
 import { zValidator } from '@hono/zod-validator'
 import { createRoomScheme } from './scheme'
-import { idParamsScheme } from '../../lib/scheme'
-import { HTTPException } from 'hono/http-exception'
 
 export const RoomRoute = new Hono<{
 	Variables: { user_id: string }

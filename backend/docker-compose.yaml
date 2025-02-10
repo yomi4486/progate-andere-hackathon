@@ -3,7 +3,7 @@ services:
     mysql:
         image: mysql:latest
         ports:
-            - '4000:3306'
+            - '4001:3306'
         environment:
             MYSQL_ROOT_PASSWORD: mysql
             MYSQL_DATABASE: db
