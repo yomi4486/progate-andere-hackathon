@@ -6,8 +6,8 @@
 		"dev": "npx nodemon",
 		"build": "npx tsc --skipLibCheck",
 		"deploy": "gcloud functions deploy mainFunction --runtime nodejs22 --trigger-http --allow-unauthenticated",
-		"test": "podman compose up -d && bun test && podman compose down",
-		"coverage": "podman compose up -d && bun test --coverage && podman compose down",
+		"test": "podman compose -f docker-compose-test.yaml up -d && bun test && podman compose -f docker-compose-test.yaml down",
+		"coverage": "podman compose -f docker-compose-test.yaml up -d && bun test --coverage && podman compose -f docker-compose-test.yaml down",
 		"test:docker": "docker compose up -d && bun test && docker compose down",
 		"lint": "eslint .",
 		"format": "prettier --write .",
@@ -31,6 +31,7 @@
 		"hono": "^4.7.0",
 		"livekit-server-sdk": "^2.9.7",
 		"mysql2": "^3.12.0",
+      "newrelic": "^12.12.0",
 		"typescript-eslint": "^8.23.0",
 		"zod": "^3.24.1"
 	},
