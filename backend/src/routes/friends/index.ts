@@ -5,41 +5,38 @@ import { zValidator } from '@hono/zod-validator'
 import { changeFriendStatus } from './scheme'
 
 export const FriendRoute = new Hono<{ Variables: { user_id: string } }>()
-	.post(
-		'/:id',
-		async (c) => {
-			const prisma = getPrismaClient(process.env.DATABASE_URL)
-			const userId = c.get('user_id')
-			const id = c.req.param('id')
+	.post('/:id', async (c) => {
+		const prisma = getPrismaClient(process.env.DATABASE_URL)
+		const userId = c.get('user_id')
+		const id = c.req.param('id')
 
-			if (userId == id) {
-				return c.json({ message: 'Can\'t Send Friend Request' }, 400)
-			}
+		if (userId == id) {
+			return c.json({ message: 'Can\'t Send Friend Request' }, 400)
+		}
 
-			const result = await prisma.friends.findFirst({
-				where: {
-					from_id: userId,
-					to_id: id,
-				},
+		const result = await prisma.friends.findFirst({
+			where: {
+				from_id: userId,
+				to_id: id,
+			},
+		})
+
+		if (result) {
+			throw new HTTPException(409, {
+				message: 'Already Send Request',
 			})
+		}
 
-			if (result) {
-				throw new HTTPException(409, {
-					message: 'Already Send Request',
-				})
-			}
+		await prisma.friends.create({
+			data: {
+				from_id: userId,
+				to_id: id,
+				status: 'PENDING',
+			},
+		})
 
-			await prisma.friends.create({
-				data: {
-					from_id: userId,
-					to_id: id,
-					status: 'PENDING',
-				},
-			})
-
-			return c.json({ message: 'Friend Request Successfully' }, 200)
-		},
-	)
+		return c.json({ message: 'Friend Request Successfully' }, 200)
+	})
 
 	.put(
 		'/:id',

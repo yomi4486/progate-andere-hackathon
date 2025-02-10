@@ -38,7 +38,6 @@ describe('RoomRoute API', () => {
 			}
 		})
 
-
 		const prisma = new PrismaClient()
 		await prisma.user.create({
 			data: {
