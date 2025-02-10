@@ -20,6 +20,7 @@ export async function jwtAuth(token: string) {
                 audience: process.env.GOOGLE_CLIENT_ID,
             })
             const payload = ticket.getPayload()
+            console.log(payload)
             return payload.sub.toString()
         } catch (e) {
             if (e instanceof HTTPException) throw e
