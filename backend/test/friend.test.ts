@@ -80,6 +80,7 @@ describe('FriendRoute API', () => {
 			},
 		)
 
+		// @ts-ignore
 		expect(res.status).toBe(400)
 		expect(await res.json()).toEqual({
 			message: 'Bad Request',
@@ -98,6 +99,7 @@ describe('FriendRoute API', () => {
 			},
 		)
 
+		// @ts-ignore
 		expect(res.status).toBe(409)
 		expect(await res.json()).toEqual({
 			message: 'Already Send Request',
@@ -108,6 +110,7 @@ describe('FriendRoute API', () => {
 		const res = await client.friends[':id'].$put(
 			{
 				param: { id: '1' },
+				// @ts-ignore
 				json: { status: 'REJECTED' },
 			},
 			{
@@ -137,6 +140,7 @@ describe('FriendRoute API', () => {
 		const res = await client.friends[':id'].$put(
 			{
 				param: { id: '1' },
+				// @ts-ignore
 				json: { status: 'ACCEPTED' },
 			},
 			{
