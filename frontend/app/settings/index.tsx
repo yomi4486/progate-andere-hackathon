@@ -5,10 +5,11 @@ import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
 import DefaultHeader from '../components/Header';
 import { SettingsButtonItem } from './items';
-import { useAuthContext } from '../../utils/authContext';
+import { useContext } from 'react';
+import { AuthContext, useAuth } from '@/utils/authContext';
 
 export default function SettingsScreen() {
-  const { signOut } = useAuthContext();
+  const { signOut } = useAuth()
   return (
     <View style ={{height:"100%"}}>
         <DefaultHeader title="設定" showSettingButton={false} showBackButton={true}/>
