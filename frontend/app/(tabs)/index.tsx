@@ -7,7 +7,6 @@ import DefaultHeader from '../components/Header';
 import {profileStyles} from '../styles';
 import {AppType} from '../../../backend/src';
 const { hc } = require("hono/dist/client") as typeof import("hono/client");
-import { useAuthContext } from './../../utils/authContext';
 
 export default function HomeScreen() {
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import {
   Button,
   SafeAreaView,
@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useAuthContext } from '../../utils/authContext';
 import { useRouter } from 'expo-router';
 import 'react-native-reanimated';
+import { AuthContext, useAuth } from '@/utils/authContext';
 
 const LoginScreen = () => {
   const router = useRouter();
-  const { googleSignIn, isSetupAccount } = useAuthContext();
+  const {googleSignIn, isSetupAccount}  = useAuth()
   return (
     <SafeAreaView>
         <View style={{height:"100%",justifyContent:'center',alignItems:'center',}}>

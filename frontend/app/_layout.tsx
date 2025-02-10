@@ -3,9 +3,9 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Slot, Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import 'react-native-reanimated';
-import { AuthProvider, useAuthContext } from '../utils/authContext';
+import { AuthContext, AuthProvider, useAuth } from '../utils/authContext';
 import { useColorScheme } from '@/components/useColorScheme';
 
 export {
@@ -53,20 +53,22 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { user } = useAuthContext();
+  const { user, isSetupAccount} = useAuth()
   const router = useRouter();
 
   useEffect(()=>{
-    try{
-      if(user){
-        router.push("/(tabs)")
-      }else{
-        router.push("/login");
+    (async()=>{
+      try{
+        if(user && await isSetupAccount()){
+          router.push("/(tabs)")
+        }else{
+          router.push("/login");
+        }
+      }catch(error){
+        console.log(error)
       }
-    }catch(error){
-      console.log(error)
-    }
-  })
+    })()
+  },[])
 
   return <Slot/>
 }
