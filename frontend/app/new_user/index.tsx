@@ -8,7 +8,7 @@ import { SignInSuccessResponse } from '@react-native-google-signin/google-signin
 import {useState,useEffect,useContext } from 'react';
 export default function NewUserScreen() {
     const { user } = useAuth();
-
+    console.log(`${user?.data.user.photo}`);
     return (
         <View style ={{height:"100%"}}>
             <DefaultHeader title="プロフィールを作りましょう！" showSettingButton={false}/>
