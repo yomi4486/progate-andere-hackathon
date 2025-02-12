@@ -15,10 +15,9 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<SignInSuccessResponse | null>(null);
     const [idToken, setIdToken] = useState<string | null>(null);
+    GoogleSignin.configure({ iosClientId: "165387728661-co452vd2hfojg56nnknpu9j8ddksm66l.apps.googleusercontent.com", offlineAccess: false });
 
     const googleSignIn = async () => {
-        GoogleSignin.configure({ iosClientId: "165387728661-co452vd2hfojg56nnknpu9j8ddksm66l.apps.googleusercontent.com", offlineAccess: false });
-
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
@@ -35,12 +34,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const isSetupAccount = async (): Promise<boolean> => {
+        console.log(idToken);
         if (!idToken) return false;
         try {
-            const res = await userRequest.get();
+            const res = await userRequest.get(idToken);
             console.log(res);
             return true;
-        } catch {
+        } catch(e) {
+            console.error(e)
             return false;
         }
     };
