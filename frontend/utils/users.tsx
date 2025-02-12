@@ -63,6 +63,8 @@ export async function post(
           },
         }
       );
+      console.log(res)
+      console.log(res.status)
       if(!res.ok)throw Error("request failed")
       const json = await res.json();
       return json;
