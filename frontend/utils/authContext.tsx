@@ -18,8 +18,6 @@ export interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    
-
     const [user, setUser] = useState<SignInSuccessResponse | null>(null);
     const [idToken, setIdToken] = useState<string | null>(null);
     const [currentUserInfo, setCurrentUserInfo] = useState<HonoResponseType<typeof client.users.$get> | null>(null);

@@ -9,6 +9,7 @@ import {AppType} from '../../../backend/src';
 const { hc } = require("hono/dist/client") as typeof import("hono/client");
 import { useAuth } from '@/utils/authContext';
 import * as Users from '@/utils/users';
+import { HonoResponseType } from '@/utils/resnposeType';
 
 export default function HomeScreen() {
   const { currentUserInfo,idToken } = useAuth();
@@ -43,7 +44,7 @@ export default function HomeScreen() {
             style={profileStyles.statusEditIcon} 
             onPress={async()=>{
               const res = await Users.put({status:undefined,username:undefined,icon_url:undefined,status_message:statusMessage,introduction:undefined},idToken!)
-              setStatusMessage(res["status_message"])
+              setStatusMessage(res!["status_message"])
             }} 
           />
         </View>
