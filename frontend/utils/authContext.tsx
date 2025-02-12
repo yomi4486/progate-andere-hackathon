@@ -1,20 +1,28 @@
 import { GoogleSignin, SignInSuccessResponse } from '@react-native-google-signin/google-signin';
 import { createContext, useContext, useState } from 'react';
 import * as userRequest from './users';
+import { HonoResponseType } from './resnposeType';
+import { AppType } from "../../backend/src";
+const { hc } = require("hono/dist/client") as typeof import("hono/client");
+
+const client = hc<AppType>("");
 
 export interface AuthContextType {
     user: SignInSuccessResponse | null;
     idToken: string | null;
+    currentUserInfo: HonoResponseType<typeof client.users.$get> | null;
     googleSignIn: () => Promise<void>;
     isSetupAccount: () => Promise<boolean>;
     signOut: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    
+
     const [user, setUser] = useState<SignInSuccessResponse | null>(null);
     const [idToken, setIdToken] = useState<string | null>(null);
+    const [currentUserInfo, setCurrentUserInfo] = useState<HonoResponseType<typeof client.users.$get> | null>(null);
     GoogleSignin.configure({ iosClientId: "165387728661-co452vd2hfojg56nnknpu9j8ddksm66l.apps.googleusercontent.com", offlineAccess: false });
 
     const googleSignIn = async () => {
@@ -38,7 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!idToken) return false;
         try {
             const res = await userRequest.get(idToken);
-            console.log(res);
+            setCurrentUserInfo(res);
             return true;
         } catch(e) {
             console.error(e)
@@ -57,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, idToken, googleSignIn, isSetupAccount, signOut }}>
+        <AuthContext.Provider value={{ user, idToken,currentUserInfo, googleSignIn, isSetupAccount, signOut }}>
             {children}
         </AuthContext.Provider>
     );
