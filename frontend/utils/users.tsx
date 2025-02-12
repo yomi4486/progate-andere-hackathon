@@ -63,10 +63,11 @@ export async function post(
           },
         }
       );
-      if(!res.ok)return null;
+      if(!res.ok)throw Error("request failed")
       const json = await res.json();
       return json;
     } catch (e) {
+      console.log(e)
       return null;
     }
   } else {
