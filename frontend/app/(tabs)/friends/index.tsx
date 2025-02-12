@@ -1,4 +1,5 @@
 import { Text, View } from '@/components/Themed';
+import { useAuth } from '@/utils/authContext';
 
 import DefaultHeader from '../../components/Header';
 import { localStyles } from '../../styles';
@@ -7,6 +8,22 @@ import { TextInput } from 'react-native';
 import FriendListContainer from '../../components/FriendListContainer';
 
 export default function FriendsScreen() {
+  const { currentUserInfo } = useAuth();
+  const fromUsers = currentUserInfo!["from_users"];
+  const toUsers = currentUserInfo!["to_users"];
+  let updatedFromUser:typeof currentUserInfo.from_users|null=null;
+  if(currentUserInfo != null){
+    function removeMatchingUsers(from: typeof currentUserInfo.from_users, to: typeof currentUserInfo.to_users): typeof currentUserInfo.from_users {
+      const toUserIds = new Set(to.map(user => user.to_user.id));
+    
+      // from_userの配列からto_userに存在しないidを持つ要素のみを残す
+      return from.filter(user => !toUserIds.has(user.from_user.id));
+    }
+    
+    updatedFromUser = removeMatchingUsers(fromUsers, toUsers);
+  }else{
+    // 例外処理
+  }
   const activeFriends = [
     { name: 'yomi', lastLogin: '10分前', isActive: true },
     { name: 'mono', lastLogin: '20分前', isActive: true },
@@ -32,7 +49,5 @@ export default function FriendsScreen() {
       <FriendListContainer title="アクティブなフレンド" friends={activeFriends} />
       <FriendListContainer title="非アクティブなフレンド" friends={inactiveFriends} />
     </View>
-
-
   );
 }

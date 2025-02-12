@@ -39,7 +39,7 @@ export default function HomeScreen() {
           />
           <FontAwesome 
             name={
-              currentUserInfo&&statusMessage==currentUserInfo['status_message']?"pencil":"check"
+              currentUserInfo&&(statusMessage==currentUserInfo['status_message'])?"pencil":"check"
             } 
             style={profileStyles.statusEditIcon} 
             onPress={async()=>{

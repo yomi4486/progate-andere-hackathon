@@ -5,7 +5,7 @@ import { HonoResponseType } from "./resnposeType";
 
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`;
 const client = hc<AppType>(base_url);
-const idFriend =client.friends[":id"];
+const idFriend = client.friends[":id"];
 export async function post(idToken: string, id: string):Promise<HonoResponseType<typeof idFriend.$post> | null> {
   if (idToken) {
     try {

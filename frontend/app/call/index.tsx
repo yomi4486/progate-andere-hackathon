@@ -8,7 +8,7 @@ import {
 } from '@livekit/react-native'
 import { useRouter } from 'expo-router'
 
-const CallScreen: React.FC<{roomToken:string}> = ({roomToken})=> {
+const CallScreen: React.FC<{roomId:string}> = ({roomId})=> {
 	useEffect(() => {
 		let start = async () => {
 			await AudioSession.startAudioSession()
@@ -23,7 +23,7 @@ const CallScreen: React.FC<{roomToken:string}> = ({roomToken})=> {
 	return (
 		<LiveKitRoom
 			serverUrl="wss://qwet-dev-cyhgi9fp.livekit.cloud"
-			token={roomToken!}
+			token={roomId!}
 			connect={true}
 			audio={true}
 		>
