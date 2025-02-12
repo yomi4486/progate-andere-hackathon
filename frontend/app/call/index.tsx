@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import React,{ useEffect, useState } from 'react';
 import {
 	AudioSession,
 	LiveKitRoom,
@@ -8,7 +8,7 @@ import {
 } from '@livekit/react-native'
 import { useRouter } from 'expo-router'
 
-export default function CallScreen() {
+const CallScreen: React.FC<{roomToken:string}> = ({roomToken})=> {
 	useEffect(() => {
 		let start = async () => {
 			await AudioSession.startAudioSession()
@@ -23,11 +23,11 @@ export default function CallScreen() {
 	return (
 		<LiveKitRoom
 			serverUrl="wss://qwet-dev-cyhgi9fp.livekit.cloud"
-			token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzkzMjcyMjUsImlzcyI6IkFQSUZSVFpZb3o4c3FtbiIsIm5iZiI6MTczOTMyNjMyNSwic3ViIjoibW9ubyIsInZpZGVvIjp7ImNhblVwZGF0ZU93bk1ldGFkYXRhIjp0cnVlLCJyb29tIjoiYWFhIiwicm9vbUpvaW4iOnRydWUsInJvb21MaXN0Ijp0cnVlfX0.Oa4u6jZp-5QOGsEQHcvE8r0uyRXrNqVi1nhnxi7oQv0"
+			token={roomToken!}
 			connect={true}
 			audio={true}
 		>
-			<Screen />
+		<Screen />
 		</LiveKitRoom>
 	)
 };
@@ -142,3 +142,5 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 })
+
+export default CallScreen;
