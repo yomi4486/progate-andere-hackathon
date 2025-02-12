@@ -37,3 +37,5 @@ yarn-error.*
 
 *.plist
 app.json
+
+ios/*

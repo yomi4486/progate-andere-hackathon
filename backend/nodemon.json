@@ -1,5 +1,5 @@
 {
 	"watch": ["src"],
 	"ext": "ts",
-	"exec": "npx tsc --skipLibCheck&& functions-framework --target=mainFunction --source=dist/index.js"
+	"exec": "npx tsc --skipLibCheck&& NODE_ENV=development functions-framework --target=mainFunction --source=dist/index.js"
 }

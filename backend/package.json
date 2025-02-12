@@ -8,7 +8,7 @@
 		"deploy": "gcloud functions deploy mainFunction --runtime nodejs22 --trigger-http --allow-unauthenticated",
 		"test": "podman compose -f docker-compose-test.yaml up -d && bun test && podman compose -f docker-compose-test.yaml down",
 		"coverage": "podman compose -f docker-compose-test.yaml up -d && bun test --coverage && podman compose -f docker-compose-test.yaml down",
-		"test:docker": "docker compose up -d && bun test && docker compose down",
+		"test:docker": "docker compose -f docker-compose-test.yaml up -d && bun test && docker compose -f docker-compose-test.yaml down",
 		"lint": "eslint .",
 		"format": "prettier --write .",
 		"format:check": "prettier --check ."
