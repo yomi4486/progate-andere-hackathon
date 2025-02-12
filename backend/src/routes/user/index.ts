@@ -170,6 +170,6 @@ export const UserRoute = new Hono<{
 				return c.json({ message: 'User Not Found' }, 404)
 			}
 
-			return c.json({ message: 'User Update Successfully' }, 200)
+			return c.json(result, 200);
 		},
 	)
