@@ -7,6 +7,7 @@ import React, { useContext, useEffect } from 'react';
 import 'react-native-reanimated';
 import { AuthContext, AuthProvider, useAuth } from '../utils/authContext';
 import { useColorScheme } from '@/components/useColorScheme';
+import { registerGlobals } from '@livekit/react-native'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -20,6 +21,7 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+registerGlobals()
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -62,7 +64,7 @@ function RootLayoutNav() {
         if(user && await isSetupAccount()){
           router.push("/(tabs)")
         }else{
-          router.push("/login");
+          router.push('/(tabs)/call')
         }
       }catch(error){
         console.log(error)
