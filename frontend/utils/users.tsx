@@ -11,14 +11,6 @@ const client = hc<AppType>(base_url);
 export async function get(
   idToken?: string | undefined
 ): Promise<HonoResponseType<typeof client.users.$get>> {
-  if(!idToken){
-    const { user } = useAuth();
-    if(user?.data.idToken){
-      idToken = user?.data.idToken;
-    }else{
-      throw Error("idToken is undefined")
-    }
-  }
   if (idToken) {
     const result = await client.users.$get(
       {},
@@ -28,8 +20,9 @@ export async function get(
         },
       }
     );
-
+    console.log(result);
     if (result.ok) {
+      console.log(result);
       const json = await result.json();
       return json;
     } else {

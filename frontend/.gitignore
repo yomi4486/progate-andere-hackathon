@@ -39,3 +39,5 @@ yarn-error.*
 app.json
 
 ios/*
+
+android/*
