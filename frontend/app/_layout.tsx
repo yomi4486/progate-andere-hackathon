@@ -62,7 +62,7 @@ function RootLayoutNav() {
         if(user && await isSetupAccount()){
           router.push("/(tabs)")
         }else{
-          router.push("/login");
+          router.push('/login')
         }
       }catch(error){
         console.log(error)
