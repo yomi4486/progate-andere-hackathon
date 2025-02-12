@@ -42,8 +42,8 @@ export default function HomeScreen() {
             } 
             style={profileStyles.statusEditIcon} 
             onPress={async()=>{
-              const res = await Users.put({status:null,username:null,icon_url:null,status_message:statusMessage,introduction:null},idToken!)
-              currentUserInfo["status_message"] = res["status_message"];
+              const res = await Users.put({status:undefined,username:undefined,icon_url:undefined,status_message:statusMessage,introduction:undefined},idToken!)
+              setStatusMessage(res["status_message"])
             }} 
           />
         </View>
