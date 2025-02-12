@@ -9,9 +9,9 @@ export const createUserScheme = z.object({
 })
 
 export const updateUserScheme = z.object({
-	username: z.string().nullable(),
-	icon_url: z.string().nullable(),
-	status: z.string().nullable(),
-	status_message: z.string().nullable(),
-	introduction: z.string().nullable(),
+	username: z.string().optional(),
+	icon_url: z.string().optional(),
+	status: z.string().optional(),
+	status_message: z.string().optional(),
+	introduction: z.string().optional(),
 })
