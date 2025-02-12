@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isSetupAccount = async (): Promise<boolean> => {
         if (!idToken) return false;
         try {
-            const res = await userRequest.get(idToken);
+            const res = await userRequest.get();
             console.log(res);
             return true;
         } catch {
