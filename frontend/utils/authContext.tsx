@@ -14,6 +14,7 @@ export interface AuthContextType {
     googleSignIn: () => Promise<void>;
     isSetupAccount: () => Promise<boolean>;
     signOut: () => Promise<void>;
+    updateCurrentUserInfo: (data: HonoResponseType<typeof client.users.$get>) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -39,6 +40,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
+    const updateCurrentUserInfo = (data:HonoResponseType<typeof client.users.$get>):void => {
+        setCurrentUserInfo(data);
+      };
+
     const isSetupAccount = async (): Promise<boolean> => {
         console.log(idToken);
         if (!idToken) return false;
@@ -63,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, idToken,currentUserInfo, googleSignIn, isSetupAccount, signOut }}>
+        <AuthContext.Provider value={{ user, idToken,currentUserInfo, googleSignIn, isSetupAccount, signOut,updateCurrentUserInfo }}>
             {children}
         </AuthContext.Provider>
     );

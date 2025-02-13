@@ -5,18 +5,26 @@ import FriendItem from '../components/FriendItem'; // 追加
 import DefaultHeader from '../components/Header';
 import {profileStyles} from '../styles';
 import { useState } from 'react';
+import FloatingActionButton from '@/components/FloatActionButton';
 import {AppType} from '../../../backend/src';
 const { hc } = require("hono/dist/client") as typeof import("hono/client");
 import { useAuth } from '@/utils/authContext';
 import * as Users from '@/utils/users';
 import { HonoResponseType } from '@/utils/resnposeType';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
-  const { currentUserInfo,idToken } = useAuth();
+  const { currentUserInfo,idToken,updateCurrentUserInfo } = useAuth();
   const [statusMessage,setStatusMessage] = useState<string>("");
   return (
     <View style ={{height:"100%"}}>
       <DefaultHeader title="あなたのステータス" showSettingButton={true}/>
+      <FloatingActionButton onPress={async()=>{
+        // 通話開始のモーダルを表示
+      }}        
+        icon='add'
+        color="#FFFFFF"
+      />
       <View style={profileStyles.profileContainer}>
         <View>
         
@@ -35,7 +43,9 @@ export default function HomeScreen() {
             style={profileStyles.statusInput}
             placeholder="現在のステータスを入力"
             defaultValue={currentUserInfo?currentUserInfo['status_message']:""}
-            onChangeText={(text)=>{setStatusMessage(text);}}
+            onChangeText={(text)=>{
+              setStatusMessage(text);
+            }}
           />
           <FontAwesome 
             name={
@@ -44,7 +54,12 @@ export default function HomeScreen() {
             style={profileStyles.statusEditIcon} 
             onPress={async()=>{
               const res = await Users.put({status:undefined,username:undefined,icon_url:undefined,status_message:statusMessage,introduction:undefined},idToken!)
-              setStatusMessage(res!["status_message"])
+              if(currentUserInfo){
+                let a:typeof currentUserInfo = currentUserInfo
+                a!.status_message = res!["status_message"]
+                updateCurrentUserInfo(a);
+                setStatusMessage(res!["status_message"]);
+              }
             }} 
           />
         </View>
