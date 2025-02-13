@@ -1,18 +1,6 @@
-name: Lint and Format Check
-
-on:
-  pull_request:
-
-defaults:
-  run:
-    working-directory: backend
-
 jobs:
   eslint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v3
 
@@ -22,21 +10,23 @@ jobs:
           cache: "npm"
           cache-dependency-path: ./backend/package-lock.json
 
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
+
       - name: eslint
         uses: reviewdog/action-eslint@v1
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           eslint_flags: "src/**/*.{ts,tsx}"
-          fail_on_error: true # 指摘が発生したらjobを失敗扱いにする
+          fail_on_error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   prettier:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - name: Generate github token
         id: generate_token
@@ -59,13 +49,20 @@ jobs:
           cache: "npm"
           cache-dependency-path: ./backend/package-lock.json
 
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
+
       - name: Run Prettier
         run: |
+          cd backend
           npm ci
-          npx prettier --write ${{ env.GIT_DIFF_FILTERED }} # 環境変数GIT_DIFF_FILTEREDに差分のあるファイルが列挙されている
+          npx prettier --write ${{ env.GIT_DIFF_FILTERED }}
         if: env.GIT_DIFF
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Apply Prettier Change
