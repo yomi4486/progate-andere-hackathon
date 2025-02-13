@@ -68,10 +68,47 @@ describe('FriendRoute API', () => {
 		})
 	})
 
+	it('should get a friend request status sucessfully', async () => {
+		const res = await client.friends[':status'].$get(
+			{
+				param: {
+					status: 'PENDING',
+				},
+			},
+			{
+				headers: {
+					Authorization: 'Bearer valid_token123',
+				},
+			},
+		)
+
+		expect(res.status).toBe(200)
+	})
+
+	it('should return 400 if get friend Bad Request', async () => {
+		const res = await client.friends[':status'].$get(
+			{
+				// @ts-ignore
+				param: '',
+			},
+			{
+				headers: {
+					Authorization: 'Bearer valid_token123',
+				},
+			},
+		)
+
+		expect(res.status).toBe(400)
+	})
+
 	it('should return 400 if bad request', async () => {
 		const res = await client.friends[':id'].$put(
 			{
 				param: { id: '123' },
+				json: {
+					// @ts-ignore
+					status: 'BAD_REQUEST',
+				},
 			},
 			{
 				headers: {
@@ -110,7 +147,6 @@ describe('FriendRoute API', () => {
 		const res = await client.friends[':id'].$put(
 			{
 				param: { id: '1' },
-				// @ts-ignore
 				json: { status: 'REJECTED' },
 			},
 			{
@@ -140,7 +176,6 @@ describe('FriendRoute API', () => {
 		const res = await client.friends[':id'].$put(
 			{
 				param: { id: '1' },
-				// @ts-ignore
 				json: { status: 'ACCEPTED' },
 			},
 			{
