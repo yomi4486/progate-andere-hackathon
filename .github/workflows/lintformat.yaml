@@ -26,11 +26,11 @@ jobs:
       - name: eslint
         uses: reviewdog/action-eslint@v1
         with:
+          working-directory: backend
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           eslint_flags: "src/**/*.{ts,tsx}"
           fail_on_error: true
-          working-directory: backend
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
