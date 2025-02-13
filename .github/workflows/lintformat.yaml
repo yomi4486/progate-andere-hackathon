@@ -15,9 +15,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: step
-        run: |
-          pwd && ls
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,7 +23,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: ls && npm ci
 
       - name: Install Reviewdog
         uses: reviewdog/action-setup@v1
