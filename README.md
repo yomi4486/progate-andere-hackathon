@@ -1,4 +1,4 @@
-# Imakara - 暇人同士が繋がる通話SNS
+# Imacalla - 暇人同士が繋がる通話SNS
 > DBの立ち上げ
 ```
 cd ./backend
