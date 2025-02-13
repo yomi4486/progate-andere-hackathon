@@ -1,0 +1,75 @@
+name: Lint and Format Check
+
+on:
+  pull_request:
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: ./backend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: eslint
+        uses: reviewdog/action-eslint@v1
+        with:
+          working-directory: backend
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          eslint_flags: "src/**/*.{ts,tsx}"
+          fail_on_error: true
+          workdir: backend
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate github token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          ref: ${{ github.head_ref }}
+      - uses: technote-space/get-diff-action@v6
+        with:
+          PATTERNS: |
+            **/*.{ts,tsx,js,jsx,json}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: ./backend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run Prettier
+        run: |
+          cd ../ && npx prettier --write ${{ env.GIT_DIFF_FILTERED }}
+        if: env.GIT_DIFF
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply Prettier Change
