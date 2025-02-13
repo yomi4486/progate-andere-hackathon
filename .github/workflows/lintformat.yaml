@@ -1,5 +1,4 @@
 name: Lint and Format Check
-
 on:
   pull_request:
 
