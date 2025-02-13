@@ -10,6 +10,9 @@ defaults:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     permissions:
       pull-requests: write
       contents: write
