@@ -10,18 +10,14 @@ defaults:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     permissions:
       pull-requests: write
       contents: write
     steps:
       - uses: actions/checkout@v4
-
       - name: step
         run: |
-          pwd
+          pwd && ls
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
