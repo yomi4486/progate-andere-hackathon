@@ -1,7 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import { profileStyles } from '../styles';
-import { StyleSheet, TextInput, TouchableOpacity,Image ,TouchableWithoutFeedback, Keyboard,} from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity,Image,ScrollView} from 'react-native';
 import DefaultHeader from '../components/Header';
 import { SettingsButtonItem } from './items';
 import { useContext } from 'react';
@@ -10,7 +10,7 @@ import { AuthContext, useAuth } from '@/utils/authContext';
 export default function SettingsScreen() {
   const { signOut,currentUserInfo } = useAuth()
   return (
-    <View style ={{height:"100%"}}>
+    <ScrollView style ={{height:"100%"}}>
         <DefaultHeader title="設定" showSettingButton={false} showBackButton={true}/>
         <View style={{borderBottomColor: 'gray',borderBottomWidth: 1,width:"50%",}}>
             <Text style={StyleSheet.compose(profileStyles.friendsTitle,{paddingLeft:20,paddingTop:10})}>プロフィール</Text>
@@ -40,7 +40,7 @@ export default function SettingsScreen() {
             <Text style={StyleSheet.compose(profileStyles.friendsTitle,{paddingLeft:20,paddingTop:10})}>基本</Text>
         </View>
         <SettingsButtonItem title="ログアウト" denger={true} event={signOut}/>
-    </View>
+    </ScrollView>
   );
 }
 

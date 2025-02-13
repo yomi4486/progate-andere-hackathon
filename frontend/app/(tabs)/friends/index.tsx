@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ScrollView
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Icons from "react-native-vector-icons/FontAwesome5";
@@ -49,7 +50,7 @@ export default function FriendsScreen() {
 
   return (
     <View style={{ height: "100%" }}>
-      <DefaultHeader title="フレンド" showSettingButton={true} />
+    <DefaultHeader title="フレンド" showSettingButton={true} />
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={() => setSelectedTab("friends")}
@@ -117,7 +118,7 @@ export default function FriendsScreen() {
         icon="add"
         color="#FFFFFF"
       />
-
+      <ScrollView>
       {selectedTab === "friends" && (
         <>
           <View style={localStyles.searchContainer}>
@@ -154,6 +155,7 @@ export default function FriendsScreen() {
           )}
         </View>
       )}
+      </ScrollView>
     </View>
   );
 }
