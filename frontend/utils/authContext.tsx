@@ -15,6 +15,7 @@ export interface AuthContextType {
     isSetupAccount: () => Promise<boolean>;
     signOut: () => Promise<void>;
     updateCurrentUserInfo: (data: InferResponseType<typeof client.users.$get,200>) => void;
+    reGetIdToken: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -32,7 +33,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (!userInfo.data || !userInfo.data.idToken) {
                 throw new Error("Login Cancel");
             }
-
             setUser(userInfo);
             setIdToken(userInfo.data.idToken);
         } catch (error) {
@@ -42,7 +42,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const updateCurrentUserInfo = (data:InferResponseType<typeof client.users.$get,200>):void => {
         setCurrentUserInfo(data);
-      };
+    };
+
+    const reGetIdToken = async():Promise<void>=>{
+        const tokens = await GoogleSignin.getTokens();
+        setIdToken(tokens.idToken);
+    }
 
     const isSetupAccount = async (): Promise<boolean> => {
         console.log(idToken);
@@ -68,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, idToken,currentUserInfo, googleSignIn, isSetupAccount, signOut,updateCurrentUserInfo }}>
+        <AuthContext.Provider value={{ user, idToken,currentUserInfo, googleSignIn, isSetupAccount, signOut,updateCurrentUserInfo,reGetIdToken }}>
             {children}
         </AuthContext.Provider>
     );
