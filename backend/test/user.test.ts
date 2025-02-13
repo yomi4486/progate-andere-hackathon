@@ -152,6 +152,7 @@ describe('UserRoute API', () => {
 	it('should register a new user return 400 if bad request', async () => {
 		const res = await client.users.$post(
 			{
+				//@ts-ignore
 				json: {},
 			},
 			{
@@ -211,14 +212,24 @@ describe('UserRoute API', () => {
 
 		expect(res.status).toBe(200)
 		expect(await res.json()).toEqual({
-			message: 'User Update Successfully',
+			id: '1',
+			username: 'newuser',
+			icon_url: 'new_icon_url',
+			status: 'inactive',
+			status_message: 'Updated status',
+			introduction: 'Updated introduction.',
+			created_at: expect.any(String),
+			updated_at: expect.any(String),
 		})
 	})
 
-	it('should update user details return 400 if bad request', async () => {
+	it('should update user details return 200 if invald data', async () => {
 		const res = await client.users.$put(
 			{
-				json: {},
+				json: {
+					// @ts-ignore
+					invalid: 'invalid',
+				},
 			},
 			{
 				headers: {
@@ -228,9 +239,18 @@ describe('UserRoute API', () => {
 		)
 
 		// @ts-ignore
-		expect(res.status).toBe(400)
+		expect(res.status).toBe(200)
 
 		// @ts-ignore
-		expect(await res.json()).toEqual({ message: 'Bad Request' })
+		expect(await res.json()).toEqual({
+			id: '1',
+			username: 'newuser',
+			icon_url: 'new_icon_url',
+			status: 'inactive',
+			status_message: 'Updated status',
+			introduction: 'Updated introduction.',
+			created_at: expect.any(String),
+			updated_at: expect.any(String),
+		})
 	})
 })

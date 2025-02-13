@@ -1,5 +1,5 @@
 import { z } from 'zod'
 
-export const changeFriendStatus = z.object({
-	status: z.enum(['ACCEPTED', 'REJECTED', 'BLOCKED']),
+export const FriendStatus = z.object({
+	status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED', 'BLOCKED']),
 })

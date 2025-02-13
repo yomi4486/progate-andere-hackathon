@@ -2,16 +2,38 @@ import { getPrismaClient } from '../../lib/prisma'
 import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { zValidator } from '@hono/zod-validator'
-import { changeFriendStatus } from './scheme'
+import { FriendStatus } from './scheme'
 
 export const FriendRoute = new Hono<{ Variables: { user_id: string } }>()
+	.get(
+		'/:status',
+		zValidator('param', FriendStatus, (result, c) => {
+			if (!result.success) {
+				return c.json({ message: 'Bad Request' }, 400)
+			}
+		}),
+		async (c) => {
+			const prisma = getPrismaClient(process.env.DATABASE_URL)
+			const param = c.req.valid('param')
+			const userId = c.get('user_id')
+
+			const result = await prisma.friends.findMany({
+				where: {
+					to_id: userId,
+					status: param.status,
+				},
+			})
+
+			return c.json(result, 200)
+		},
+	)
 	.post('/:id', async (c) => {
 		const prisma = getPrismaClient(process.env.DATABASE_URL)
 		const userId = c.get('user_id')
 		const id = c.req.param('id')
 
 		if (userId == id) {
-			return c.json({ message: 'Can\'t Send Friend Request' }, 400)
+			return c.json({ message: "Can't Send Friend Request" }, 400)
 		}
 
 		const result = await prisma.friends.findFirst({
@@ -40,7 +62,7 @@ export const FriendRoute = new Hono<{ Variables: { user_id: string } }>()
 
 	.put(
 		'/:id',
-		zValidator('json', changeFriendStatus, (result, c) => {
+		zValidator('json', FriendStatus, (result, c) => {
 			if (!result.success) {
 				return c.json({ message: 'Bad Request' }, 400)
 			}
