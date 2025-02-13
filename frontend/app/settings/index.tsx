@@ -1,15 +1,14 @@
 import { Text, View } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import { profileStyles } from '../styles';
-import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-
+import { StyleSheet, TextInput, TouchableOpacity,Image ,TouchableWithoutFeedback, Keyboard,} from 'react-native';
 import DefaultHeader from '../components/Header';
 import { SettingsButtonItem } from './items';
 import { useContext } from 'react';
 import { AuthContext, useAuth } from '@/utils/authContext';
 
 export default function SettingsScreen() {
-  const { signOut } = useAuth()
+  const { signOut,currentUserInfo } = useAuth()
   return (
     <View style ={{height:"100%"}}>
         <DefaultHeader title="設定" showSettingButton={false} showBackButton={true}/>
@@ -18,14 +17,17 @@ export default function SettingsScreen() {
         </View>
         <View style={profileStyles.profileContainer}>
             <View style={styles.IconContainer}>
-                <FontAwesome name="user-circle" style={styles.Icon} />
+                {currentUserInfo?<Image
+                    source={{ uri: currentUserInfo["icon_url"] }}
+                    style={{width:100,height:100,borderRadius:50}}
+                />:<FontAwesome name="user-circle" style={styles.Icon} />}
                 <FontAwesome name="pencil" style={styles.EditButton} />
             </View>
             <View style={(profileStyles.statusInputContainer)}>
             <TextInput
                 style={StyleSheet.compose(profileStyles.statusInput,{textAlign: 'center',paddingLeft:20})}
                 placeholder="表示名"
-                value='yomi4486'
+                defaultValue={currentUserInfo!["username"]}
             />
             <FontAwesome 
                 name="pencil" 
