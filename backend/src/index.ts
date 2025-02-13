@@ -30,7 +30,7 @@ const app = new Hono<{ Variables: { user_id: string } }>()
 	.route('/friends', FriendRoute)
 
 	.onError((e, c) => {
-		console.log(e)
+		console.error(e)
 		if (e instanceof HTTPException)
 			return c.json({ message: e.message }, e.status)
 		if (e instanceof ZodError) return c.json({ message: e.message }, 400)
@@ -45,8 +45,6 @@ const app = new Hono<{ Variables: { user_id: string } }>()
 			return c.json({ message: e.message }, 500)
 		if (e instanceof Prisma.PrismaClientUnknownRequestError)
 			return c.json({ message: e.message }, 500)
-
-		
 
 		return c.json({ message: 'Internal Server Error' }, 500)
 	})
