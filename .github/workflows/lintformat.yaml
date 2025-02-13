@@ -21,7 +21,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
           npm install
 
       - name: eslint
@@ -31,6 +30,7 @@ jobs:
           reporter: github-pr-review
           eslint_flags: "src/**/*.{ts,tsx}"
           fail_on_error: true
+          working-directory: backend
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -60,13 +60,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
           npm install
 
       - name: Run Prettier
         run: |
-          cd backend
-          npm ci
           npx prettier --write ${{ env.GIT_DIFF_FILTERED }}
         if: env.GIT_DIFF
         env:
