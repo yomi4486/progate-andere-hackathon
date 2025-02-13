@@ -10,6 +10,9 @@ defaults:
 jobs:
   eslint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - uses: actions/checkout@v3
 
@@ -31,6 +34,9 @@ jobs:
 
   prettier:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - name: Generate github token
         id: generate_token
