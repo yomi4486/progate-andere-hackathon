@@ -1,4 +1,3 @@
-# .github/workflows/lint.yml
 name: Lint and Format Check
 
 on:
@@ -7,6 +6,9 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     permissions:
       pull-requests: write
       contents: write
@@ -16,8 +18,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -40,6 +42,9 @@ jobs:
 
   type-check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     permissions:
       pull-requests: write
       contents: write
@@ -49,8 +54,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
