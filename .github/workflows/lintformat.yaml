@@ -6,9 +6,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     permissions:
       pull-requests: write
       contents: write
@@ -22,7 +19,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: cd backend && npm ci
 
       - name: Install Reviewdog
         uses: reviewdog/action-setup@v1
@@ -31,20 +28,17 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run lint -s -- -f json | reviewdog -f=eslint -reporter=github-pr-review -fail-on-error=true
+          cd backend && npm run lint -s -- -f json | reviewdog -f=eslint -reporter=github-pr-review -fail-on-error=true
 
       - name: Run Prettier Check with Reviewdog
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run format:check -s > prettier.log || true
-          cat prettier.log | reviewdog -efm="%f" -name="prettier" -reporter=github-pr-review -level=warning
+          cd backend && npm run format:check -s > prettier.log || true
+          cat backend/prettier.log | reviewdog -efm="%f" -name="prettier" -reporter=github-pr-review -level=warning
 
   type-check:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     permissions:
       pull-requests: write
       contents: write
@@ -58,14 +52,14 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: cd backend && npm ci
 
       - name: Run Type Check
-        run: npm run type-check || true
+        run: cd backend && npm run type-check || true
 
       - name: Report TypeScript errors
         if: failure()
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run type-check -s -- --pretty false | reviewdog -efm="%f(%l,%c): %m" -name="typescript" -reporter=github-pr-review -level=error
+          cd backend && npm run type-check -s -- --pretty false | reviewdog -efm="%f(%l,%c): %m" -name="typescript" -reporter=github-pr-review -level=error
