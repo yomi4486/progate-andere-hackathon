@@ -10,7 +10,6 @@ import {AppType} from '../../../backend/src';
 const { hc } = require("hono/dist/client") as typeof import("hono/client");
 import { useAuth } from '@/utils/authContext';
 import * as Users from '@/utils/users';
-import { HonoResponseType } from '@/utils/resnposeType';
 import { router } from 'expo-router';
 
 export default function HomeScreen() {

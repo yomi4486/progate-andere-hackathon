@@ -1,9 +1,9 @@
 import { AppType } from "../../backend/src";
 const { hc } = require("hono/dist/client") as typeof import("hono/client");
-import { HonoResponseType } from "./resnposeType";
-
+import type { InferRequestType, InferResponseType } from 'hono/client'
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`;
 const client = hc<AppType>(base_url);
+const IdToGetRoom = client.rooms[":id"]
 
 export async function deleteRoomById(idToken: string, id: string) {
   if (idToken) {
@@ -21,7 +21,7 @@ export async function deleteRoomById(idToken: string, id: string) {
   }
 }
 
-export async function get(idToken: string, id: string) {
+export async function get(idToken: string, id: string):Promise<InferResponseType<typeof IdToGetRoom.$get>> {
   if (idToken) {
     try {
       const res = await client.rooms[":id"].$get(
@@ -47,7 +47,7 @@ export async function get(idToken: string, id: string) {
   }
 }
 
-export async function postRoomById(idToken: string, room_name: string) {
+export async function postRoomById(idToken: string, room_name: string):Promise<InferResponseType<typeof client.rooms.$post>> {
   if (idToken) {
     try {
       const res = await client.rooms.$post(

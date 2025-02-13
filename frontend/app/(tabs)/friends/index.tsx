@@ -6,6 +6,7 @@ import { localStyles } from '../../styles';
 import { FontAwesome } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import FriendListContainer from '../../components/FriendListContainer';
+import FloatingActionButton from '@/components/FloatActionButton';
 
 export default function FriendsScreen() {
   const { currentUserInfo } = useAuth();
@@ -35,9 +36,13 @@ export default function FriendsScreen() {
   ];
   return (
     <View style={{height:"100%"}}>
-      <View>
-          <DefaultHeader title="フレンド" showSettingButton={true}/>
-      </View>
+      <DefaultHeader title="フレンド" showSettingButton={true}/>
+      <FloatingActionButton onPress={async()=>{
+        // 通話開始のモーダルを表示
+      }}        
+        icon='add'
+        color="#FFFFFF"
+      />
       <View style={localStyles.searchContainer}>
         <FontAwesome name="search" size={20} color="#a0a0a0" />
         <TextInput

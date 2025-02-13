@@ -1,8 +1,7 @@
 import { AppType } from "../../backend/src";
 const { hc } = require("hono/dist/client") as typeof import("hono/client");
-import { HonoResponseType } from "./resnposeType";
-import { HonoRequestType } from "./requestType";
 import { useAuth } from "./authContext";
+import type { InferRequestType, InferResponseType } from 'hono/client';
 
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`;
 const client = hc<AppType>(base_url);
@@ -10,7 +9,7 @@ const client = hc<AppType>(base_url);
 // 自分のユーザーを取得
 export async function get(
   idToken: string | undefined
-): Promise<HonoResponseType<typeof client.users.$get>> {
+): Promise<InferResponseType<typeof client.users.$get,200>> {
   if (idToken) {
     const result = await client.users.$get(
       {},
@@ -33,9 +32,9 @@ export async function get(
   }
 }
 export async function post(
-  data: HonoRequestType<typeof client.users.$post>,
+  data: InferRequestType<typeof client.users.$post>['json'],
   idToken: string | undefined
-): Promise<HonoResponseType<typeof client.users.$post> | null> {
+): Promise<InferResponseType<typeof client.users.$post,200> | null> {
   if (idToken) {
     try {
       const res = await client.users.$post(
@@ -63,9 +62,9 @@ export async function post(
 }
 
 export async function put(
-  data: HonoRequestType<typeof client.users.$put>,
+  data: InferRequestType<typeof client.users.$put>['json'],
   idToken: string | undefined
-): Promise<HonoResponseType<typeof client.users.$put> | null> {
+): Promise<InferResponseType<typeof client.users.$put,200> | null> {
   if (idToken) {
     try {
       const res = await client.users.$put(
