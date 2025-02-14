@@ -4,7 +4,6 @@ import { profileStyles } from '../styles';
 import { StyleSheet, TextInput, TouchableOpacity,Image,ScrollView} from 'react-native';
 import DefaultHeader from '../components/Header';
 import { SettingsButtonItem } from './items';
-import { useContext } from 'react';
 import { AuthContext, useAuth } from '@/utils/authContext';
 
 export default function SettingsScreen() {

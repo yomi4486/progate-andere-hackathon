@@ -6,13 +6,11 @@ import DefaultHeader from '../components/Header';
 import {profileStyles} from '../styles';
 import { useState } from 'react';
 import FloatingActionButton from '@/components/FloatActionButton';
-import {AppType} from '../../../backend/src';
-const { hc } = require("hono/dist/client") as typeof import("hono/client");
 import { useAuth } from '@/utils/authContext';
 import * as Users from '@/utils/users';
-import { router } from 'expo-router';
-
+import { useRouter } from 'expo-router';
 export default function HomeScreen() {
+  const router = useRouter();
   const { currentUserInfo,idToken,updateCurrentUserInfo } = useAuth();
   const [statusMessage,setStatusMessage] = useState<string>("");
   return (

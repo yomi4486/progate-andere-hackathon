@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import {styles} from '../styles';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router'
 
 interface DefaultHeaderProps {
   title: string;
@@ -16,6 +16,7 @@ const DefaultHeader: React.FC<DefaultHeaderProps> = ({
   showSettingButton,
   showBackButton = false,
 }) => {
+    const router = useRouter();
     return (
         <Header
             leftComponent={

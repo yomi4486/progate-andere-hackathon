@@ -1,6 +1,5 @@
 import { AppType } from "../../backend/src";
 const { hc } = require("hono/dist/client") as typeof import("hono/client");
-import { useAuth } from "./authContext";
 import type { InferRequestType, InferResponseType } from 'hono/client';
 
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`;
