@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Icons from "react-native-vector-icons/FontAwesome5";
@@ -15,12 +15,14 @@ import { localStyles } from "../../styles";
 import FriendListContainer from "../../components/FriendListContainer";
 import FloatingActionButton from "@/components/FloatActionButton";
 import FriendRequestItem from "../../components/FriendRequestItem";
+import AddFriendModal from "../../components/AddFriendModal";
 
 export default function FriendsScreen() {
   const { currentUserInfo } = useAuth();
   const fromUsers = currentUserInfo!["from_users"];
   const toUsers = currentUserInfo!["to_users"];
   const [selectedTab, setSelectedTab] = useState("friends");
+  const [isModalVisible, setModalVisible] = useState(false);
 
   let updatedFromUser: typeof currentUserInfo.from_users | null = null;
   if (currentUserInfo != null) {
@@ -48,9 +50,14 @@ export default function FriendsScreen() {
 
   const friendRequests = [{ name: "新しい友達1" }, { name: "新しい友達2" }];
 
+  const handleAddFriend = (friendName: string) => {
+    console.log(`フレンド追加: ${friendName}`);
+    // フレンド追加のロジックをここに追加
+  };
+
   return (
     <View style={{ height: "100%" }}>
-    <DefaultHeader title="フレンド" showSettingButton={true} />
+      <DefaultHeader title="フレンド" showSettingButton={true} />
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={() => setSelectedTab("friends")}
@@ -112,49 +119,52 @@ export default function FriendsScreen() {
         </TouchableOpacity>
       </View>
       <FloatingActionButton
-        onPress={async () => {
-          // 通話開始のモーダルを表示
-        }}
+        onPress={() => setModalVisible(true)}
         icon="add"
         color="#FFFFFF"
       />
+      <AddFriendModal
+        visible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        onAddFriend={handleAddFriend}
+      />
       <ScrollView>
-      {selectedTab === "friends" && (
-        <>
-          <View style={localStyles.searchContainer}>
-            <FontAwesome name="search" size={20} color="#a0a0a0" />
-            <TextInput
-              style={localStyles.searchInput}
-              placeholder="検索"
-              placeholderTextColor="#a0a0a0"
-            />
-          </View>
-          <FriendListContainer
-            title="アクティブなフレンド"
-            friends={activeFriends}
-          />
-          <FriendListContainer
-            title="非アクティブなフレンド"
-            friends={inactiveFriends}
-          />
-        </>
-      )}
-      {selectedTab === "pending" && (
-        <View style={styles.pendingContainer}>
-          {friendRequests.length === 0 ? (
-            <Text>承認待ちのフレンドはありません。</Text>
-          ) : (
-            friendRequests.map((request, index) => (
-              <FriendRequestItem
-                key={index}
-                name={request.name}
-                onApprove={() => console.log(`${request.name} 承認`)}
-                onReject={() => console.log(`${request.name} 非承認`)}
+        {selectedTab === "friends" && (
+          <>
+            <View style={localStyles.searchContainer}>
+              <FontAwesome name="search" size={20} color="#a0a0a0" />
+              <TextInput
+                style={localStyles.searchInput}
+                placeholder="検索"
+                placeholderTextColor="#a0a0a0"
               />
-            ))
-          )}
-        </View>
-      )}
+            </View>
+            <FriendListContainer
+              title="アクティブなフレンド"
+              friends={activeFriends}
+            />
+            <FriendListContainer
+              title="非アクティブなフレンド"
+              friends={inactiveFriends}
+            />
+          </>
+        )}
+        {selectedTab === "pending" && (
+          <View style={styles.pendingContainer}>
+            {friendRequests.length === 0 ? (
+              <Text>承認待ちのフレンドはありません。</Text>
+            ) : (
+              friendRequests.map((request, index) => (
+                <FriendRequestItem
+                  key={index}
+                  name={request.name}
+                  onApprove={() => console.log(`${request.name} 承認`)}
+                  onReject={() => console.log(`${request.name} 非承認`)}
+                />
+              ))
+            )}
+          </View>
+        )}
       </ScrollView>
     </View>
   );
