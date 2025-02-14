@@ -1,15 +1,14 @@
 import { AppType } from "../../backend/src";
 const { hc } = require("hono/dist/client") as typeof import("hono/client");
-import { useAuth } from "./authContext";
-import type { InferRequestType, InferResponseType } from 'hono/client';
+import type { InferRequestType, InferResponseType } from "hono/client";
 
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`;
 const client = hc<AppType>(base_url);
 
 // 自分のユーザーを取得
 export async function get(
-  idToken: string | undefined
-): Promise<InferResponseType<typeof client.users.$get,200>> {
+  idToken: string | undefined,
+): Promise<InferResponseType<typeof client.users.$get, 200>> {
   if (idToken) {
     const result = await client.users.$get(
       {},
@@ -17,7 +16,7 @@ export async function get(
         headers: {
           Authorization: `Beaner ${idToken}`,
         },
-      }
+      },
     );
     console.log(result);
     if (result.ok) {
@@ -32,9 +31,9 @@ export async function get(
   }
 }
 export async function post(
-  data: InferRequestType<typeof client.users.$post>['json'],
-  idToken: string | undefined
-): Promise<InferResponseType<typeof client.users.$post,200> | null> {
+  data: InferRequestType<typeof client.users.$post>["json"],
+  idToken: string | undefined,
+): Promise<InferResponseType<typeof client.users.$post, 200> | null> {
   if (idToken) {
     try {
       const res = await client.users.$post(
@@ -45,15 +44,15 @@ export async function post(
           headers: {
             Authorization: `Beaner ${idToken}`,
           },
-        }
+        },
       );
-      console.log(res)
-      console.log(res.status)
-      if(!res.ok)throw Error("request failed")
+      console.log(res);
+      console.log(res.status);
+      if (!res.ok) throw Error("request failed");
       const json = await res.json();
       return json;
     } catch (e) {
-      console.log(e)
+      console.log(e);
       return null;
     }
   } else {
@@ -62,9 +61,9 @@ export async function post(
 }
 
 export async function put(
-  data: InferRequestType<typeof client.users.$put>['json'],
-  idToken: string | undefined
-): Promise<InferResponseType<typeof client.users.$put,200> | null> {
+  data: InferRequestType<typeof client.users.$put>["json"],
+  idToken: string | undefined,
+): Promise<InferResponseType<typeof client.users.$put, 200> | null> {
   if (idToken) {
     try {
       const res = await client.users.$put(
@@ -75,14 +74,14 @@ export async function put(
           headers: {
             Authorization: `Beaner ${idToken}`,
           },
-        }
+        },
       );
-      console.log(res.status)
-      if(!res.ok)throw Error("request failed")
+      console.log(res.status);
+      if (!res.ok) throw Error("request failed");
       const json = await res.json();
       return json;
     } catch (e) {
-      console.log(e)
+      console.log(e);
       return null;
     }
   } else {
