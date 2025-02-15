@@ -4,7 +4,7 @@ import FriendList from './FriendList'
 
 interface FriendListContainerProps {
 	title: string
-	friends: { name: string; lastLogin: string; isActive: boolean }[]
+	friends: { name: string; isActive: boolean; statusMessage: string }[]
 }
 
 const FriendListContainer: React.FC<FriendListContainerProps> = ({
@@ -37,9 +37,9 @@ const FriendListContainer: React.FC<FriendListContainerProps> = ({
 			<View style={styles.borderLine} />
 			{friends.map((friend, index) => (
 				<FriendList
-					key={index}
 					name={friend.name}
-					lastLogin={friend.lastLogin}
+					isActive={friend.isActive}
+					statusMessage={friend.statusMessage}
 				/>
 			))}
 		</View>

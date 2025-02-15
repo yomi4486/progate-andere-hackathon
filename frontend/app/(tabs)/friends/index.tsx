@@ -36,8 +36,8 @@ export default function FriendsScreen() {
 	}, [])
 
 	const activeFriends = [
-		{ name: 'yomi', lastLogin: '10分前', isActive: true },
-		{ name: 'mono', lastLogin: '20分前', isActive: true },
+		{ name: 'yomi', isActive: true, statusMessage: '最近オンライン' },
+		{ name: 'mono', isActive: true, statusMessage: '最近オンライqン' },
 	]
 
 	const inactiveFriends = [
@@ -151,17 +151,21 @@ export default function FriendsScreen() {
 				)}
 				{selectedTab === 'pending' && (
 					<View style={styles.pendingContainer}>
-						{friendRequests.length === 0 ? (
-							<Text>承認待ちのフレンドはありません。</Text>
+						{userData ? (
+							userData.from_users.length > 0 ? (
+								userData.from_users.map((friend, index) => (
+									<FriendRequestItem
+										key={index}
+										name={friend.to_user.username}
+										onApprove={() => {}}
+										onReject={() => {}}
+									/>
+								))
+							) : (
+								<Text>承認待ちリクエストがありません</Text>
+							)
 						) : (
-							friendRequests.map((request, index) => (
-								<FriendRequestItem
-									key={index}
-									name={request.name}
-									onApprove={() => {}}
-									onReject={() => {}}
-								/>
-							))
+							<Text>loading...</Text>
 						)}
 					</View>
 				)}
