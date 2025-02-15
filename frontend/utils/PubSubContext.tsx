@@ -1,22 +1,22 @@
-import mqtt from "mqtt";
-import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "./authContext";
+import mqtt from 'mqtt'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { useAuth } from './authContext'
 
 export interface PubSubContextType {
-  friendsStatus: Record<string, string>; // フレンドのステータス
-  setFriendList: (friends: string[]) => void; // フレンドリストをセットする関数
+	friendsStatus: Record<string, string> // フレンドのステータス
+	setFriendList: (friends: string[]) => void // フレンドリストをセットする関数
 }
 
-export const PubSubContext = createContext<PubSubContextType | null>(null);
+export const PubSubContext = createContext<PubSubContextType | null>(null)
 
 export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
+	children,
 }) => {
-  const { user } = useAuth();
-  if (!user || !user.data.user) {
-    throw new Error("User is not authenticated");
-  }
-
+	const { user } = useAuth()
+	if (!user || !user.data.user) {
+		throw new Error('User is not authenticated')
+	}
+  
   const userId = user.data.user.id;
   const [friends, setFriends] = useState<string[]>(["aaaa", "bbbb"]);
   const [friendsStatus, setFriendsStatus] = useState<Record<string, string>>(
@@ -50,22 +50,22 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [friends]);
 
-  const setFriendList = (friends: string[]) => {
-    setFriends(friends);
-  };
+	const setFriendList = (friends: string[]) => {
+		setFriends(friends)
+	}
 
-  return (
-    <PubSubContext.Provider value={{ friendsStatus, setFriendList }}>
-      {children}
-    </PubSubContext.Provider>
-  );
-};
+	return (
+		<PubSubContext.Provider value={{ friendsStatus, setFriendList }}>
+			{children}
+		</PubSubContext.Provider>
+	)
+}
 
 // コンテキストを利用するためのカスタムフック
 export const usePubSub = () => {
-  const context = useContext(PubSubContext);
-  if (!context) {
-    throw new Error("usePubSub must be used within a PubSubProvider");
-  }
-  return context;
-};
+	const context = useContext(PubSubContext)
+	if (!context) {
+		throw new Error('usePubSub must be used within a PubSubProvider')
+	}
+	return context
+}

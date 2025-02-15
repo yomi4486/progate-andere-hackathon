@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import React,{ useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import React, { useEffect, useState } from 'react'
 import {
 	AudioSession,
 	LiveKitRoom,
@@ -8,7 +8,7 @@ import {
 } from '@livekit/react-native'
 import { useRouter } from 'expo-router'
 
-const CallScreen: React.FC<{roomId:string}> = ({roomId})=> {
+const CallScreen: React.FC<{ roomId: string }> = ({ roomId }) => {
 	useEffect(() => {
 		let start = async () => {
 			await AudioSession.startAudioSession()
@@ -27,10 +27,10 @@ const CallScreen: React.FC<{roomId:string}> = ({roomId})=> {
 			connect={true}
 			audio={true}
 		>
-		<Screen />
+			<Screen />
 		</LiveKitRoom>
 	)
-};
+}
 
 function Screen() {
 	const room = useRoomContext()
@@ -39,8 +39,7 @@ function Screen() {
 	return (
 		<View style={styles.container}>
 			{/* 上部ヘッダー */}
-			<View style={styles.header}>
-			</View>
+			<View style={styles.header}></View>
 
 			{/* プロフィール画像 */}
 			<View style={styles.profileContainer}>
@@ -52,10 +51,12 @@ function Screen() {
 
 			{/* 通話操作ボタン */}
 			<View style={styles.controlContainer}>
-				<TouchableOpacity onPress={() => {
-					setMic(!mic)
-					room.localParticipant.setMicrophoneEnabled(mic)
-				}}>
+				<TouchableOpacity
+					onPress={() => {
+						setMic(!mic)
+						room.localParticipant.setMicrophoneEnabled(mic)
+					}}
+				>
 					<Icon name="microphone-slash" size={30} color="black" />
 				</TouchableOpacity>
 				<TouchableOpacity>
@@ -67,10 +68,13 @@ function Screen() {
 			</View>
 
 			{/* 通話終了ボタン */}
-			<TouchableOpacity style={styles.endCallButton} onPress={() => {
-				router.push('/(tabs)')
-				room.disconnect()
-			}}>
+			<TouchableOpacity
+				style={styles.endCallButton}
+				onPress={() => {
+					router.push('/(tabs)')
+					room.disconnect()
+				}}
+			>
 				<Icon name="times" size={40} color="white" />
 			</TouchableOpacity>
 		</View>
@@ -143,4 +147,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default CallScreen;
+export default CallScreen
