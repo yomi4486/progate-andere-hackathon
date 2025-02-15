@@ -7,6 +7,37 @@ const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`
 const client = hc<AppType>(base_url)
 // eslint-disable-next-line
 const idFriend = client.friends[':id']
+const statusFriend = client.friends[':status']
+
+export async function get(
+	idToken: string,
+	id: string,
+	status: InferRequestType<typeof statusFriend.$get>['param']['status'],
+): Promise<InferResponseType<typeof statusFriend.$get, 200> | null> {
+	if (idToken) {
+		try {
+			const res = await client.friends[':status'].$get(
+				{
+					param: {
+						status: status,
+					},
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${idToken}`,
+					},
+				},
+			)
+
+			const json = await res.json()
+			return json
+		} catch {
+			throw Error('Fetch Error')
+		}
+	} else {
+		throw Error('idToken is undefined')
+	}
+}
 
 export async function post(
 	idToken: string,

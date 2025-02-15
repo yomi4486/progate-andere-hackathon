@@ -22,6 +22,20 @@ export const FriendRoute = new Hono<{ Variables: { user_id: string } }>()
 					to_id: userId,
 					status: param.status,
 				},
+				select: {
+					status: true,
+					id: true,
+					from_id: true,
+					from_user: {
+						select: {
+							id: true,
+							username: true,
+							icon_url: true,
+						},
+					},
+					created_at: true,
+					updated_at: true,
+				},
 			})
 
 			return c.json(result, 200)
