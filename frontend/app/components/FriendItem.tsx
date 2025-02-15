@@ -7,14 +7,21 @@ import * as Room from '../../utils/room'
 import { useRouter } from 'expo-router'
 import { useAuth } from '../../utils/authContext'
 import { SendCall } from '../../utils/mqttCommonType'
+import { Image } from 'react-native'
 
 interface FriendItemProps {
 	id: string
 	name: string
 	message: string
+	icon_url: string
 }
 
-const FriendItem: React.FC<FriendItemProps> = ({ id, name, message }) => {
+const FriendItem: React.FC<FriendItemProps> = ({
+	id,
+	name,
+	message,
+	icon_url,
+}) => {
 	const router = useRouter()
 	const { user } = useAuth()
 	const { sendMessage } = usePubSub()
@@ -31,7 +38,14 @@ const FriendItem: React.FC<FriendItemProps> = ({ id, name, message }) => {
 	return (
 		<View style={styles.friend}>
 			<View style={styles.friendIconContainer}>
-				<UserIcon size={50} isOnline={true} />
+				<Image
+					source={{ uri: icon_url }}
+					style={{
+						width: 50,
+						height: 50,
+						borderRadius: 50,
+					}}
+				/>
 			</View>
 			<View style={styles.friendInfo}>
 				<Text style={styles.friendName}>{name}</Text>
