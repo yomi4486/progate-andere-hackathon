@@ -17,7 +17,7 @@ interface ModalProfileInfoProps {
 const ModalProfileInfo: React.FC<ModalProfileInfoProps> = ({
 	name,
 	userId,
-	qrCode="",
+	qrCode = '',
 }) => {
 	const copyToClipboard = () => {
 		Clipboard.setString(userId)
