@@ -4,7 +4,12 @@ import FriendList from './FriendList'
 
 interface FriendListContainerProps {
 	title: string
-	friends: { username: string; isActive: boolean; statusMessage: string }[]
+	friends: {
+		username: string
+		isActive: boolean
+		statusMessage: string
+		icon_url: string // 追加
+	}[]
 }
 
 const FriendListContainer: React.FC<FriendListContainerProps> = ({
@@ -52,6 +57,7 @@ const FriendListContainer: React.FC<FriendListContainerProps> = ({
 						name={friend.username}
 						isActive={friend.isActive}
 						statusMessage={friend.statusMessage}
+						icon_url={friend.icon_url}
 					/>
 				))
 			) : (

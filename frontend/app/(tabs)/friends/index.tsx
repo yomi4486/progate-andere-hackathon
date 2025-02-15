@@ -31,6 +31,7 @@ export default function FriendsScreen() {
 			username: string
 			isActive: boolean
 			statusMessage: string
+			icon_url: string
 		}[]
 	>([])
 	const [inactiveFriends, setInactiveFriends] = useState<
@@ -38,6 +39,7 @@ export default function FriendsScreen() {
 			username: string
 			isActive: boolean
 			statusMessage: string
+			icon_url: string
 		}[]
 	>([])
 
@@ -55,6 +57,7 @@ export default function FriendsScreen() {
 							username: friend.username,
 							isActive: true,
 							statusMessage: friend.status_message,
+							icon_url: friend.icon_url,
 						}))
 
 					const inactive = res.friends
@@ -63,6 +66,7 @@ export default function FriendsScreen() {
 							username: friend.username,
 							isActive: false,
 							statusMessage: friend.status_message,
+							icon_url: friend.icon_url,
 						}))
 
 					setActiveFriends(active)

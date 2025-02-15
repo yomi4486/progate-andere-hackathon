@@ -1,22 +1,25 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 
 interface FriendListProps {
 	name: string
 	isActive: boolean
 	statusMessage: string
+	icon_url: string
 }
 
 const FriendList: React.FC<FriendListProps> = ({
 	name,
 	isActive,
 	statusMessage,
+	icon_url,
 }) => {
 	return (
 		<View style={styles.friendItem}>
 			<View style={styles.iconContainer}>
-				<FontAwesome name="user-circle" size={45} color="#a0a0a0" />
+				<Image source={{ uri: icon_url }} style={styles.iconImage} />
+
 				<View
 					style={[
 						styles.onlineIndicator,
@@ -64,6 +67,11 @@ const styles = StyleSheet.create({
 	statusMessage: {
 		fontSize: 16,
 		color: '#808080',
+	},
+	iconImage: {
+		width: 45,
+		height: 45,
+		borderRadius: 22.5, // 円形にする
 	},
 })
 
