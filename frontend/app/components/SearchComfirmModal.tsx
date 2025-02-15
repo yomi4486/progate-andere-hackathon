@@ -13,13 +13,20 @@ const SearchComfirmModal: React.FC<SearchComfirmModalProps> = ({
 	onClose,
 	userName,
 }) => {
+	const handleClose = () => {
+		onClose()
+	}
+
 	return (
-		<CommonModal visible={visible} onClose={onClose}>
+		<CommonModal visible={visible} onClose={handleClose}>
 			<View style={styles.container}>
 				<Text style={styles.message}>
 					{userName}に申請を送りました！
 				</Text>
-				<TouchableOpacity style={styles.closeButton} onPress={onClose}>
+				<TouchableOpacity
+					style={styles.closeButton}
+					onPress={handleClose}
+				>
 					<Text style={styles.buttonText}>閉じる</Text>
 				</TouchableOpacity>
 			</View>
