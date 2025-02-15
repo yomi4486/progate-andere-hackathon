@@ -16,8 +16,8 @@ const CallScreen: React.FC = () => {
 	const { user } = useAuth()
 
 	useEffect(() => {
-		let start = async () => {
-			let data = await RoomService.get(
+		const start = async () => {
+			const data = await RoomService.get(
 				user!.data.idToken as string,
 				id as string,
 			)

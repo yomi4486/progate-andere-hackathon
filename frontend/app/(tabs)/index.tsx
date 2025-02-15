@@ -86,7 +86,8 @@ export default function HomeScreen() {
 								idToken!,
 							)
 							if (currentUserInfo) {
-								let a: typeof currentUserInfo = currentUserInfo
+								const a: typeof currentUserInfo =
+									currentUserInfo
 								a!.status_message = res!['status_message']
 								updateCurrentUserInfo(a)
 								setStatusMessage(res!['status_message'])
