@@ -8,6 +8,7 @@ import { SendCall, SendStatus } from '../utils/mqttCommonType'
 export interface PubSubContextType {
 	friendsStatus: Record<string, string> // フレンドのステータス
 	setFriendList: (friends: string[]) => void // フレンドリストをセットする関数
+	sendMessage: (topic: string, data: string) => void
 }
 
 export const PubSubContext = createContext<PubSubContextType | null>(null)
@@ -68,14 +69,15 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	const setFriendList = (friends: string[]) => {
 		setFriends(friends)
 	}
-	/*
+
 	const sendMessage = (topic: string, data: string) => {
 		client.publish(topic, data)
 	}
-	*/
 
 	return (
-		<PubSubContext.Provider value={{ friendsStatus, setFriendList }}>
+		<PubSubContext.Provider
+			value={{ friendsStatus, setFriendList, sendMessage }}
+		>
 			{children}
 		</PubSubContext.Provider>
 	)

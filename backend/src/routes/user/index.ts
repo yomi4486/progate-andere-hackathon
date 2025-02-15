@@ -27,7 +27,7 @@ export const UserRoute = new Hono<{
 						status: 'ACCEPTED',
 					},
 					select: {
-						from_user: {
+						to_user: {
 							select: {
 								id: true,
 								username: true,
@@ -42,9 +42,10 @@ export const UserRoute = new Hono<{
 						status: 'ACCEPTED',
 					},
 					select: {
-						to_user: {
+						from_user: {
 							select: {
 								id: true,
+								username: true,
 								icon_url: true,
 								status: true,
 							},
@@ -82,9 +83,10 @@ export const UserRoute = new Hono<{
 						status: 'ACCEPTED',
 					},
 					select: {
-						from_user: {
+						to_user: {
 							select: {
 								id: true,
+								username: true,
 								icon_url: true,
 								status: true,
 							},
@@ -96,9 +98,10 @@ export const UserRoute = new Hono<{
 						status: 'ACCEPTED',
 					},
 					select: {
-						to_user: {
+						from_user: {
 							select: {
 								id: true,
+								username: true,
 								icon_url: true,
 								status: true,
 							},

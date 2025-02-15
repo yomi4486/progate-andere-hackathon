@@ -6,8 +6,8 @@ import DefaultHeader from '../components/Header'
 import { profileStyles } from '../styles'
 import { useState, useEffect } from 'react'
 import FloatingActionButton from '@/components/FloatActionButton'
-import { useAuth } from '@/utils/authContext'
 import * as Users from '@/utils/users'
+import { useAuth } from '../../utils/authContext'
 export default function HomeScreen() {
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
 	const [statusMessage, setStatusMessage] = useState<string>('')
@@ -112,9 +112,10 @@ export default function HomeScreen() {
 				</Text>
 				<View style={profileStyles.friendsBox}>
 					{userData ? (
-						userData.from_users.map((friend) => {
+						userData.to_users.map((friend) => {
 							return (
 								<FriendItem
+									key={friend.from_user.id}
 									id={friend.from_user.id}
 									name={friend.from_user.username}
 									message={friend.from_user.status}
