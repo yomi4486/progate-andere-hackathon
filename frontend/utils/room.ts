@@ -70,7 +70,6 @@ export async function postRoomById(
           },
         },
       );
-
       const json = await res.json();
       return json;
     } catch (e) {

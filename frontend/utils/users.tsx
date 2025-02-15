@@ -1,91 +1,90 @@
-import { AppType } from "../../backend/src";
-const { hc } = require("hono/dist/client") as typeof import("hono/client");
-import { useAuth } from "./authContext";
-import type { InferRequestType, InferResponseType } from 'hono/client';
+import { AppType } from '../../backend/src'
+const { hc } = require('hono/dist/client') as typeof import('hono/client')
+import type { InferRequestType, InferResponseType } from 'hono/client'
 
-const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`;
-const client = hc<AppType>(base_url);
+const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`
+const client = hc<AppType>(base_url)
 
 // 自分のユーザーを取得
 export async function get(
-  idToken: string | undefined
-): Promise<InferResponseType<typeof client.users.$get,200>> {
-  if (idToken) {
-    const result = await client.users.$get(
-      {},
-      {
-        headers: {
-          Authorization: `Beaner ${idToken}`,
-        },
-      }
-    );
-    console.log(result);
-    if (result.ok) {
-      console.log(result);
-      const json = await result.json();
-      return json;
-    } else {
-      throw Error("Fetch to Server");
-    }
-  } else {
-    throw Error("idToken is undefind");
-  }
+	idToken: string | undefined,
+): Promise<InferResponseType<typeof client.users.$get, 200>> {
+	if (idToken) {
+		const result = await client.users.$get(
+			{},
+			{
+				headers: {
+					Authorization: `Beaner ${idToken}`,
+				},
+			},
+		)
+		console.log(result)
+		if (result.ok) {
+			console.log(result)
+			const json = await result.json()
+			return json
+		} else {
+			throw Error('Fetch to Server')
+		}
+	} else {
+		throw Error('idToken is undefind')
+	}
 }
 export async function post(
-  data: InferRequestType<typeof client.users.$post>['json'],
-  idToken: string | undefined
-): Promise<InferResponseType<typeof client.users.$post,200> | null> {
-  if (idToken) {
-    try {
-      const res = await client.users.$post(
-        {
-          json: data,
-        },
-        {
-          headers: {
-            Authorization: `Beaner ${idToken}`,
-          },
-        }
-      );
-      console.log(res)
-      console.log(res.status)
-      if(!res.ok)throw Error("request failed")
-      const json = await res.json();
-      return json;
-    } catch (e) {
-      console.log(e)
-      return null;
-    }
-  } else {
-    throw Error("idToken is undefined");
-  }
+	data: InferRequestType<typeof client.users.$post>['json'],
+	idToken: string | undefined,
+): Promise<InferResponseType<typeof client.users.$post, 200> | null> {
+	if (idToken) {
+		try {
+			const res = await client.users.$post(
+				{
+					json: data,
+				},
+				{
+					headers: {
+						Authorization: `Beaner ${idToken}`,
+					},
+				},
+			)
+			console.log(res)
+			console.log(res.status)
+			if (!res.ok) throw Error('request failed')
+			const json = await res.json()
+			return json
+		} catch (e) {
+			console.log(e)
+			return null
+		}
+	} else {
+		throw Error('idToken is undefined')
+	}
 }
 
 export async function put(
-  data: InferRequestType<typeof client.users.$put>['json'],
-  idToken: string | undefined
-): Promise<InferResponseType<typeof client.users.$put,200> | null> {
-  if (idToken) {
-    try {
-      const res = await client.users.$put(
-        {
-          json: data,
-        },
-        {
-          headers: {
-            Authorization: `Beaner ${idToken}`,
-          },
-        }
-      );
-      console.log(res.status)
-      if(!res.ok)throw Error("request failed")
-      const json = await res.json();
-      return json;
-    } catch (e) {
-      console.log(e)
-      return null;
-    }
-  } else {
-    throw Error("idToken is undefined");
-  }
+	data: InferRequestType<typeof client.users.$put>['json'],
+	idToken: string | undefined,
+): Promise<InferResponseType<typeof client.users.$put, 200> | null> {
+	if (idToken) {
+		try {
+			const res = await client.users.$put(
+				{
+					json: data,
+				},
+				{
+					headers: {
+						Authorization: `Beaner ${idToken}`,
+					},
+				},
+			)
+			console.log(res.status)
+			if (!res.ok) throw Error('request failed')
+			const json = await res.json()
+			return json
+		} catch (e) {
+			console.log(e)
+			return null
+		}
+	} else {
+		throw Error('idToken is undefined')
+	}
 }

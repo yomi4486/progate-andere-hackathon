@@ -1,4 +1,5 @@
 import mqtt from "mqtt";
+import React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./authContext";
 import { useRouter } from "expo-router";
