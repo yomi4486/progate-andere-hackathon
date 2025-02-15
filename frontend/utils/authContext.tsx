@@ -66,7 +66,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	}
 
 	const isSetupAccount = async (): Promise<boolean> => {
-		console.log(idToken)
 		if (!idToken) return false
 		try {
 			const res = await userRequest.get(idToken)

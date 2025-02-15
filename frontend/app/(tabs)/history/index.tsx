@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View, ScrollView } from 'react-native'
+import { TextInput, View, ScrollView } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons' // 追加
 import DefaultHeader from '@/app/components/Header'
 import CallHistoryItem from '../../components/CallHistoryItem' // 追加: CallHistoryItemをインポート
