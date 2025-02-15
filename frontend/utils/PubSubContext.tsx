@@ -29,7 +29,7 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	)
 
 	const [client] = useState(
-		mqtt.connect('ws://localhost:3000', {
+		mqtt.connect(process.env.EXPO_PUBLIC_WS_URL!, {
 			rejectUnauthorized: false,
 		}),
 	)
