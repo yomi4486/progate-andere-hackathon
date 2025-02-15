@@ -15,13 +15,13 @@ import { useState, useEffect } from 'react'
 import FloatingActionButton from '@/components/FloatActionButton'
 import * as Users from '@/utils/users'
 import { useAuth } from '../../utils/authContext'
-import { ExtendedUserResponse } from '@/utils/users'
 export default function HomeScreen() {
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
 	const [statusMessage, setStatusMessage] = useState<string>('')
-	const [userData, setUserData] = useState<ExtendedUserResponse>()
-	const [refreshing, setRefreshing] = useState(false)
+	const [userData, setUserData] =
+		useState<Awaited<ReturnType<typeof Users.get>>>()
 
+	const [refreshing, setRefreshing] = useState(false)
 	const [refreshNumber, setRefreshNumber] = useState<number>(0)
 	useEffect(() => {
 		;(async () => {
@@ -149,7 +149,8 @@ export default function HomeScreen() {
 										key={friend.id}
 										id={friend.id}
 										name={friend.username}
-										message={friend.status}
+										message={friend.status_message}
+										icon_url={friend.icon_url}
 									/>
 								)
 							})
