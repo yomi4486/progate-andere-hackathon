@@ -71,7 +71,7 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	}
 
 	const sendMessage = (topic: string, data: SendCall | SendStatus) => {
-		client.publish(topic, data.toString())
+		client.publish(topic, JSON.stringify(data))
 	}
 
 	return (
