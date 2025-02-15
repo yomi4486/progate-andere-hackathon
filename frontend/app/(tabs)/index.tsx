@@ -1,4 +1,11 @@
-import { StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, RefreshControl } from 'react-native'
+import {
+	StyleSheet,
+	TextInput,
+	TouchableOpacity,
+	Image,
+	ScrollView,
+	RefreshControl,
+} from 'react-native'
 import { Text, View } from '@/components/Themed'
 import { FontAwesome } from '@expo/vector-icons'
 import FriendItem from '../components/FriendItem' // 追加
@@ -12,12 +19,10 @@ import { ExtendedUserResponse } from '@/utils/users'
 export default function HomeScreen() {
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
 	const [statusMessage, setStatusMessage] = useState<string>('')
-	const [userData, setUserData] =
-		useState<ExtendedUserResponse>()
-	const [refreshing, setRefreshing] = useState(false);
+	const [userData, setUserData] = useState<ExtendedUserResponse>()
+	const [refreshing, setRefreshing] = useState(false)
 
-
-	const [refreshNumber, setRefreshNumber] = useState<number>(0);
+	const [refreshNumber, setRefreshNumber] = useState<number>(0)
 	useEffect(() => {
 		;(async () => {
 			if (idToken) {
@@ -27,10 +32,10 @@ export default function HomeScreen() {
 		})()
 	}, [refreshNumber])
 
-	function pushToReload():void{
-		setRefreshing(true);
-		setRefreshNumber(refreshNumber+1)
-		setRefreshing(false);
+	function pushToReload(): void {
+		setRefreshing(true)
+		setRefreshNumber(refreshNumber + 1)
+		setRefreshing(false)
 	}
 
 	return (
@@ -48,7 +53,10 @@ export default function HomeScreen() {
 			/>
 			<ScrollView
 				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={pushToReload} />
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={pushToReload}
+					/>
 				}
 			>
 				<View style={profileStyles.profileContainer}>
@@ -63,7 +71,10 @@ export default function HomeScreen() {
 								}}
 							/>
 						) : (
-							<FontAwesome name="user-circle" style={styles.Icon} />
+							<FontAwesome
+								name="user-circle"
+								style={styles.Icon}
+							/>
 						)}
 					</View>
 					<Text style={profileStyles.profileName}>
@@ -71,12 +82,16 @@ export default function HomeScreen() {
 							? currentUserInfo['username']
 							: 'loading...'}
 					</Text>
-					<TouchableOpacity style={profileStyles.profileStatusContainer}>
+					<TouchableOpacity
+						style={profileStyles.profileStatusContainer}
+					>
 						<FontAwesome
 							name="circle"
 							style={profileStyles.activeDot}
 						/>
-						<Text style={profileStyles.profileStatus}>アクティブ</Text>
+						<Text style={profileStyles.profileStatus}>
+							アクティブ
+						</Text>
 					</TouchableOpacity>
 					<View style={profileStyles.statusInputContainer}>
 						<TextInput
@@ -94,7 +109,8 @@ export default function HomeScreen() {
 						<FontAwesome
 							name={
 								currentUserInfo &&
-								statusMessage == currentUserInfo['status_message']
+								statusMessage ==
+									currentUserInfo['status_message']
 									? 'pencil'
 									: 'check'
 							}
@@ -145,7 +161,6 @@ export default function HomeScreen() {
 				</View>
 			</ScrollView>
 		</View>
-
 	)
 }
 
