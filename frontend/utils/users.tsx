@@ -13,7 +13,10 @@ type User = {
 	status_message: string
 }
 
-type ExtendedUserResponse = InferResponseType<typeof client.users.$get, 200> & {
+export type ExtendedUserResponse = InferResponseType<
+	typeof client.users.$get,
+	200
+> & {
 	friends: User[]
 }
 // 自分のユーザーを取得

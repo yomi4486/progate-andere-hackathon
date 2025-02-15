@@ -77,7 +77,7 @@ export default function FriendsScreen() {
 	}, [])
 
 	return (
-		<View style={{ height: '100%' }}>
+		<View style={{ height: '100%', backgroundColor: '#fff' }}>
 			<DefaultHeader title="フレンド" showSettingButton={true} />
 			<View style={styles.tabContainer}>
 				<TouchableOpacity
