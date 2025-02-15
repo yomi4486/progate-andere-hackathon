@@ -12,8 +12,7 @@ import { ExtendedUserResponse } from '@/utils/users'
 export default function HomeScreen() {
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
 	const [statusMessage, setStatusMessage] = useState<string>('')
-	const [userData, setUserData] =
-		useState<ExtendedUserResponse>()
+	const [userData, setUserData] = useState<ExtendedUserResponse>()
 
 	useEffect(() => {
 		;(async () => {
