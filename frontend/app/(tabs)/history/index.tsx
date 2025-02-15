@@ -6,7 +6,7 @@ import { localStyles } from '@/app/styles'
 
 export default function HistoryScreen() {
 	return (
-		<View>
+		<View style={{ backgroundColor: '#fff' }}>
 			<DefaultHeader title="着信履歴" showSettingButton={true} />
 			{/* ここに要素を追加していく */}
 			<View style={localStyles.searchContainer}>
