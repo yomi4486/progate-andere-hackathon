@@ -11,13 +11,13 @@ import { FontAwesome } from '@expo/vector-icons'
 interface ModalProfileInfoProps {
 	name: string
 	userId: string
-	qrCode: string // QRコードのURLまたはデータ
+	qrCode?: string // QRコードのURLまたはデータ
 }
 
 const ModalProfileInfo: React.FC<ModalProfileInfoProps> = ({
 	name,
 	userId,
-	qrCode,
+	qrCode = '',
 }) => {
 	const copyToClipboard = () => {
 		Clipboard.setString(userId)
