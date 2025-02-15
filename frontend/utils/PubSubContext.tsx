@@ -48,8 +48,7 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 			})
 
 			client.on('message', (topic, message) => {
-				const [friendId, dataType] = topic.split('/')
-
+				const [friendId, dataType] = topic.split('/');
 				if (dataType == 'status') {
 					const data = JSON.parse(message.toString()) as SendStatus
 					setFriendsStatus((prev) => ({
