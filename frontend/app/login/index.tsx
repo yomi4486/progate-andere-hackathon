@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-	SafeAreaView,
-	View,
-	Text,
-	TouchableOpacity,
-} from 'react-native'
+import { SafeAreaView, View, Text, TouchableOpacity } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import 'react-native-reanimated'

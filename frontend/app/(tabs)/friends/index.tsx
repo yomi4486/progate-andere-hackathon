@@ -30,10 +30,15 @@ export default function FriendsScreen() {
 			from: typeof currentUserInfo.from_users,
 			to: typeof currentUserInfo.to_users,
 		): typeof currentUserInfo.from_users {
-			const toUserIds = new Set(to.map((user:typeof currentUserInfo) => user.to_user.id))
-			return from.filter((user:typeof currentUserInfo) => !toUserIds.has(user.from_user.id))
+			const toUserIds = new Set(
+				to.map((user: typeof currentUserInfo) => user.to_user.id),
+			)
+			return from.filter(
+				(user: typeof currentUserInfo) =>
+					!toUserIds.has(user.from_user.id),
+			)
 		}
-		Friends = removeMatchingUsers(fromUsers, toUsers);
+		Friends = removeMatchingUsers(fromUsers, toUsers)
 	} else {
 		// 例外処理
 	}
@@ -162,7 +167,7 @@ export default function FriendsScreen() {
 									key={index}
 									name={request.name}
 									onApprove={() => {}}
-									onReject={() => {} }
+									onReject={() => {}}
 								/>
 							))
 						)}
