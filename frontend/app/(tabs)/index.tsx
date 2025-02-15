@@ -4,15 +4,25 @@ import { FontAwesome } from '@expo/vector-icons'
 import FriendItem from '../components/FriendItem' // 追加
 import DefaultHeader from '../components/Header'
 import { profileStyles } from '../styles'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import FloatingActionButton from '@/components/FloatActionButton'
 import { useAuth } from '@/utils/authContext'
 import * as Users from '@/utils/users'
-import { useRouter } from 'expo-router'
 export default function HomeScreen() {
-	const router = useRouter()
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
 	const [statusMessage, setStatusMessage] = useState<string>('')
+	const [userData, setUserData] =
+		useState<Awaited<ReturnType<typeof Users.get>>>()
+
+	useEffect(() => {
+		;(async () => {
+			if (idToken) {
+				const res = await Users.get(idToken)
+				setUserData(res)
+			}
+		})()
+	}, [idToken])
+
 	return (
 		<View style={{ height: '100%' }}>
 			<DefaultHeader
@@ -101,9 +111,19 @@ export default function HomeScreen() {
 					アクティブなフレンド
 				</Text>
 				<View style={profileStyles.friendsBox}>
-					<FriendItem name="yomi" message="超暇" />
-					<FriendItem name="まる" message="通話募集" />
-					<FriendItem name="mono" message="喉がやばい" />
+					{userData ? (
+						userData.from_users.map((friend) => {
+							return (
+								<FriendItem
+									id={friend.from_user.id}
+									name={friend.from_user.username}
+									message={friend.from_user.status}
+								/>
+							)
+						})
+					) : (
+						<Text>loading...</Text>
+					)}
 					{/* 他のフレンドも同様に追加 */}
 				</View>
 			</View>

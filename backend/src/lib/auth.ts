@@ -15,9 +15,10 @@ export async function jwtAuth(token: string) {
 	} else {
 		try {
 			const client = new OAuth2Client()
+			const clientIds = process.env.GOOGLE_CLIENT_IDs.split(',')
 			const ticket = await client.verifyIdToken({
 				idToken: token,
-				audience: process.env.GOOGLE_CLIENT_ID,
+				audience: clientIds,
 			})
 			const payload = ticket.getPayload()
 			return payload.sub.toString()

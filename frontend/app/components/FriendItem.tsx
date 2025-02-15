@@ -4,11 +4,12 @@ import { FontAwesome } from '@expo/vector-icons'
 import UserIcon from './UserIcon'
 
 interface FriendItemProps {
+	id: string
 	name: string
 	message: string
 }
 
-const FriendItem: React.FC<FriendItemProps> = ({ name, message }) => {
+const FriendItem: React.FC<FriendItemProps> = ({ id, name, message }) => {
 	return (
 		<View style={styles.friend}>
 			<View style={styles.friendIconContainer}>

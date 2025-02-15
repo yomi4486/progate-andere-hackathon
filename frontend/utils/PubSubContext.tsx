@@ -27,7 +27,7 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 		{},
 	)
 
-	const [client, setClient] = useState(
+	const [client] = useState(
 		mqtt.connect('ws://localhost:3000', {
 			rejectUnauthorized: false,
 		}),
@@ -68,10 +68,11 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	const setFriendList = (friends: string[]) => {
 		setFriends(friends)
 	}
-
+	/*
 	const sendMessage = (topic: string, data: string) => {
 		client.publish(topic, data)
 	}
+	*/
 
 	return (
 		<PubSubContext.Provider value={{ friendsStatus, setFriendList }}>

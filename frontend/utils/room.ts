@@ -4,6 +4,7 @@ const { hc } = require('hono/dist/client') as typeof import('hono/client')
 import type { InferResponseType } from 'hono/client'
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`
 const client = hc<AppType>(base_url)
+// eslint-disable-next-line
 const IdToGetRoom = client.rooms[':id']
 
 export async function deleteRoomById(idToken: string, id: string) {

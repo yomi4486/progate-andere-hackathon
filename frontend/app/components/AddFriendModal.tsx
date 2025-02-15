@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
 import ProfileInfo from './ModalProfileInfo'
 import SearchButton from './SearchUserButton'
 import CommonModal from './CommonModal'

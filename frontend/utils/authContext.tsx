@@ -5,8 +5,9 @@ import {
 import { createContext, useContext, useState } from 'react'
 import * as userRequest from './users'
 import { AppType } from '../../backend/src'
+// eslint-disable-next-line
 const { hc } = require('hono/dist/client') as typeof import('hono/client')
-import type { InferRequestType, InferResponseType } from 'hono/client'
+import type { InferResponseType } from 'hono/client'
 
 const client = hc<AppType>('')
 
@@ -51,7 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			}
 			setUser(userInfo)
 			setIdToken(userInfo.data.idToken)
-		} catch (error) {
+		} catch {
 			throw new Error('Login Unsuccessful')
 		}
 	}
@@ -73,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			const res = await userRequest.get(idToken)
 			setCurrentUserInfo(res)
 			return true
-		} catch (e) {
+		} catch {
 			return false
 		}
 	}
