@@ -75,17 +75,16 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 					}
 				>
 					<Text style={styles.buttonText}>QRコードを読み込む</Text>
-				</TouchableOpacity>	{isSearchResultVisible && searchResult && (
-				<SearchResultModal
-					visible={isSearchResultVisible}
-					onClose={handleCloseResultModal}
-					user={searchResult}
-					onSendRequest={handleSendRequest}
-				/>
-			)}
+				</TouchableOpacity>{' '}
+				{isSearchResultVisible && searchResult && (
+					<SearchResultModal
+						visible={isSearchResultVisible}
+						onClose={handleCloseResultModal}
+						user={searchResult}
+						onSendRequest={handleSendRequest}
+					/>
+				)}
 			</CommonModal>
-
-		
 		</>
 	)
 }
