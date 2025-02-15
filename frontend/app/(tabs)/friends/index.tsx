@@ -45,11 +45,32 @@ export default function FriendsScreen() {
 		}[]
 	>([])
 
+	const [inAcceptUser, setinAcceptUser] = useState<
+		{
+			username: string
+			icon_url: string
+			from_id: string
+			id: string
+		}[]
+	>([])
+
 	useEffect(() => {
 		;(async () => {
 			if (idToken) {
 				const res = await Users.get(idToken)
 				setUserData(res)
+
+				const friends = await Friends.get(idToken, 'PENDING')
+				if (friends) {
+					setinAcceptUser(
+						friends.map((friend) => ({
+							username: friend.from_user.username,
+							icon_url: friend.from_user.icon_url,
+							from_id: friend.from_user.id,
+							id: friend.id,
+						})),
+					)
+				}
 
 				// フレンドをアクティブ状態で振り分け
 				if (res?.friends) {
@@ -184,25 +205,31 @@ export default function FriendsScreen() {
 				)}
 				{selectedTab === 'pending' && (
 					<View style={styles.pendingContainer}>
-						{userData ? (
-							userData.friends.length > 0 ? (
-								userData.friends.map((friend, index) => (
+						{inAcceptUser ? (
+							inAcceptUser.length > 0 ? (
+								inAcceptUser.map((friend, index) => (
 									<FriendRequestItem
 										key={index}
 										name={friend.username}
-										onApprove={() => {
-											Friends.put(idToken!, friend.id, {
-												status: 'ACCEPTED',
-											}).then(() => {
-												SetReload(reload + 1)
-											})
+										onApprove={async () => {
+											await Friends.put(
+												idToken!,
+												friend.from_id,
+												{
+													status: 'ACCEPTED',
+												},
+											)
+											SetReload(reload + 1)
 										}}
-										onReject={() => {
-											Friends.put(idToken!, friend.id, {
-												status: 'REJECTED',
-											}).then(() => {
-												SetReload(reload + 1)
-											})
+										onReject={async () => {
+											await Friends.put(
+												idToken!,
+												friend.from_id,
+												{
+													status: 'REJECTED',
+												},
+											)
+											SetReload(reload + 1)
 										}}
 									/>
 								))

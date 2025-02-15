@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import React, { useEffect, useState } from 'react'
 import {
@@ -54,6 +54,43 @@ function Screen() {
 	const room = useRoomContext()
 	const [mic, setMic] = useState(true)
 	const router = useRouter()
+	const { user } = useAuth()
+	const [userData, setUserData] = useState<{
+		id: string
+		username: string
+		icon_url: string
+	} | null>(null)
+
+	type UserNameData = {
+		id: string
+		username: string
+		icon_url: string
+	}
+
+	const userNameData: UserNameData = {
+		id: user!.data.user.id,
+		username: user!.data.user.name!,
+		icon_url: user!.data.user.photo!,
+	}
+
+	setInterval(() => {
+		const encoder = new TextEncoder()
+		const data = encoder.encode(JSON.stringify(userNameData))
+		room.localParticipant.publishData(data, { reliable: false })
+	}, 3000)
+
+	room.on('dataReceived', (payload: Uint8Array) => {
+		const decoder = new TextDecoder()
+		const strData = decoder.decode(payload)
+		const data = JSON.parse(strData) as UserNameData
+		if (data.username || data.id != user!.data.user.id) {
+			setUserData({
+				username: data.username,
+				icon_url: data.icon_url,
+				id: data.id,
+			})
+		}
+	})
 
 	return (
 		<View style={styles.screenContainer}>
@@ -62,9 +99,17 @@ function Screen() {
 
 			{/* プロフィール画像とタイマー */}
 			<View style={styles.profileContainer}>
-				<View style={styles.avatar} />
-				<Text style={styles.userName}>yomi</Text>
-				<Text style={styles.timer}>00:12</Text>
+				{userData ? (
+					<View style={styles.profileContainer}>
+						<Image
+							source={{ uri: userData.icon_url }}
+							style={styles.avatar}
+						/>
+						<Text style={styles.userName}>{userData.username}</Text>
+					</View>
+				) : (
+					<Text style={styles.userName}>接続待機中...</Text>
+				)}
 				<View style={styles.audioWave} />
 			</View>
 
@@ -124,7 +169,6 @@ const styles = StyleSheet.create({
 	},
 	profileContainer: {
 		alignItems: 'center',
-		flex: 1,
 		justifyContent: 'center',
 	},
 	avatar: {
@@ -132,6 +176,7 @@ const styles = StyleSheet.create({
 		height: 80,
 		borderRadius: 40,
 		backgroundColor: 'gray',
+		alignItems: 'center',
 	},
 	userName: {
 		fontSize: 20,
