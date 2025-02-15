@@ -16,32 +16,24 @@ import FriendListContainer from '../../components/FriendListContainer'
 import FloatingActionButton from '@/components/FloatActionButton'
 import FriendRequestItem from '../../components/FriendRequestItem'
 import AddFriendModal from '../../components/AddFriendModal'
+import { useEffect } from 'react'
+import * as Users from '@/utils/users'
 
 export default function FriendsScreen() {
-	const { currentUserInfo } = useAuth()
-	const fromUsers = currentUserInfo!['from_users']
-	const toUsers = currentUserInfo!['to_users']
+	const { idToken } = useAuth()
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
+	const [userData, setUserData] =
+		useState<Awaited<ReturnType<typeof Users.get>>>()
 
-	let Friends: typeof currentUserInfo.from_users | null = null
-	if (currentUserInfo != null) {
-		function removeMatchingUsers(
-			from: typeof currentUserInfo.from_users,
-			to: typeof currentUserInfo.to_users,
-		): typeof currentUserInfo.from_users {
-			const toUserIds = new Set(
-				to.map((user: typeof currentUserInfo) => user.to_user.id),
-			)
-			return from.filter(
-				(user: typeof currentUserInfo) =>
-					!toUserIds.has(user.from_user.id),
-			)
-		}
-		Friends = removeMatchingUsers(fromUsers, toUsers)
-	} else {
-		// 例外処理
-	}
+	useEffect(() => {
+		;(async () => {
+			if (idToken) {
+				const res = await Users.get(idToken)
+				setUserData(res)
+			}
+		})()
+	}, [])
 
 	const activeFriends = [
 		{ name: 'yomi', lastLogin: '10分前', isActive: true },
