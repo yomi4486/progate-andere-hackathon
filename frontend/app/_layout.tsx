@@ -5,13 +5,13 @@ import {
 	ThemeProvider,
 } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { Slot, Stack, useRouter } from 'expo-router'
+import { Slot, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import 'react-native-reanimated'
-import { AuthContext, AuthProvider, useAuth } from '../utils/authContext'
+import { AuthProvider, useAuth } from '../utils/authContext'
 import { useColorScheme } from '@/components/useColorScheme'
-import { PubSubContext, PubSubProvider } from '@/utils/PubSubContext'
+import { PubSubProvider } from '@/utils/PubSubContext'
 
 export {
 	// Catch any errors thrown by the Layout component.

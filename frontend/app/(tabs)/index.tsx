@@ -8,9 +8,7 @@ import { useState } from 'react'
 import FloatingActionButton from '@/components/FloatActionButton'
 import { useAuth } from '@/utils/authContext'
 import * as Users from '@/utils/users'
-import { useRouter } from 'expo-router'
 export default function HomeScreen() {
-	const router = useRouter()
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
 	const [statusMessage, setStatusMessage] = useState<string>('')
 	return (

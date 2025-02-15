@@ -20,7 +20,7 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 	} | null>(null)
 
 	const handleSearchUser = () => {
-		console.log(`検索するユーザーID: ${searchUserId}`)
+		//console.log(`検索するユーザーID: ${searchUserId}`)
 		// ユーザー検索のロジックをここに追加
 		try {
 			// 検索結果を設定（仮のデータを使用）
@@ -29,7 +29,7 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 				iconUrl: 'https://example.com/user-icon.png',
 			})
 			setSearchResultVisible(true)
-			console.log(searchResult)
+			//console.log(searchResult)
 		} catch (error) {
 			console.error('検索エラー:', error)
 			// エラーが発生しても検索結果モーダルに遷移する
@@ -42,7 +42,7 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 	}
 
 	const handleSendRequest = () => {
-		console.log('申請を送るボタンが押されました')
+		//console.log('申請を送るボタンが押されました')
 		// 申請を送るロジックをここに追加
 	}
 
@@ -70,9 +70,11 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.qrButton}
+					/* /
 					onPress={() =>
-						console.log('QRコードを読み込むボタンが押されました')
+						console.info('QRコードを読み込むボタンが押されました')
 					}
+					*/
 				>
 					<Text style={styles.buttonText}>QRコードを読み込む</Text>
 				</TouchableOpacity>{' '}

@@ -1,7 +1,7 @@
 import { AppType } from '../../backend/src'
+// eslint-disable-next-line
 const { hc } = require('hono/dist/client') as typeof import('hono/client')
 import type { InferRequestType, InferResponseType } from 'hono/client'
-
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`
 const client = hc<AppType>(base_url)
 

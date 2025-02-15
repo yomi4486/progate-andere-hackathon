@@ -1,16 +1,10 @@
 import { Text, View } from '@/components/Themed'
 import { FontAwesome } from '@expo/vector-icons'
 import { profileStyles } from '../styles'
-import {
-	StyleSheet,
-	TextInput,
-	TouchableOpacity,
-	Image,
-	ScrollView,
-} from 'react-native'
+import { StyleSheet, TextInput, Image, ScrollView } from 'react-native'
 import DefaultHeader from '../components/Header'
 import { SettingsButtonItem } from './items'
-import { AuthContext, useAuth } from '@/utils/authContext'
+import { useAuth } from '@/utils/authContext'
 
 export default function SettingsScreen() {
 	const { signOut, currentUserInfo } = useAuth()

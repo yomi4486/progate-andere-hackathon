@@ -12,7 +12,7 @@ const FriendListContainer: React.FC<FriendListContainerProps> = ({
 	friends,
 }) => {
 	const activeFriends = friends.filter((friend) => friend.isActive)
-	const inactiveFriends = friends.filter((friend) => !friend.isActive)
+	//const inactiveFriends = friends.filter((friend) => !friend.isActive)
 
 	return (
 		<View style={styles.container}>

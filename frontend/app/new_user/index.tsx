@@ -1,7 +1,7 @@
 import { Text, View } from '@/components/Themed'
 import { FontAwesome } from '@expo/vector-icons'
 import { profileStyles } from '../styles'
-import { StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, TextInput, Image } from 'react-native'
 import { useAuth } from '@/utils/authContext'
 import DefaultHeader from '../components/Header'
 import FloatingActionButton from '@/components/FloatActionButton'
@@ -108,7 +108,6 @@ export default function NewUserScreen() {
 								},
 								user?.data.idToken,
 							)
-							console.log(res)
 							if (res) {
 								router.push('/(tabs)')
 							} else {

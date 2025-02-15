@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
 import ProfileInfo from './ModalProfileInfo'
 import SearchButton from './SearchUserButton'
 import CommonModal from './CommonModal'
@@ -18,12 +17,13 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({
 }) => {
 	const [friendName, setFriendName] = useState('')
 	const [isSearchModalVisible, setSearchModalVisible] = useState(false)
-
+	/*
 	const handleAddFriend = () => {
 		onAddFriend(friendName)
 		setFriendName('')
 		onClose()
 	}
+
 
 	const handleOpenSearchModal = () => {
 		setSearchModalVisible(true)
