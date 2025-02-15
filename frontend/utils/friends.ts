@@ -11,7 +11,6 @@ const statusFriend = client.friends[':status']
 
 export async function get(
 	idToken: string,
-	id: string,
 	status: InferRequestType<typeof statusFriend.$get>['param']['status'],
 ): Promise<InferResponseType<typeof statusFriend.$get, 200> | null> {
 	if (idToken) {

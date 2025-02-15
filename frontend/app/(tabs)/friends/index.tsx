@@ -19,6 +19,7 @@ import FriendRequestItem from '../../components/FriendRequestItem'
 import AddFriendModal from '../../components/AddFriendModal'
 import { useEffect } from 'react'
 import * as Users from '@/utils/users'
+import * as Friends from '../../../utils/friends'
 import ModalProfileInfo from '@/app/components/ModalProfileInfo'
 import SimpleModal from '@/components/simpleModal'
 
@@ -26,6 +27,7 @@ export default function FriendsScreen() {
 	const { idToken } = useAuth()
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
+	const [reload, SetReload] = useState(0)
 	const [userData, setUserData] =
 		useState<Awaited<ReturnType<typeof Users.get>>>()
 	// アクティブと非アクティブフレンドを分けて管理するstate
@@ -46,11 +48,32 @@ export default function FriendsScreen() {
 		}[]
 	>([])
 
+	const [inAcceptUser, setinAcceptUser] = useState<
+		{
+			username: string
+			icon_url: string
+			from_id: string
+			id: string
+		}[]
+	>([])
+
 	useEffect(() => {
 		;(async () => {
 			if (idToken) {
 				const res = await Users.get(idToken)
 				setUserData(res)
+
+				const friends = await Friends.get(idToken, 'PENDING')
+				if (friends) {
+					setinAcceptUser(
+						friends.map((friend) => ({
+							username: friend.from_user.username,
+							icon_url: friend.from_user.icon_url,
+							from_id: friend.from_user.id,
+							id: friend.id,
+						})),
+					)
+				}
 
 				// フレンドをアクティブ状態で振り分け
 				if (res?.friends) {
@@ -77,7 +100,7 @@ export default function FriendsScreen() {
 				}
 			}
 		})()
-	}, [])
+	}, [reload])
 
 	return (
 		<View style={{ height: '100%', backgroundColor: '#fff' }}>
@@ -196,14 +219,32 @@ export default function FriendsScreen() {
 				)}
 				{selectedTab === 'pending' && (
 					<View style={styles.pendingContainer}>
-						{userData ? (
-							userData.from_users.length > 0 ? (
-								userData.from_users.map((friend, index) => (
+						{inAcceptUser ? (
+							inAcceptUser.length > 0 ? (
+								inAcceptUser.map((friend, index) => (
 									<FriendRequestItem
 										key={index}
-										name={friend.to_user.username}
-										onApprove={() => {}}
-										onReject={() => {}}
+										name={friend.username}
+										onApprove={async () => {
+											await Friends.put(
+												idToken!,
+												friend.from_id,
+												{
+													status: 'ACCEPTED',
+												},
+											)
+											SetReload(reload + 1)
+										}}
+										onReject={async () => {
+											await Friends.put(
+												idToken!,
+												friend.from_id,
+												{
+													status: 'REJECTED',
+												},
+											)
+											SetReload(reload + 1)
+										}}
 									/>
 								))
 							) : (
