@@ -65,7 +65,7 @@ jobs:
 
       - name: Run Prettier
         run: |
-          npx prettier --write ${{ env.GIT_DIFF_FILTERED }}
+          cd ../ && npx prettier --write ${{ env.GIT_DIFF_FILTERED }}
         if: env.GIT_DIFF
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
