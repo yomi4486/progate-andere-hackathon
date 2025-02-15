@@ -6,6 +6,7 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 	ScrollView,
+	Modal,
 } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import Icons from 'react-native-vector-icons/FontAwesome5'
@@ -19,6 +20,8 @@ import AddFriendModal from '../../components/AddFriendModal'
 import { useEffect } from 'react'
 import * as Users from '@/utils/users'
 import * as Friends from '../../../utils/friends'
+import ModalProfileInfo from '@/app/components/ModalProfileInfo'
+import SimpleModal from '@/components/simpleModal'
 
 export default function FriendsScreen() {
 	const { idToken } = useAuth()
@@ -101,6 +104,17 @@ export default function FriendsScreen() {
 
 	return (
 		<View style={{ height: '100%', backgroundColor: '#fff' }}>
+			<SimpleModal
+				visible={isModalVisible}
+				visibleControler={() => {
+					setModalVisible(false)
+				}}
+			>
+				<ModalProfileInfo
+					name={userData?.username!}
+					userId={userData?.id!}
+				/>
+			</SimpleModal>
 			<DefaultHeader title="フレンド" showSettingButton={true} />
 			<View style={styles.tabContainer}>
 				<TouchableOpacity
