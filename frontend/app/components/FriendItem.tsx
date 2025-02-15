@@ -6,6 +6,7 @@ import { usePubSub } from '../../utils/PubSubContext'
 import * as Room from '../../utils/room'
 import { useRouter } from 'expo-router'
 import { useAuth } from '../../utils/authContext'
+import { SendCall } from '../../utils/mqttCommonType'
 
 interface FriendItemProps {
 	id: string
@@ -20,9 +21,12 @@ const FriendItem: React.FC<FriendItemProps> = ({ id, name, message }) => {
 
 	const call = async () => {
 		if (!user || !user.data || !user.data.idToken) return
-		const roomId = await Room.postRoomById(user.data.idToken, id)
-		sendMessage(`${id}/call`, JSON.stringify({ roomId }))
-		router.replace(`/call/${roomId}`)
+		const room = await Room.postRoomById(user.data.idToken, id)
+		const data: SendCall = {
+			roomId: room.id,
+		}
+		sendMessage(`${id}/call`, data)
+		router.replace(`/call/${room.id}`)
 	}
 	return (
 		<View style={styles.friend}>
