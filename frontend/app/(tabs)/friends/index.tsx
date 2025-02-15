@@ -18,11 +18,13 @@ import FriendRequestItem from '../../components/FriendRequestItem'
 import AddFriendModal from '../../components/AddFriendModal'
 import { useEffect } from 'react'
 import * as Users from '@/utils/users'
+import * as Friends from '../../../utils/friends'
 
 export default function FriendsScreen() {
 	const { idToken } = useAuth()
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
+	const [reload, SetReload] = useState(0)
 	const [userData, setUserData] =
 		useState<Awaited<ReturnType<typeof Users.get>>>()
 	// アクティブと非アクティブフレンドを分けて管理するstate
@@ -74,7 +76,7 @@ export default function FriendsScreen() {
 				}
 			}
 		})()
-	}, [])
+	}, [reload])
 
 	return (
 		<View style={{ height: '100%', backgroundColor: '#fff' }}>
@@ -183,13 +185,25 @@ export default function FriendsScreen() {
 				{selectedTab === 'pending' && (
 					<View style={styles.pendingContainer}>
 						{userData ? (
-							userData.from_users.length > 0 ? (
-								userData.from_users.map((friend, index) => (
+							userData.friends.length > 0 ? (
+								userData.friends.map((friend, index) => (
 									<FriendRequestItem
 										key={index}
-										name={friend.to_user.username}
-										onApprove={() => {}}
-										onReject={() => {}}
+										name={friend.username}
+										onApprove={() => {
+											Friends.put(idToken!, friend.id, {
+												status: 'ACCEPTED',
+											}).then(() => {
+												SetReload(reload + 1)
+											})
+										}}
+										onReject={() => {
+											Friends.put(idToken!, friend.id, {
+												status: 'REJECTED',
+											}).then(() => {
+												SetReload(reload + 1)
+											})
+										}}
 									/>
 								))
 							) : (
