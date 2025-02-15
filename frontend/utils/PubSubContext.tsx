@@ -16,39 +16,39 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	if (!user || !user.data.user) {
 		throw new Error('User is not authenticated')
 	}
-  
-  const userId = user.data.user.id;
-  const [friends, setFriends] = useState<string[]>(["aaaa", "bbbb"]);
-  const [friendsStatus, setFriendsStatus] = useState<Record<string, string>>(
-    {},
-  );
 
-  useEffect(() => {
-    try {
-      const client = mqtt.connect("ws://localhost:3000", {
-        rejectUnauthorized: false,
-      });
+	const userId = user.data.user.id
+	const [friends, setFriends] = useState<string[]>(['aaaa', 'bbbb'])
+	const [friendsStatus, setFriendsStatus] = useState<Record<string, string>>(
+		{},
+	)
 
-      client.on("connect", () => {
-        client.publish(`status/${userId}`, "online", { retain: true });
+	useEffect(() => {
+		try {
+			const client = mqtt.connect('ws://localhost:3000', {
+				rejectUnauthorized: false,
+			})
 
-        // フレンドのステータスを購読
-        friends.forEach((friendId) => {
-          client.subscribe(`status/${friendId}`);
-        });
-      });
+			client.on('connect', () => {
+				client.publish(`status/${userId}`, 'online', { retain: true })
 
-      client.on("message", (topic, message) => {
-        const [_, friendId] = topic.split("/");
-        setFriendsStatus((prev) => ({
-          ...prev,
-          [friendId]: message.toString(),
-        }));
-      });
-    } catch (e) {
-      console.error("error:" + e);
-    }
-  }, [friends]);
+				// フレンドのステータスを購読
+				friends.forEach((friendId) => {
+					client.subscribe(`status/${friendId}`)
+				})
+			})
+
+			client.on('message', (topic, message) => {
+				const [_, friendId] = topic.split('/')
+				setFriendsStatus((prev) => ({
+					...prev,
+					[friendId]: message.toString(),
+				}))
+			})
+		} catch (e) {
+			console.error('error:' + e)
+		}
+	}, [friends])
 
 	const setFriendList = (friends: string[]) => {
 		setFriends(friends)
