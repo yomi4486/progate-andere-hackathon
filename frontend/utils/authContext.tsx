@@ -36,6 +36,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	GoogleSignin.configure({
 		iosClientId:
 			'165387728661-co452vd2hfojg56nnknpu9j8ddksm66l.apps.googleusercontent.com',
+		webClientId:
+			'165387728661-b77uchgm2s5200tebjj0cvre73omsl3j.apps.googleusercontent.com',
 		offlineAccess: false,
 	})
 
@@ -72,7 +74,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			setCurrentUserInfo(res)
 			return true
 		} catch (e) {
-			console.error(e)
 			return false
 		}
 	}

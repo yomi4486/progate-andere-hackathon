@@ -1,6 +1,7 @@
 import { AppType } from '../../backend/src'
+// eslint-disable-next-line
 const { hc } = require('hono/dist/client') as typeof import('hono/client')
-import type { InferRequestType, InferResponseType } from 'hono/client'
+import type { InferResponseType } from 'hono/client'
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`
 const client = hc<AppType>(base_url)
 const IdToGetRoom = client.rooms[':id']
@@ -8,12 +9,12 @@ const IdToGetRoom = client.rooms[':id']
 export async function deleteRoomById(idToken: string, id: string) {
 	if (idToken) {
 		try {
-			const res = await client.rooms[':id'].$delete({
+			await client.rooms[':id'].$delete({
 				param: {
 					id: id,
 				},
 			})
-		} catch (e) {
+		} catch {
 			throw Error('Fetch Error')
 		}
 	} else {
@@ -46,7 +47,7 @@ export async function get(
 
 			const json = await res.json()
 			return json
-		} catch (e) {
+		} catch {
 			throw Error('Fetch Error')
 		}
 	} else {
@@ -72,7 +73,7 @@ export async function postRoomById(
 			)
 			const json = await res.json()
 			return json
-		} catch (e) {
+		} catch {
 			throw Error('Fetch Error')
 		}
 	} else {

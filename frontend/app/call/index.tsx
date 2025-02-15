@@ -10,7 +10,7 @@ import { useRouter } from 'expo-router'
 
 const CallScreen: React.FC<{ roomId: string }> = ({ roomId }) => {
 	useEffect(() => {
-		let start = async () => {
+		const start = async () => {
 			await AudioSession.startAudioSession()
 		}
 

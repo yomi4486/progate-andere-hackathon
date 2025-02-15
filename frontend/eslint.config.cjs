@@ -11,6 +11,8 @@ const mono = tseslint.config(
 		rules: {
 			'@typescript-eslint/explicit-function-return-type': 'off',
 			'@typescript-eslint/no-explicit-any': 'warn',
+			'import/no-commonjs': 'off',
+			'no-restricted-syntax': 'off',
 			'@typescript-eslint/no-unused-vars': [
 				'error',
 				{ argsIgnorePattern: '^_' },

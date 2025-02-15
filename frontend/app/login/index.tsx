@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaView, View, Text, TouchableOpacity } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
@@ -8,11 +8,10 @@ import { useAuth } from '@/utils/authContext'
 const LoginScreen = () => {
 	const router = useRouter()
 	const { googleSignIn, isSetupAccount, idToken } = useAuth()
-	const [checkingAccount, setCheckingAccount] = useState(false)
 
 	useEffect(() => {
-		const checkAccount = async () => {
-			if (idToken && checkingAccount) {
+		;(async () => {
+			if (idToken) {
 				try {
 					const res = await isSetupAccount()
 					if (!res) {
@@ -22,12 +21,9 @@ const LoginScreen = () => {
 					}
 				} catch (error) {
 					console.error('アカウント確認エラー', error)
-				} finally {
-					setCheckingAccount(false)
 				}
 			}
-		}
-		checkAccount()
+		})()
 	}, [idToken])
 
 	return (
@@ -54,11 +50,9 @@ const LoginScreen = () => {
 				<TouchableOpacity
 					onPress={async () => {
 						try {
-							setCheckingAccount(true)
 							await googleSignIn()
 						} catch (error) {
 							console.error('ログインエラー', error)
-							setCheckingAccount(false)
 						}
 					}}
 				>

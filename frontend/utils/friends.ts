@@ -26,7 +26,7 @@ export async function post(
 
 			const json = await res.json()
 			return json
-		} catch (e) {
+		} catch {
 			throw Error('Fetch Error')
 		}
 	} else {
@@ -57,7 +57,7 @@ export async function put(
 
 			const json = await res.json()
 			return json
-		} catch (e) {
+		} catch {
 			throw Error('Fetch Error')
 		}
 	} else {
