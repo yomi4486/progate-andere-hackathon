@@ -12,6 +12,9 @@ import 'react-native-reanimated'
 import { AuthProvider, useAuth } from '../utils/authContext'
 import { useColorScheme } from '@/components/useColorScheme'
 import { PubSubProvider } from '@/utils/PubSubContext'
+import { registerGlobals } from '@livekit/react-native'
+
+registerGlobals()
 
 export {
 	// Catch any errors thrown by the Layout component.

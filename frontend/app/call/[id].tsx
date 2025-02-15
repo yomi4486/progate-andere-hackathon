@@ -32,18 +32,19 @@ const CallScreen: React.FC = () => {
 	}, [])
 
 	return (
-		<View>
+		<View style={styles.container}>
 			{accessToken ? (
 				<LiveKitRoom
 					serverUrl="wss://qwet-dev-cyhgi9fp.livekit.cloud"
 					token={accessToken}
 					connect={true}
 					audio={true}
+					style={{ flex: 1 }}
 				>
 					<Screen />
 				</LiveKitRoom>
 			) : (
-				<Text>読み込み中</Text> // Or any fallback UI
+				<Text>読み込み中...</Text>
 			)}
 		</View>
 	)
@@ -53,12 +54,13 @@ function Screen() {
 	const room = useRoomContext()
 	const [mic, setMic] = useState(true)
 	const router = useRouter()
+
 	return (
-		<View style={styles.container}>
+		<View style={styles.screenContainer}>
 			{/* 上部ヘッダー */}
 			<View style={styles.header}></View>
 
-			{/* プロフィール画像 */}
+			{/* プロフィール画像とタイマー */}
 			<View style={styles.profileContainer}>
 				<View style={styles.avatar} />
 				<Text style={styles.userName}>yomi</Text>
@@ -70,11 +72,15 @@ function Screen() {
 			<View style={styles.controlContainer}>
 				<TouchableOpacity
 					onPress={() => {
-						setMic(!mic)
-						room.localParticipant.setMicrophoneEnabled(mic)
+						setMic((prev) => !prev)
+						room.localParticipant.setMicrophoneEnabled(!mic)
 					}}
 				>
-					<Icon name="microphone-slash" size={30} color="black" />
+					<Icon
+						name={mic ? 'microphone' : 'microphone-slash'}
+						size={30}
+						color="black"
+					/>
 				</TouchableOpacity>
 				<TouchableOpacity>
 					<Icon name="comment" size={30} color="black" />
@@ -88,8 +94,8 @@ function Screen() {
 			<TouchableOpacity
 				style={styles.endCallButton}
 				onPress={() => {
-					router.push('/(tabs)')
 					room.disconnect()
+					router.push('/(tabs)')
 				}}
 			>
 				<Icon name="times" size={40} color="white" />
@@ -102,6 +108,10 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: 'white',
+		width: '100%',
+	},
+	screenContainer: {
+		flex: 1,
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		paddingVertical: 20,
@@ -112,18 +122,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	expandIcon: {
-		position: 'absolute',
-		left: 20,
-		top: 30,
-	},
-	callingText: {
-		color: 'white',
-		fontSize: 16,
-		fontWeight: 'bold',
-	},
 	profileContainer: {
 		alignItems: 'center',
+		flex: 1,
+		justifyContent: 'center',
 	},
 	avatar: {
 		width: 80,
@@ -152,6 +154,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		width: '60%',
+		marginBottom: 100,
 	},
 	endCallButton: {
 		backgroundColor: 'red',

@@ -8,7 +8,7 @@ import { SendCall, SendStatus } from '../utils/mqttCommonType'
 export interface PubSubContextType {
 	friendsStatus: Record<string, string> // フレンドのステータス
 	setFriendList: (friends: string[]) => void // フレンドリストをセットする関数
-	sendMessage: (topic: string, data: string) => void
+	sendMessage: (topic: string, data: SendCall | SendStatus) => void
 }
 
 export const PubSubContext = createContext<PubSubContextType | null>(null)
@@ -29,7 +29,7 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	)
 
 	const [client] = useState(
-		mqtt.connect('ws://localhost:3000', {
+		mqtt.connect(process.env.EXPO_PUBLIC_WS_URL!, {
 			rejectUnauthorized: false,
 		}),
 	)
@@ -70,8 +70,8 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 		setFriends(friends)
 	}
 
-	const sendMessage = (topic: string, data: string) => {
-		client.publish(topic, data)
+	const sendMessage = (topic: string, data: SendCall | SendStatus) => {
+		client.publish(topic, data.toString())
 	}
 
 	return (
