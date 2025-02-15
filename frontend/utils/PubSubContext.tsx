@@ -1,6 +1,9 @@
 import mqtt from 'mqtt'
+import React from 'react'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useAuth } from './authContext'
+import { useRouter } from 'expo-router'
+import { SendCall, SendStatus } from '../utils/mqttCommonType'
 
 export interface PubSubContextType {
 	friendsStatus: Record<string, string> // フレンドのステータス
@@ -17,33 +20,45 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 		throw new Error('User is not authenticated')
 	}
 
+	const router = useRouter()
 	const userId = user.data.user.id
 	const [friends, setFriends] = useState<string[]>(['aaaa', 'bbbb'])
 	const [friendsStatus, setFriendsStatus] = useState<Record<string, string>>(
 		{},
 	)
 
+	const [client, setClient] = useState(
+		mqtt.connect('ws://localhost:3000', {
+			rejectUnauthorized: false,
+		}),
+	)
+
 	useEffect(() => {
 		try {
-			const client = mqtt.connect('ws://localhost:3000', {
-				rejectUnauthorized: false,
-			})
-
 			client.on('connect', () => {
-				client.publish(`status/${userId}`, 'online', { retain: true })
+				client.publish(`${userId}/status`, 'online', { retain: true })
 
 				// フレンドのステータスを購読
 				friends.forEach((friendId) => {
-					client.subscribe(`status/${friendId}`)
+					client.subscribe(`${friendId}/#`)
 				})
+
+				client.subscribe(`${userId}/call`)
 			})
 
 			client.on('message', (topic, message) => {
-				const [_, friendId] = topic.split('/')
-				setFriendsStatus((prev) => ({
-					...prev,
-					[friendId]: message.toString(),
-				}))
+				const [friendId, dataType] = topic.split('/')
+
+				if (dataType == 'status') {
+					const data = JSON.parse(message.toString()) as SendStatus
+					setFriendsStatus((prev) => ({
+						...prev,
+						[friendId]: data.status,
+					}))
+				} else if (dataType == 'call') {
+					const data = JSON.parse(message.toString()) as SendCall
+					router.push(`/call/${data.roomId}`)
+				}
 			})
 		} catch (e) {
 			console.error('error:' + e)
@@ -52,6 +67,10 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const setFriendList = (friends: string[]) => {
 		setFriends(friends)
+	}
+
+	const sendMessage = (topic: string, data: string) => {
+		client.publish(topic, data)
 	}
 
 	return (

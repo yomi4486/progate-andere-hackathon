@@ -24,7 +24,7 @@ export async function deleteRoomById(idToken: string, id: string) {
 export async function get(
 	idToken: string,
 	id: string,
-): Promise<InferResponseType<typeof IdToGetRoom.$get>> {
+): Promise<InferResponseType<typeof IdToGetRoom.$get, 200>> {
 	if (idToken) {
 		try {
 			const res = await client.rooms[':id'].$get(
@@ -39,6 +39,10 @@ export async function get(
 					},
 				},
 			)
+
+			if (res.status === 404) {
+				throw Error('Room Not Found')
+			}
 
 			const json = await res.json()
 			return json
@@ -66,7 +70,6 @@ export async function postRoomById(
 					},
 				},
 			)
-
 			const json = await res.json()
 			return json
 		} catch (e) {
