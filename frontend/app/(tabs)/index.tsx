@@ -8,16 +8,17 @@ import { useState, useEffect } from 'react'
 import FloatingActionButton from '@/components/FloatActionButton'
 import * as Users from '@/utils/users'
 import { useAuth } from '../../utils/authContext'
+import { ExtendedUserResponse } from '@/utils/users'
 export default function HomeScreen() {
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
 	const [statusMessage, setStatusMessage] = useState<string>('')
-	const [userData, setUserData] =
-		useState<Awaited<ReturnType<typeof Users.get>>>()
+	const [userData, setUserData] = useState<ExtendedUserResponse>()
 
 	useEffect(() => {
 		;(async () => {
 			if (idToken) {
 				const res = await Users.get(idToken)
+				console.log(res)
 				setUserData(res)
 			}
 		})()
@@ -112,13 +113,13 @@ export default function HomeScreen() {
 				</Text>
 				<View style={profileStyles.friendsBox}>
 					{userData ? (
-						userData.to_users.map((friend) => {
+						userData.friends.map((friend) => {
 							return (
 								<FriendItem
-									key={friend.from_user.id}
-									id={friend.from_user.id}
-									name={friend.from_user.username}
-									message={friend.from_user.status}
+									key={friend.id}
+									id={friend.id}
+									name={friend.username}
+									message={friend.status}
 								/>
 							)
 						})
