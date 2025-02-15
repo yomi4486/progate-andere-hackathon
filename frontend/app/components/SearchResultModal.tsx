@@ -49,7 +49,6 @@ const SearchResultModal: React.FC<SearchResultModalProps> = ({
 					userName={user.name}
 				/>
 			</CommonModal>
-			
 		</>
 	)
 }

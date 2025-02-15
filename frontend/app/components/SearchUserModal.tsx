@@ -1,11 +1,5 @@
 import React, { useState } from 'react'
-import {
-	View,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	StyleSheet,
-} from 'react-native'
+import { Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
 import CommonModal from './CommonModal'
 import SearchResultModal from './SearchResultModal'
 
@@ -81,17 +75,16 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 					}
 				>
 					<Text style={styles.buttonText}>QRコードを読み込む</Text>
-				</TouchableOpacity>	{isSearchResultVisible && searchResult && (
-				<SearchResultModal
-					visible={isSearchResultVisible}
-					onClose={handleCloseResultModal}
-					user={searchResult}
-					onSendRequest={handleSendRequest}
-				/>
-			)}
+				</TouchableOpacity>{' '}
+				{isSearchResultVisible && searchResult && (
+					<SearchResultModal
+						visible={isSearchResultVisible}
+						onClose={handleCloseResultModal}
+						user={searchResult}
+						onSendRequest={handleSendRequest}
+					/>
+				)}
 			</CommonModal>
-
-		
 		</>
 	)
 }
