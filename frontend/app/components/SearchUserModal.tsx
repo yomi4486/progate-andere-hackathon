@@ -1,11 +1,5 @@
 import React, { useState } from 'react'
-import {
-	View,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	StyleSheet,
-} from 'react-native'
+import { Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
 import CommonModal from './CommonModal'
 import SearchResultModal from './SearchResultModal'
 

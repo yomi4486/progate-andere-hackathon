@@ -1,16 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import {
-	Button,
-	SafeAreaView,
-	View,
-	Text,
-	TouchableOpacity,
-} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { SafeAreaView, View, Text, TouchableOpacity } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import 'react-native-reanimated'
-import { AuthContext, useAuth } from '@/utils/authContext'
-import * as userRequest from '../../utils/users'
+import { useAuth } from '@/utils/authContext'
 
 const LoginScreen = () => {
 	const router = useRouter()
@@ -19,15 +12,12 @@ const LoginScreen = () => {
 
 	useEffect(() => {
 		const checkAccount = async () => {
-			console.log(idToken)
 			if (idToken && checkingAccount) {
 				try {
 					const res = await isSetupAccount()
 					if (!res) {
-						console.log('未登録のユーザーです')
 						router.push('/new_user')
 					} else {
-						console.log('登録済みのユーザーです')
 						router.push('/(tabs)')
 					}
 				} catch (error) {
