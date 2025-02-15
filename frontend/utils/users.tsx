@@ -10,6 +10,7 @@ type User = {
 	id: string
 	username: string
 	icon_url: string
+	status_message: string
 }
 
 type ExtendedUserResponse = InferResponseType<typeof client.users.$get, 200> & {

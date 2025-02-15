@@ -16,48 +16,61 @@ import FriendListContainer from '../../components/FriendListContainer'
 import FloatingActionButton from '@/components/FloatActionButton'
 import FriendRequestItem from '../../components/FriendRequestItem'
 import AddFriendModal from '../../components/AddFriendModal'
+import { useEffect } from 'react'
+import * as Users from '@/utils/users'
 
 export default function FriendsScreen() {
-	const { currentUserInfo } = useAuth()
-	const fromUsers = currentUserInfo!['from_users']
-	const toUsers = currentUserInfo!['to_users']
+	const { idToken } = useAuth()
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
+	const [userData, setUserData] =
+		useState<Awaited<ReturnType<typeof Users.get>>>()
+	// アクティブと非アクティブフレンドを分けて管理するstate
+	const [activeFriends, setActiveFriends] = useState<
+		{
+			username: string
+			isActive: boolean
+			statusMessage: string
+		}[]
+	>([])
+	const [inactiveFriends, setInactiveFriends] = useState<
+		{
+			username: string
+			isActive: boolean
+			statusMessage: string
+		}[]
+	>([])
 
-	let Friends: typeof currentUserInfo.from_users | null = null
-	if (currentUserInfo != null) {
-		function removeMatchingUsers(
-			from: typeof currentUserInfo.from_users,
-			to: typeof currentUserInfo.to_users,
-		): typeof currentUserInfo.from_users {
-			const toUserIds = new Set(
-				to.map((user: typeof currentUserInfo) => user.to_user.id),
-			)
-			return from.filter(
-				(user: typeof currentUserInfo) =>
-					!toUserIds.has(user.from_user.id),
-			)
-		}
-		Friends = removeMatchingUsers(fromUsers, toUsers)
-	} else {
-		// 例外処理
-	}
+	useEffect(() => {
+		;(async () => {
+			if (idToken) {
+				const res = await Users.get(idToken)
+				setUserData(res)
 
-	const activeFriends = [
-		{ name: 'yomi', lastLogin: '10分前', isActive: true },
-		{ name: 'mono', lastLogin: '20分前', isActive: true },
-	]
+				// フレンドをアクティブ状態で振り分け
+				if (res?.friends) {
+					const active = res.friends
+						.filter((friend) => friend.status === 'ACTIVE')
+						.map((friend) => ({
+							username: friend.username,
+							isActive: true,
+							statusMessage: friend.status_message,
+						}))
 
-	const inactiveFriends = [
-		{ name: 'まる', lastLogin: '1日前', isActive: false },
-		{ name: 'kuro', lastLogin: '3日前', isActive: false },
-	]
+					const inactive = res.friends
+						.filter((friend) => friend.status !== 'ACTIVE')
+						.map((friend) => ({
+							username: friend.username,
+							isActive: false,
+							statusMessage: friend.status_message,
+						}))
 
-	const friendRequests = [{ name: '新しい友達1' }, { name: '新しい友達2' }]
-
-	const handleAddFriend = (friendName: string) => {
-		// フレンド追加のロジックをここに追加
-	}
+					setActiveFriends(active)
+					setInactiveFriends(inactive)
+				}
+			}
+		})()
+	}, [])
 
 	return (
 		<View style={{ height: '100%' }}>
@@ -127,11 +140,11 @@ export default function FriendsScreen() {
 				icon="add"
 				color="#FFFFFF"
 			/>
-			<AddFriendModal
+			{/* <AddFriendModal
 				visible={isModalVisible}
 				onClose={() => setModalVisible(false)}
-				onAddFriend={handleAddFriend}
-			/>
+				// onAddFriend={handleAddFriend}
+			/> */}
 			<ScrollView>
 				{selectedTab === 'friends' && (
 					<>
@@ -147,29 +160,39 @@ export default function FriendsScreen() {
 								placeholderTextColor="#a0a0a0"
 							/>
 						</View>
-						<FriendListContainer
-							title="アクティブなフレンド"
-							friends={activeFriends}
-						/>
-						<FriendListContainer
-							title="非アクティブなフレンド"
-							friends={inactiveFriends}
-						/>
+						{userData ? (
+							<>
+								<FriendListContainer
+									title="アクティブなフレンド"
+									friends={activeFriends}
+								/>
+								<FriendListContainer
+									title="非アクティブなフレンド"
+									friends={inactiveFriends}
+								/>
+							</>
+						) : (
+							<Text>loading...</Text>
+						)}
 					</>
 				)}
 				{selectedTab === 'pending' && (
 					<View style={styles.pendingContainer}>
-						{friendRequests.length === 0 ? (
-							<Text>承認待ちのフレンドはありません。</Text>
+						{userData ? (
+							userData.from_users.length > 0 ? (
+								userData.from_users.map((friend, index) => (
+									<FriendRequestItem
+										key={index}
+										name={friend.to_user.username}
+										onApprove={() => {}}
+										onReject={() => {}}
+									/>
+								))
+							) : (
+								<Text>承認待ちリクエストがありません</Text>
+							)
 						) : (
-							friendRequests.map((request, index) => (
-								<FriendRequestItem
-									key={index}
-									name={request.name}
-									onApprove={() => {}}
-									onReject={() => {}}
-								/>
-							))
+							<Text>loading...</Text>
 						)}
 					</View>
 				)}

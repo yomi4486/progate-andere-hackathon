@@ -21,7 +21,7 @@ export default function HomeScreen() {
 				setUserData(res)
 			}
 		})()
-	}, [idToken])
+	}, [])
 
 	return (
 		<View style={{ height: '100%' }}>
