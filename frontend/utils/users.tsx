@@ -5,10 +5,20 @@ import type { InferRequestType, InferResponseType } from 'hono/client'
 const base_url: string = `${process.env.EXPO_PUBLIC_BASE_URL}`
 const client = hc<AppType>(base_url)
 
+type User = {
+	status: string
+	id: string
+	username: string
+	icon_url: string
+}
+
+type ExtendedUserResponse = InferResponseType<typeof client.users.$get, 200> & {
+	friends: User[]
+}
 // 自分のユーザーを取得
 export async function get(
 	idToken: string | undefined,
-): Promise<InferResponseType<typeof client.users.$get, 200>> {
+): Promise<ExtendedUserResponse> {
 	if (idToken) {
 		const result = await client.users.$get(
 			{},
@@ -20,7 +30,9 @@ export async function get(
 		)
 		if (result.ok) {
 			const json = await result.json()
-			return json
+			const mergeFriends = mergeUsers(json.to_users, json.from_users)
+
+			return { ...json, friends: mergeFriends }
 		} else {
 			throw Error('Fetch to Server')
 		}
@@ -82,4 +94,26 @@ export async function put(
 	} else {
 		throw Error('idToken is undefined')
 	}
+}
+
+type ToUser = { from_user: User }
+type FromUser = { to_user: User }
+
+function mergeUsers(to_users: ToUser[], from_users: FromUser[]): User[] {
+	const userMap = new Map<string, User>()
+
+	// to_users のデータを追加
+	for (const entry of to_users) {
+		userMap.set(entry.from_user.id, entry.from_user)
+	}
+
+	// from_users のデータを追加（既にある場合は無視）
+	for (const entry of from_users) {
+		if (!userMap.has(entry.to_user.id)) {
+			userMap.set(entry.to_user.id, entry.to_user)
+		}
+	}
+
+	// Map の値をリスト化して返す
+	return Array.from(userMap.values())
 }
