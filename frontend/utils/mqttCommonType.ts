@@ -1,7 +1,7 @@
 export interface SendCall {
-  roomId: string;
+	roomId: string
 }
 
 export interface SendStatus {
-  status: string;
+	status: string
 }
