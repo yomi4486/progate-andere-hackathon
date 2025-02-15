@@ -24,16 +24,21 @@ export default function FriendsScreen() {
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
 
-	let updatedFromUser: typeof currentUserInfo.from_users | null = null
+	let Friends: typeof currentUserInfo.from_users | null = null
 	if (currentUserInfo != null) {
 		function removeMatchingUsers(
 			from: typeof currentUserInfo.from_users,
 			to: typeof currentUserInfo.to_users,
 		): typeof currentUserInfo.from_users {
-			const toUserIds = new Set(to.map((user) => user.to_user.id))
-			return from.filter((user) => !toUserIds.has(user.from_user.id))
+			const toUserIds = new Set(
+				to.map((user: typeof currentUserInfo) => user.to_user.id),
+			)
+			return from.filter(
+				(user: typeof currentUserInfo) =>
+					!toUserIds.has(user.from_user.id),
+			)
 		}
-		updatedFromUser = removeMatchingUsers(fromUsers, toUsers)
+		Friends = removeMatchingUsers(fromUsers, toUsers)
 	} else {
 		// 例外処理
 	}
@@ -51,7 +56,6 @@ export default function FriendsScreen() {
 	const friendRequests = [{ name: '新しい友達1' }, { name: '新しい友達2' }]
 
 	const handleAddFriend = (friendName: string) => {
-		console.log(`フレンド追加: ${friendName}`)
 		// フレンド追加のロジックをここに追加
 	}
 
@@ -162,12 +166,8 @@ export default function FriendsScreen() {
 								<FriendRequestItem
 									key={index}
 									name={request.name}
-									onApprove={() =>
-										console.log(`${request.name} 承認`)
-									}
-									onReject={() =>
-										console.log(`${request.name} 非承認`)
-									}
+									onApprove={() => {}}
+									onReject={() => {}}
 								/>
 							))
 						)}
