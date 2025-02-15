@@ -24,6 +24,11 @@ const SearchResultModal: React.FC<SearchResultModalProps> = ({
 		setComfirmModalVisible(true)
 	}
 
+	const handleCloseComfirmModal = () => {
+		setComfirmModalVisible(false)
+		onClose()
+	}
+
 	return (
 		<>
 			<CommonModal visible={visible} onClose={onClose}>
@@ -37,9 +42,10 @@ const SearchResultModal: React.FC<SearchResultModalProps> = ({
 						<Text style={styles.buttonText}>申請を送る</Text>
 					</TouchableOpacity>
 				</View>
+				{/* ここからの SearchComfirmModal 、CommonModalの外にあったのを動かしたら動くようになったけど、閉じた時に他のボタンが押せなくなる。  */}
 				<SearchComfirmModal
 					visible={isComfirmModalVisible}
-					onClose={() => setComfirmModalVisible(false)}
+					onClose={handleCloseComfirmModal}
 					userName={user.name}
 				/>
 			</CommonModal>
