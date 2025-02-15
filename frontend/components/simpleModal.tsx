@@ -35,7 +35,7 @@ const SimpleModal: React.FC<SimpleModalProps> = ({
 				style={{
 					minHeight: 'auto',
 					width: '75%',
-					backgroundColor: '#cccccc',
+					backgroundColor: '#fff',
 					borderRadius: 13,
 				}}
 			>
