@@ -17,13 +17,12 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({
 }) => {
 	const [friendName, setFriendName] = useState('')
 	const [isSearchModalVisible, setSearchModalVisible] = useState(false)
-	/*
+
 	const handleAddFriend = () => {
 		onAddFriend(friendName)
 		setFriendName('')
 		onClose()
 	}
-
 
 	const handleOpenSearchModal = () => {
 		setSearchModalVisible(true)

@@ -30,6 +30,7 @@ export const UserRoute = new Hono<{
 						from_user: {
 							select: {
 								id: true,
+								username: true,
 								icon_url: true,
 								status: true,
 							},
