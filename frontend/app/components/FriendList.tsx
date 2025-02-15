@@ -13,7 +13,6 @@ const FriendList: React.FC<FriendListProps> = ({
 	isActive,
 	statusMessage,
 }) => {
-	console.log(isActive)
 	return (
 		<View style={styles.friendItem}>
 			<View style={styles.iconContainer}>

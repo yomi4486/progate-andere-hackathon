@@ -4,23 +4,27 @@ import FriendList from './FriendList'
 
 interface FriendListContainerProps {
 	title: string
-	friends: { name: string; isActive: boolean; statusMessage: string }[]
+	friends: { username: string; isActive: boolean; statusMessage: string }[]
 }
 
 const FriendListContainer: React.FC<FriendListContainerProps> = ({
 	title,
 	friends,
 }) => {
-	const activeFriends = friends.filter((friend) => friend.isActive)
-	//const inactiveFriends = friends.filter((friend) => !friend.isActive)
-
+	const isNonActive = title === '非アクティブなフレンド'
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<Text
 					style={[
 						styles.title,
-						{ color: activeFriends.length > 0 ? 'green' : 'gray' },
+						{
+							color: isNonActive
+								? 'gray'
+								: friends.length > 0
+									? 'green'
+									: 'gray',
+						},
 					]}
 				>
 					{title}
@@ -28,20 +32,38 @@ const FriendListContainer: React.FC<FriendListContainerProps> = ({
 				<Text
 					style={[
 						styles.count,
-						{ color: activeFriends.length > 0 ? 'green' : 'gray' },
+						{
+							color: isNonActive
+								? 'gray'
+								: friends.length > 0
+									? 'green'
+									: 'gray',
+						},
 					]}
 				>
 					{friends.length}
 				</Text>
 			</View>
 			<View style={styles.borderLine} />
-			{friends.map((friend, index) => (
-				<FriendList
-					name={friend.name}
-					isActive={friend.isActive}
-					statusMessage={friend.statusMessage}
-				/>
-			))}
+			{friends.length > 0 ? (
+				friends.map((friend, index) => (
+					<FriendList
+						key={index}
+						name={friend.username}
+						isActive={friend.isActive}
+						statusMessage={friend.statusMessage}
+					/>
+				))
+			) : (
+				<View style={styles.noFriendsMessageContainer}>
+					<Text style={styles.noFriendsMessage}>
+						現在{title}がいません。
+					</Text>
+					<Text style={styles.noFriendsMessage}>
+						フレンドを追加しましょう！
+					</Text>
+				</View>
+			)}
 		</View>
 	)
 }
@@ -69,6 +91,16 @@ const styles = StyleSheet.create({
 		borderBottomColor: '#ccc',
 		borderBottomWidth: 1,
 		marginBottom: 15, // 下のmarginも少し大きく
+	},
+	noFriendsMessageContainer: {
+		alignItems: 'center',
+		marginVertical: 20,
+	},
+	noFriendsMessage: {
+		textAlign: 'center',
+		color: '#808080',
+		fontSize: 16,
+		marginVertical: 5, // 上下の間隔を追加
 	},
 })
 

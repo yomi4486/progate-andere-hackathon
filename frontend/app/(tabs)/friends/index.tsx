@@ -25,31 +25,52 @@ export default function FriendsScreen() {
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [userData, setUserData] =
 		useState<Awaited<ReturnType<typeof Users.get>>>()
+	// アクティブと非アクティブフレンドを分けて管理するstate
+	const [activeFriends, setActiveFriends] = useState<
+		{
+			username: string
+			isActive: boolean
+			statusMessage: string
+		}[]
+	>([])
+	const [inactiveFriends, setInactiveFriends] = useState<
+		{
+			username: string
+			isActive: boolean
+			statusMessage: string
+		}[]
+	>([])
 
 	useEffect(() => {
 		;(async () => {
 			if (idToken) {
 				const res = await Users.get(idToken)
 				setUserData(res)
+
+				// フレンドをアクティブ状態で振り分け
+				if (res?.friends) {
+					const active = res.friends
+						.filter((friend) => friend.status === 'ACTIVE')
+						.map((friend) => ({
+							username: friend.username,
+							isActive: true,
+							statusMessage: friend.status_message,
+						}))
+
+					const inactive = res.friends
+						.filter((friend) => friend.status !== 'ACTIVE')
+						.map((friend) => ({
+							username: friend.username,
+							isActive: false,
+							statusMessage: friend.status_message,
+						}))
+
+					setActiveFriends(active)
+					setInactiveFriends(inactive)
+				}
 			}
 		})()
 	}, [])
-
-	const activeFriends = [
-		{ name: 'yomi', isActive: true, statusMessage: '最近オンライン' },
-		{ name: 'mono', isActive: true, statusMessage: '最近オンライqン' },
-	]
-
-	const inactiveFriends = [
-		{ name: 'まる', lastLogin: '1日前', isActive: false },
-		{ name: 'kuro', lastLogin: '3日前', isActive: false },
-	]
-
-	const friendRequests = [{ name: '新しい友達1' }, { name: '新しい友達2' }]
-
-	const handleAddFriend = (friendName: string) => {
-		// フレンド追加のロジックをここに追加
-	}
 
 	return (
 		<View style={{ height: '100%' }}>
@@ -119,11 +140,11 @@ export default function FriendsScreen() {
 				icon="add"
 				color="#FFFFFF"
 			/>
-			<AddFriendModal
+			{/* <AddFriendModal
 				visible={isModalVisible}
 				onClose={() => setModalVisible(false)}
-				onAddFriend={handleAddFriend}
-			/>
+				// onAddFriend={handleAddFriend}
+			/> */}
 			<ScrollView>
 				{selectedTab === 'friends' && (
 					<>
@@ -139,14 +160,20 @@ export default function FriendsScreen() {
 								placeholderTextColor="#a0a0a0"
 							/>
 						</View>
-						<FriendListContainer
-							title="アクティブなフレンド"
-							friends={activeFriends}
-						/>
-						<FriendListContainer
-							title="非アクティブなフレンド"
-							friends={inactiveFriends}
-						/>
+						{userData ? (
+							<>
+								<FriendListContainer
+									title="アクティブなフレンド"
+									friends={activeFriends}
+								/>
+								<FriendListContainer
+									title="非アクティブなフレンド"
+									friends={inactiveFriends}
+								/>
+							</>
+						) : (
+							<Text>loading...</Text>
+						)}
 					</>
 				)}
 				{selectedTab === 'pending' && (
