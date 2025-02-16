@@ -139,8 +139,7 @@ export async function getFromId(
 		)
 		if (result.ok) {
 			const json = await result.json()
-			return json;
-
+			return json
 		} else {
 			throw Error(`Fetch to Server(${result.status})`)
 		}
