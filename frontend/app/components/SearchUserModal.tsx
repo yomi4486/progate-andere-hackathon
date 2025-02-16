@@ -5,7 +5,7 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 	View,
-	Image
+	Image,
 } from 'react-native'
 import SimpleModal from '../../components/simpleModal'
 import SearchResultModal from './SearchResultModal'
@@ -17,11 +17,9 @@ interface SearchUserModalProps {
 	onClose: () => void
 }
 
-const SearchUserModal: React.FC<SearchUserModalProps> = ({
-	onClose,
-}) => {
+const SearchUserModal: React.FC<SearchUserModalProps> = ({ onClose }) => {
 	const theme = useTheme()
-	const {idToken} = useAuth()
+	const { idToken } = useAuth()
 	const [searchUserId, setSearchUserId] = useState('')
 	const [isSearchResultVisible, setSearchResultVisible] = useState(false)
 	const [searchResult, setSearchResult] = useState<{
@@ -46,11 +44,11 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 		}
 	}
 
-	async function handleSendRequest():Promise<boolean>{
-		const res = await Friends.post(idToken!,searchUserId);
+	async function handleSendRequest(): Promise<boolean> {
+		const res = await Friends.post(idToken!, searchUserId)
 		console.log(res)
-		if(res)return true;
-		return false;
+		if (res) return true
+		return false
 	}
 
 	const handleCloseResultModal = () => {
@@ -58,8 +56,7 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 		onClose()
 	}
 
-	return (
-		searchResult?
+	return searchResult ? (
 		<View style={styles.container}>
 			<Image
 				source={{ uri: searchResult.iconUrl }}
@@ -72,17 +69,15 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 			<Text style={styles.name}>{searchResult.name}</Text>
 			<TouchableOpacity
 				style={styles.requestButton}
-				onPress={async()=>{
-					const res =await handleSendRequest();
+				onPress={async () => {
+					const res = await handleSendRequest()
 					console.log(res)
-				}
-
-				}
+				}}
 			>
 				<Text style={styles.buttonText}>申請を送る</Text>
 			</TouchableOpacity>
 		</View>
-		:
+	) : (
 		<View style={styles.content}>
 			<TextInput
 				style={[
@@ -110,14 +105,9 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 				<Text style={styles.buttonText}>検索</Text>
 			</TouchableOpacity>
 			<TouchableOpacity
-				style={[
-					styles.qrButton,
-					{ backgroundColor: theme.primary },
-				]}
+				style={[styles.qrButton, { backgroundColor: theme.primary }]}
 			>
-				<Text style={styles.buttonText}>
-					QRコードを読み込む
-				</Text>
+				<Text style={styles.buttonText}>QRコードを読み込む</Text>
 			</TouchableOpacity>
 		</View>
 	)

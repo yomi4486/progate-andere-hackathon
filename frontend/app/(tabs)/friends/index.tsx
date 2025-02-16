@@ -23,7 +23,6 @@ import * as Friends from '../../../utils/friends'
 import ModalProfileInfo from '@/app/components/ModalProfileInfo'
 import SimpleModal from '@/components/simpleModal'
 
-
 export default function FriendsScreen() {
 	const { idToken } = useAuth()
 	const [selectedTab, setSelectedTab] = useState('friends')
@@ -126,7 +125,7 @@ export default function FriendsScreen() {
 					setTwoModalVisible(false)
 				}}
 			>
-				<SearchUserModal onClose={()=>{}}/>
+				<SearchUserModal onClose={() => {}} />
 			</SimpleModal>
 			<DefaultHeader title="フレンド" showSettingButton={true} />
 			<View style={styles.tabContainer}>
