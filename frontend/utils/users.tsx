@@ -123,15 +123,14 @@ function mergeUsers(to_users: ToUser[], from_users: FromUser[]): User[] {
 	return Array.from(userMap.values())
 }
 
-const getObj = client.users[':id'].$get;
+const getObj = client.users[':id'].$get
 export async function getFromId(
 	idToken: string | undefined,
-	id:string
-): Promise<InferResponseType<typeof getObj,200>>{
-	
+	id: string,
+): Promise<InferResponseType<typeof getObj, 200>> {
 	if (idToken) {
 		const result = await client.users[':id'].$get(
-			{param:{id:id}},
+			{ param: { id: id } },
 			{
 				headers: {
 					Authorization: `Beaner ${idToken}`,
@@ -141,6 +140,7 @@ export async function getFromId(
 		if (result.ok) {
 			const json = await result.json()
 			return json;
+
 		} else {
 			throw Error(`Fetch to Server(${result.status})`)
 		}
