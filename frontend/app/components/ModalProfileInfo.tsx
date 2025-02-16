@@ -7,17 +7,22 @@ import {
 	Clipboard,
 } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
+import SearchUserButton from './SearchUserButton'
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar'
+import SearchUserModal from './SearchUserModal'
 
 interface ModalProfileInfoProps {
 	name: string
 	userId: string
 	qrCode?: string // QRコードのURLまたはデータ
+	onClick: () => void
 }
 
 const ModalProfileInfo: React.FC<ModalProfileInfoProps> = ({
 	name,
 	userId,
 	qrCode = '',
+	onClick,
 }) => {
 	const copyToClipboard = () => {
 		Clipboard.setString(userId)
@@ -40,6 +45,12 @@ const ModalProfileInfo: React.FC<ModalProfileInfoProps> = ({
 			<View style={styles.qrCodeContainer}>
 				{/* <Image source={{ uri: qrCode }} style={styles.qrCode} /> */}
 			</View>
+			<SearchUserButton
+				onPress={() => {
+					console.log('ユーザー検索')
+					onClick()
+				}}
+			/>
 		</View>
 	)
 }

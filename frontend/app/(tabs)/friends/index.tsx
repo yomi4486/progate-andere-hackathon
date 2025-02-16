@@ -27,6 +27,7 @@ export default function FriendsScreen() {
 	const { idToken } = useAuth()
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
+	const [isTwoModalVisible, setTwoModalVisible] = useState(false)
 	const [reload, SetReload] = useState(0)
 	const [userData, setUserData] =
 		useState<Awaited<ReturnType<typeof Users.get>>>()
@@ -113,7 +114,18 @@ export default function FriendsScreen() {
 				<ModalProfileInfo
 					name={userData?.username!}
 					userId={userData?.id!}
+					onClick={() => {
+						setTwoModalVisible(true)
+					}}
 				/>
+			</SimpleModal>
+			<SimpleModal
+				visible={isTwoModalVisible}
+				visibleControler={() => {
+					setTwoModalVisible(false)
+				}}
+			>
+				<Text>申請画面</Text>
 			</SimpleModal>
 			<DefaultHeader title="フレンド" showSettingButton={true} />
 			<View style={styles.tabContainer}>
