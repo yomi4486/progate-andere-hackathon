@@ -56,11 +56,13 @@ export async function post(
 					},
 				},
 			)
-
+			if (!res.ok) {
+				throw Error('Fetch error')
+			}
 			const json = await res.json()
 			return json
 		} catch {
-			throw Error('Fetch Error')
+			return null
 		}
 	} else {
 		throw Error('idToken is undefined')
@@ -87,11 +89,13 @@ export async function put(
 					},
 				},
 			)
-
+			if (!res.ok) {
+				throw Error('Fetch error')
+			}
 			const json = await res.json()
 			return json
 		} catch {
-			throw Error('Fetch Error')
+			return null
 		}
 	} else {
 		throw Error('idToken is undefined')

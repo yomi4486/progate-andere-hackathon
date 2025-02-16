@@ -16,7 +16,7 @@ import { localStyles } from '../../styles'
 import FriendListContainer from '../../components/FriendListContainer'
 import FloatingActionButton from '@/components/FloatActionButton'
 import FriendRequestItem from '../../components/FriendRequestItem'
-import AddFriendModal from '../../components/AddFriendModal'
+import SearchUserModal from '@/app/components/SearchUserModal'
 import { useEffect } from 'react'
 import * as Users from '@/utils/users'
 import * as Friends from '../../../utils/friends'
@@ -27,6 +27,7 @@ export default function FriendsScreen() {
 	const { idToken } = useAuth()
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
+	const [isTwoModalVisible, setTwoModalVisible] = useState(false)
 	const [reload, SetReload] = useState(0)
 	const [userData, setUserData] =
 		useState<Awaited<ReturnType<typeof Users.get>>>()
@@ -113,6 +114,21 @@ export default function FriendsScreen() {
 				<ModalProfileInfo
 					name={userData?.username!}
 					userId={userData?.id!}
+					onClick={() => {
+						setTwoModalVisible(true)
+					}}
+				/>
+			</SimpleModal>
+			<SimpleModal
+				visible={isTwoModalVisible}
+				visibleControler={() => {
+					setTwoModalVisible(false)
+				}}
+			>
+				<SearchUserModal
+					onClose={() => {
+						setTwoModalVisible(false)
+					}}
 				/>
 			</SimpleModal>
 			<DefaultHeader title="フレンド" showSettingButton={true} />

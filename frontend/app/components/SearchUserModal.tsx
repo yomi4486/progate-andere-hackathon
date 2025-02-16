@@ -1,17 +1,26 @@
 import React, { useState } from 'react'
-import { Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
-import CommonModal from './CommonModal'
+import {
+	Text,
+	TextInput,
+	TouchableOpacity,
+	StyleSheet,
+	View,
+	Image,
+} from 'react-native'
+import SimpleModal from '../../components/simpleModal'
 import SearchResultModal from './SearchResultModal'
+import { useTheme } from './themeContext'
+import * as Friends from '../../utils/friends'
+import { useAuth } from '@/utils/authContext'
+import * as Users from '../../utils/users'
 
 interface SearchUserModalProps {
-	visible: boolean
 	onClose: () => void
 }
 
-const SearchUserModal: React.FC<SearchUserModalProps> = ({
-	visible,
-	onClose,
-}) => {
+const SearchUserModal: React.FC<SearchUserModalProps> = ({ onClose }) => {
+	const theme = useTheme()
+	const { idToken, currentUserInfo } = useAuth()
 	const [searchUserId, setSearchUserId] = useState('')
 	const [isSearchResultVisible, setSearchResultVisible] = useState(false)
 	const [searchResult, setSearchResult] = useState<{
@@ -19,31 +28,40 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 		iconUrl: string
 	} | null>(null)
 
-	const handleSearchUser = () => {
-		//console.log(`検索するユーザーID: ${searchUserId}`)
-		// ユーザー検索のロジックをここに追加
+	const handleSearchUser = async (id: string) => {
 		try {
-			// 検索結果を設定（仮のデータを使用）
+			if (id.length == 0) {
+				throw Error('IDが不正です')
+			}
+			if (currentUserInfo?.id == id) {
+				throw Error('自分と同じIDに申請を送ることはできません')
+			}
+			const res = await Users.getFromId(idToken!, id)
+			console.log(res)
 			setSearchResult({
-				name: '検索結果のユーザー',
-				iconUrl: 'https://example.com/user-icon.png',
+				name: res.username,
+				iconUrl: res.icon_url,
 			})
 			setSearchResultVisible(true)
-			//console.log(searchResult)
 		} catch (error) {
 			console.error('検索エラー:', error)
-			// エラーが発生しても検索結果モーダルに遷移する
 			setSearchResult({
-				name: '無効なユーザーID',
+				name: `${error}`,
 				iconUrl: 'https://example.com/user-icon.png',
 			})
-			setSearchResultVisible(true)
+
+			setSearchResultVisible(false)
 		}
 	}
 
-	const handleSendRequest = () => {
-		//console.log('申請を送るボタンが押されました')
-		// 申請を送るロジックをここに追加
+	async function handleSendRequest(): Promise<boolean> {
+		if (!isSearchResultVisible) {
+			console.log('OK')
+			setSearchResult(null)
+		}
+		const res = await Friends.post(idToken!, searchUserId)
+		if (res) return true
+		return false
 	}
 
 	const handleCloseResultModal = () => {
@@ -51,60 +69,82 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({
 		onClose()
 	}
 
-	return (
-		<>
-			<CommonModal visible={visible} onClose={onClose}>
-				<TextInput
-					style={styles.input}
-					placeholder="ユーザーIDを入力"
-					value={searchUserId}
-					onChangeText={setSearchUserId}
-					autoCorrect={false}
-					autoCapitalize="none"
-				/>
-				<TouchableOpacity
-					style={styles.searchButton}
-					onPress={handleSearchUser}
-				>
-					<Text style={styles.buttonText}>検索</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.qrButton}
-					/* /
-					onPress={() =>
-						console.info('QRコードを読み込むボタンが押されました')
-					}
-					*/
-				>
-					<Text style={styles.buttonText}>QRコードを読み込む</Text>
-				</TouchableOpacity>{' '}
-				{isSearchResultVisible && searchResult && (
-					<SearchResultModal
-						visible={isSearchResultVisible}
-						onClose={handleCloseResultModal}
-						user={searchResult}
-						onSendRequest={handleSendRequest}
-					/>
-				)}
-			</CommonModal>
-		</>
+	return searchResult ? (
+		<View style={styles.container}>
+			<Image
+				source={{ uri: searchResult.iconUrl }}
+				style={{
+					width: 100,
+					height: 100,
+					borderRadius: 50,
+				}}
+			/>
+			<Text style={styles.name}>{searchResult.name}</Text>
+			<TouchableOpacity
+				style={styles.requestButton}
+				onPress={async () => {
+					const res = await handleSendRequest()
+				}}
+			>
+				<Text style={styles.buttonText}>
+					{isSearchResultVisible ? '申請を送る' : 'ok'}
+				</Text>
+			</TouchableOpacity>
+		</View>
+	) : (
+		<View style={styles.content}>
+			<TextInput
+				style={[
+					styles.input,
+					{
+						backgroundColor: theme.inputBackground,
+						color: theme.text,
+						borderColor: theme.border,
+					},
+				]}
+				placeholder="ユーザーIDを入力"
+				placeholderTextColor={theme.secondary}
+				value={searchUserId}
+				onChangeText={setSearchUserId}
+				autoCorrect={false}
+				autoCapitalize="none"
+			/>
+			<TouchableOpacity
+				style={[
+					styles.searchButton,
+					{ backgroundColor: theme.primary },
+				]}
+				onPress={async () => {
+					await handleSearchUser(searchUserId)
+				}}
+			>
+				<Text style={styles.buttonText}>検索</Text>
+			</TouchableOpacity>
+			<TouchableOpacity
+				style={[styles.qrButton, { backgroundColor: theme.primary }]}
+			>
+				<Text style={styles.buttonText}>QRコードを読み込む</Text>
+			</TouchableOpacity>
+		</View>
 	)
 }
 
 const styles = StyleSheet.create({
+	content: {
+		padding: 20,
+		alignItems: 'center',
+	},
 	input: {
 		width: '100%',
 		padding: 10,
 		borderWidth: 1,
-		borderColor: '#ccc',
 		borderRadius: 5,
-		marginTop: 30,
+		marginTop: 20,
 		marginBottom: 10,
 	},
 	searchButton: {
 		width: '30%',
 		padding: 7,
-		backgroundColor: 'green',
 		borderRadius: 50,
 		alignItems: 'center',
 		marginBottom: 30,
@@ -112,13 +152,28 @@ const styles = StyleSheet.create({
 	qrButton: {
 		width: '100%',
 		padding: 15,
-		backgroundColor: 'green',
 		borderRadius: 5,
 		alignItems: 'center',
 	},
 	buttonText: {
 		color: 'white',
 		fontSize: 16,
+	},
+	container: {
+		alignItems: 'center',
+		marginBottom: 20,
+	},
+	name: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginTop: 10,
+	},
+	requestButton: {
+		marginTop: 20,
+		padding: 10,
+		backgroundColor: 'green',
+		borderRadius: 5,
+		alignItems: 'center',
 	},
 })
 
