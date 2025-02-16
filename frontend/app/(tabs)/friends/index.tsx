@@ -125,7 +125,7 @@ export default function FriendsScreen() {
 					setTwoModalVisible(false)
 				}}
 			>
-				<SearchUserModal onClose={() => {}} />
+				<SearchUserModal onClose={()=>{setTwoModalVisible(false)}}/>
 			</SimpleModal>
 			<DefaultHeader title="フレンド" showSettingButton={true} />
 			<View style={styles.tabContainer}>

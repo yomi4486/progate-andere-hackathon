@@ -12,6 +12,7 @@ import SearchResultModal from './SearchResultModal'
 import { useTheme } from './themeContext'
 import * as Friends from '../../utils/friends'
 import { useAuth } from '@/utils/authContext'
+import * as Users from '../../utils/users';
 
 interface SearchUserModalProps {
 	onClose: () => void
@@ -19,7 +20,7 @@ interface SearchUserModalProps {
 
 const SearchUserModal: React.FC<SearchUserModalProps> = ({ onClose }) => {
 	const theme = useTheme()
-	const { idToken } = useAuth()
+	const {idToken,currentUserInfo} = useAuth()
 	const [searchUserId, setSearchUserId] = useState('')
 	const [isSearchResultVisible, setSearchResultVisible] = useState(false)
 	const [searchResult, setSearchResult] = useState<{
@@ -27,28 +28,41 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ onClose }) => {
 		iconUrl: string
 	} | null>(null)
 
-	const handleSearchUser = () => {
+	const handleSearchUser = async(id:string)=> {
 		try {
+			if(id.length == 0){
+				throw Error("IDが不正です")
+			}
+			if(currentUserInfo?.id == id){
+				throw Error("自分と同じIDに申請を送ることはできません")
+			}
+			const res = await Users.getFromId(idToken!,id);
+			console.log(res);
 			setSearchResult({
-				name: '検索結果のユーザー',
-				iconUrl: 'https://example.com/user-icon.png',
+				name: res.username,
+				iconUrl: res.icon_url,
 			})
 			setSearchResultVisible(true)
 		} catch (error) {
 			console.error('検索エラー:', error)
 			setSearchResult({
-				name: '無効なユーザーID',
+				name: `${error}`,
 				iconUrl: 'https://example.com/user-icon.png',
 			})
-			setSearchResultVisible(true)
+			
+			setSearchResultVisible(false)
 		}
 	}
 
-	async function handleSendRequest(): Promise<boolean> {
-		const res = await Friends.post(idToken!, searchUserId)
-		console.log(res)
-		if (res) return true
-		return false
+
+	async function handleSendRequest():Promise<boolean>{
+		if(!isSearchResultVisible){
+			console.log("OK")
+			setSearchResult(null);
+		}
+		const res = await Friends.post(idToken!,searchUserId);
+		if(res)return true;
+		return false;
 	}
 
 	const handleCloseResultModal = () => {
@@ -69,12 +83,9 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ onClose }) => {
 			<Text style={styles.name}>{searchResult.name}</Text>
 			<TouchableOpacity
 				style={styles.requestButton}
-				onPress={async () => {
-					const res = await handleSendRequest()
-					console.log(res)
-				}}
+				onPress={async()=>{const res =await handleSendRequest();}}
 			>
-				<Text style={styles.buttonText}>申請を送る</Text>
+				<Text style={styles.buttonText}>{isSearchResultVisible?"申請を送る":"ok"}</Text>
 			</TouchableOpacity>
 		</View>
 	) : (
@@ -100,7 +111,7 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ onClose }) => {
 					styles.searchButton,
 					{ backgroundColor: theme.primary },
 				]}
-				onPress={handleSearchUser}
+				onPress={async()=>{await handleSearchUser(searchUserId)}}
 			>
 				<Text style={styles.buttonText}>検索</Text>
 			</TouchableOpacity>

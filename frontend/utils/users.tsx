@@ -44,6 +44,7 @@ export async function get(
 		throw Error('idToken is undefind')
 	}
 }
+
 export async function post(
 	data: InferRequestType<typeof client.users.$post>['json'],
 	idToken: string | undefined,
@@ -120,4 +121,32 @@ function mergeUsers(to_users: ToUser[], from_users: FromUser[]): User[] {
 
 	// Map の値をリスト化して返す
 	return Array.from(userMap.values())
+}
+
+const getObj = client.users[':id'].$get;
+export async function getFromId(
+	idToken: string | undefined,
+	id:string
+): Promise<InferResponseType<typeof getObj,200>>{
+	
+	if (idToken) {
+		const result = await client.users[':id'].$get(
+			{param:{id:id}},
+			{
+				headers: {
+					Authorization: `Beaner ${idToken}`,
+				},
+			},
+		)
+		if (result.ok) {
+			const json = await result.json()
+			const mergeFriends = mergeUsers(json.to_users, json.from_users)
+
+			return json;
+		} else {
+			throw Error('Fetch to Server')
+		}
+	} else {
+		throw Error('idToken is undefind')
+	}
 }
