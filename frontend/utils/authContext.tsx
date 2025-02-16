@@ -8,19 +8,18 @@ import { AppType } from '../../backend/src'
 // eslint-disable-next-line
 const { hc } = require('hono/dist/client') as typeof import('hono/client')
 import type { InferResponseType } from 'hono/client'
+import { ExtendedUserResponse } from './users'
 
 const client = hc<AppType>('')
 
 export interface AuthContextType {
 	user: SignInSuccessResponse | null
 	idToken: string | null
-	currentUserInfo: InferResponseType<typeof client.users.$get, 200> | null
+	currentUserInfo: ExtendedUserResponse | null
 	googleSignIn: () => Promise<void>
 	isSetupAccount: () => Promise<boolean>
 	signOut: () => Promise<void>
-	updateCurrentUserInfo: (
-		data: InferResponseType<typeof client.users.$get, 200>,
-	) => void
+	updateCurrentUserInfo: (data: ExtendedUserResponse) => void
 	reGetIdToken: () => Promise<void>
 }
 
@@ -30,10 +29,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
 	const [user, setUser] = useState<SignInSuccessResponse | null>(null)
 	const [idToken, setIdToken] = useState<string | null>(null)
-	const [currentUserInfo, setCurrentUserInfo] = useState<InferResponseType<
-		typeof client.users.$get,
-		200
-	> | null>(null)
+	const [currentUserInfo, setCurrentUserInfo] =
+		useState<ExtendedUserResponse | null>(null)
 	GoogleSignin.configure({
 		iosClientId:
 			'165387728661-co452vd2hfojg56nnknpu9j8ddksm66l.apps.googleusercontent.com',
@@ -57,9 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}
 
-	const updateCurrentUserInfo = (
-		data: InferResponseType<typeof client.users.$get, 200>,
-	): void => {
+	const updateCurrentUserInfo = (data: ExtendedUserResponse): void => {
 		setCurrentUserInfo(data)
 	}
 

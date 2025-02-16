@@ -139,11 +139,9 @@ export async function getFromId(
 		)
 		if (result.ok) {
 			const json = await result.json()
-			const mergeFriends = mergeUsers(json.to_users, json.from_users)
-
 			return json
 		} else {
-			throw Error('Fetch to Server')
+			throw Error(`Fetch to Server(${result.status})`)
 		}
 	} else {
 		throw Error('idToken is undefind')
