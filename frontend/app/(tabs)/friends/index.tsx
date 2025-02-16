@@ -16,12 +16,13 @@ import { localStyles } from '../../styles'
 import FriendListContainer from '../../components/FriendListContainer'
 import FloatingActionButton from '@/components/FloatActionButton'
 import FriendRequestItem from '../../components/FriendRequestItem'
-import AddFriendModal from '../../components/AddFriendModal'
+import SearchUserModal from '@/app/components/SearchUserModal'
 import { useEffect } from 'react'
 import * as Users from '@/utils/users'
 import * as Friends from '../../../utils/friends'
 import ModalProfileInfo from '@/app/components/ModalProfileInfo'
 import SimpleModal from '@/components/simpleModal'
+
 
 export default function FriendsScreen() {
 	const { idToken } = useAuth()
@@ -125,7 +126,7 @@ export default function FriendsScreen() {
 					setTwoModalVisible(false)
 				}}
 			>
-				<Text>申請画面</Text>
+				<SearchUserModal onClose={()=>{}}/>
 			</SimpleModal>
 			<DefaultHeader title="フレンド" showSettingButton={true} />
 			<View style={styles.tabContainer}>
