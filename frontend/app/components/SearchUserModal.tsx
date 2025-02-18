@@ -58,14 +58,13 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ onClose }) => {
 			setSearchResult(null)
 		}
 
-		const res = await Friends.post(idToken!,searchUserId);
+		const res = await Friends.post(idToken!, searchUserId)
 		console.log(res)
-		if(res){
-			onClose();
-			return true;
+		if (res) {
+			onClose()
+			return true
 		}
-		return false;
-
+		return false
 	}
 
 	const handleCloseResultModal = () => {
