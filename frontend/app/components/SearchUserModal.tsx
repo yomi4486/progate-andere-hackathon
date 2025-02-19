@@ -7,8 +7,6 @@ import {
 	View,
 	Image,
 } from 'react-native'
-import SimpleModal from '../../components/simpleModal'
-import SearchResultModal from './SearchResultModal'
 import { useTheme } from './themeContext'
 import * as Friends from '../../utils/friends'
 import { useAuth } from '@/utils/authContext'
@@ -59,8 +57,13 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ onClose }) => {
 			console.log('OK')
 			setSearchResult(null)
 		}
+
 		const res = await Friends.post(idToken!, searchUserId)
-		if (res) return true
+		console.log(res)
+		if (res) {
+			onClose()
+			return true
+		}
 		return false
 	}
 
