@@ -112,9 +112,9 @@ export const profileStyles = StyleSheet.create({
 	},
 	profileStatusContainer: {
 		flexDirection: 'row',
-		flex:1,
+		flex: 1,
 		alignItems: 'center',
-		justifyContent: 'center', 
+		justifyContent: 'center',
 		marginTop: 5,
 	},
 	activeDot: {
@@ -151,21 +151,21 @@ export const profileStyles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 20,
 		paddingHorizontal: 10,
-		color:"#4CAF50",
+		color: '#4CAF50',
 	},
 	statusInput: {
 		flex: 1,
-		textAlign:"center",
-		marginLeft:10,
+		textAlign: 'center',
+		marginLeft: 10,
 		height: 40,
 	},
 	blurStatusInput: {
 		flex: 1,
 		height: 30,
-		color:'#4CAF50',
-		textAlign:"center",
-		marginLeft:10,
-		fontWeight:"bold"
+		color: '#4CAF50',
+		textAlign: 'center',
+		marginLeft: 10,
+		fontWeight: 'bold',
 	},
 	statusEditIcon: {
 		fontSize: 20,
