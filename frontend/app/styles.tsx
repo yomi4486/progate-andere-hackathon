@@ -102,21 +102,23 @@ export const profileStyles = StyleSheet.create({
 		marginTop: 20,
 	},
 	profileIcon: {
-		fontSize: 100,
+		fontSize: 90,
 		color: '#eeeeee', // アイコンの色を変更
 	},
 	profileName: {
-		fontSize: 18,
+		fontSize: 20,
 		fontWeight: 'bold',
 		marginTop: 10,
 	},
 	profileStatusContainer: {
 		flexDirection: 'row',
+		flex:1,
 		alignItems: 'center',
+		justifyContent: 'center', 
 		marginTop: 5,
 	},
 	activeDot: {
-		fontSize: 16,
+		fontSize: 18,
 		color: '#4CAF50',
 		marginRight: 5,
 	},
@@ -139,9 +141,31 @@ export const profileStyles = StyleSheet.create({
 		borderRadius: 20,
 		paddingHorizontal: 10,
 	},
+	blurStatusInputContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		backgroundColor: '#e0f7e0',
+		marginTop: 10,
+		width: '40%',
+		borderColor: '#00000000',
+		borderWidth: 1,
+		borderRadius: 20,
+		paddingHorizontal: 10,
+		color:"#4CAF50",
+	},
 	statusInput: {
 		flex: 1,
+		textAlign:"center",
+		marginLeft:10,
 		height: 40,
+	},
+	blurStatusInput: {
+		flex: 1,
+		height: 30,
+		color:'#4CAF50',
+		textAlign:"center",
+		marginLeft:10,
+		fontWeight:"bold"
 	},
 	statusEditIcon: {
 		fontSize: 20,
