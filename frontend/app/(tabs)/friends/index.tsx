@@ -25,8 +25,8 @@ import ModalProfileInfo from '@/app/components/ModalProfileInfo'
 import SimpleModal from '@/components/simpleModal'
 
 export default function FriendsScreen() {
-const { idToken } = useAuth()
-const { friendStatusMap } = usePubSub()
+	const { idToken } = useAuth()
+	const { friendStatusMap } = usePubSub()
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [isTwoModalVisible, setTwoModalVisible] = useState(false)

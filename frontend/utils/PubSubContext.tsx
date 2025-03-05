@@ -5,6 +5,7 @@ import { useAuth } from './authContext'
 import { useRouter } from 'expo-router'
 import { SendCall, SendStatus } from '../utils/mqttCommonType'
 import { get } from './users'
+import { View,Text } from 'react-native'
 
 export interface PubSubContextType {
   friendStatusMap: Record<string, FriendStatus>
@@ -20,14 +21,16 @@ interface FriendStatus {
 export const PubSubContext = createContext<PubSubContextType | null>(null)
 
 export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
-	children,
+children,
 }) => {
 	const { user, idToken } = useAuth()
-	if (!user || !user.data.user || !idToken) {
-	  throw new Error('User is not authenticated')
-	}
-	
 	const router = useRouter()
+
+	// Wait for user authentication
+	if (!user?.data.user || !idToken) {
+		return <View><Text>aaa</Text></View>
+	}
+
 	const userId = user.data.user.id
 	const [friends, setFriends] = useState<string[]>([])
 	const [friendStatusMap, setFriendStatusMap] = useState<Record<string, FriendStatus>>({})
@@ -92,19 +95,16 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	  const handleConnect = () => {
 	    // Subscribe to friend statuses
 	    friends.forEach((friendId) => {
-	      console.log("friendId", friendId)
 	      client.subscribe(`${friendId}/#`)
 	    })
 	
 	    client.subscribe(`${userId}/call`)
-	    console.log("Connected friends:", friends)
 	  }
 	
 	  const handleMessage = (topic: string, message: Buffer) => {
 	    const [friendId, dataType] = topic.split('/')
 	    if (dataType === 'status') {
 	      const data = JSON.parse(message.toString()) as SendStatus
-	      console.log("message", data)
 	      const now = Date.now()
 	      
 	      setFriendStatusMap(prev => ({
