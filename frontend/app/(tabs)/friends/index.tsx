@@ -80,27 +80,33 @@ export default function FriendsScreen() {
 
 				// フレンドをオンライン状態で振り分け
 				if (res?.friends) {
-				  
-				  const active = res.friends
-				    .filter((friend) => friendStatusMap[friend.id]?.status === 'online')
-				    .map((friend) => ({
-				      username: friend.username,
-				      isActive: true,
-				      statusMessage: friend.status_message,
-				      icon_url: friend.icon_url,
-				    }))
+					const active = res.friends
+						.filter(
+							(friend) =>
+								friendStatusMap[friend.id]?.status === 'online',
+						)
+						.map((friend) => ({
+							username: friend.username,
+							isActive: true,
+							statusMessage: friend.status_message,
+							icon_url: friend.icon_url,
+						}))
 
-				  const inactive = res.friends
-				    .filter((friend) => !friendStatusMap[friend.id] || friendStatusMap[friend.id].status === 'offline')
-				    .map((friend) => ({
-				      username: friend.username,
-				      isActive: false,
-				      statusMessage: friend.status_message,
-				      icon_url: friend.icon_url,
-				    }))
+					const inactive = res.friends
+						.filter(
+							(friend) =>
+								!friendStatusMap[friend.id] ||
+								friendStatusMap[friend.id].status === 'offline',
+						)
+						.map((friend) => ({
+							username: friend.username,
+							isActive: false,
+							statusMessage: friend.status_message,
+							icon_url: friend.icon_url,
+						}))
 
-				  setActiveFriends(active)
-				  setInactiveFriends(inactive)
+					setActiveFriends(active)
+					setInactiveFriends(inactive)
 				}
 			}
 		})()

@@ -21,7 +21,11 @@ import { usePubSub } from '@/utils/PubSubContext'
 export default function HomeScreen() {
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
 	if (!idToken) {
-		return <View><Text>loading...</Text></View>
+		return (
+			<View>
+				<Text>loading...</Text>
+			</View>
+		)
 	}
 	const { friendStatusMap } = usePubSub()
 	const [statusMessage, setStatusMessage] = useState<string>('')
@@ -171,18 +175,22 @@ export default function HomeScreen() {
 						<View style={profileStyles.friendsBox}>
 							{userData ? (
 								userData.friends
-								.filter((friend) => friendStatusMap[friend.id]?.status === 'online')
-								.map((friend) => {
-									return (
-										<FriendItem
-											key={friend.id}
-											id={friend.id}
-											name={friend.username}
-											message={friend.status_message}
-											icon_url={friend.icon_url}
-										/>
+									.filter(
+										(friend) =>
+											friendStatusMap[friend.id]
+												?.status === 'online',
 									)
-								})
+									.map((friend) => {
+										return (
+											<FriendItem
+												key={friend.id}
+												id={friend.id}
+												name={friend.username}
+												message={friend.status_message}
+												icon_url={friend.icon_url}
+											/>
+										)
+									})
 							) : (
 								<Text>loading...</Text>
 							)}

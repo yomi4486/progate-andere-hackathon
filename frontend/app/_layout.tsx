@@ -1,8 +1,8 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
+	DarkTheme,
+	DefaultTheme,
+	ThemeProvider,
 } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import { Slot, Stack, useRouter } from 'expo-router'
@@ -16,58 +16,62 @@ import { registerGlobals } from '@livekit/react-native'
 
 registerGlobals()
 
-export {
-  ErrorBoundary,
-} from 'expo-router'
+export { ErrorBoundary } from 'expo-router'
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
 function RootLayoutNav() {
-  const { user } = useAuth()
-  const router = useRouter()
+	const { user } = useAuth()
+	const router = useRouter()
 
-  useEffect(() => {
-    if (!user) {
-      router.replace('/login')
-    } else {
-      router.replace('/(tabs)') // ユーザーがログイン済みならホーム画面に遷移
-    }
-  }, [user])
+	useEffect(() => {
+		if (!user) {
+			router.replace('/login')
+		} else {
+			router.replace('/(tabs)') // ユーザーがログイン済みならホーム画面に遷移
+		}
+	}, [user])
 
-  if(user){
-    return<PubSubProvider><Slot /></PubSubProvider>
-  }
+	if (user) {
+		return (
+			<PubSubProvider>
+				<Slot />
+			</PubSubProvider>
+		)
+	}
 
-  return <Slot />
+	return <Slot />
 }
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme()
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  })
+	const colorScheme = useColorScheme()
+	const [loaded, error] = useFonts({
+		SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+		...FontAwesome.font,
+	})
 
-  useEffect(() => {
-    if (error) throw error
-  }, [error])
+	useEffect(() => {
+		if (error) throw error
+	}, [error])
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync()
-    }
-  }, [loaded])
+	useEffect(() => {
+		if (loaded) {
+			SplashScreen.hideAsync()
+		}
+	}, [loaded])
 
-  if (!loaded) {
-    return null
-  }
+	if (!loaded) {
+		return null
+	}
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-          <RootLayoutNav />
-      </AuthProvider>
-    </ThemeProvider>
-  )
+	return (
+		<ThemeProvider
+			value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+		>
+			<AuthProvider>
+				<RootLayoutNav />
+			</AuthProvider>
+		</ThemeProvider>
+	)
 }
