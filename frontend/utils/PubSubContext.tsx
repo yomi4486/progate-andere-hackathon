@@ -1,9 +1,9 @@
-import mqtt from 'mqtt'
 import React from 'react'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useAuth } from './authContext'
 import { useRouter } from 'expo-router'
 import { SendCall, SendStatus } from '../utils/mqttCommonType'
+import mqtt from 'mqtt'
 
 export interface PubSubContextType {
 	friendsStatus: Record<string, string> // フレンドのステータス
@@ -29,9 +29,7 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	)
 
 	const [client] = useState(
-		mqtt.connect(process.env.EXPO_PUBLIC_WS_URL!, {
-			rejectUnauthorized: false,
-		}),
+		mqtt.connect(process.env.EXPO_PUBLIC_WS_URL as string),
 	)
 
 	useEffect(() => {

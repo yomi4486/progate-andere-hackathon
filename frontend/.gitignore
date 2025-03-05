@@ -36,7 +36,6 @@ yarn-error.*
 *.tsbuildinfo
 
 *.plist
-app.json
 
 ios/*
 
