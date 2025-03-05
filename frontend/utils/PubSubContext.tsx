@@ -4,11 +4,18 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { useAuth } from './authContext'
 import { useRouter } from 'expo-router'
 import { SendCall, SendStatus } from '../utils/mqttCommonType'
+import { get } from './users'
+import { View, Text } from 'react-native'
 
 export interface PubSubContextType {
-	friendsStatus: Record<string, string> // フレンドのステータス
-	setFriendList: (friends: string[]) => void // フレンドリストをセットする関数
+	friendStatusMap: Record<string, FriendStatus>
+	setFriendList: (friends: string[]) => void
 	sendMessage: (topic: string, data: SendCall | SendStatus) => void
+}
+
+interface FriendStatus {
+	status: string
+	lastUpdate: number
 }
 
 export const PubSubContext = createContext<PubSubContextType | null>(null)
@@ -16,17 +23,37 @@ export const PubSubContext = createContext<PubSubContextType | null>(null)
 export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const { user } = useAuth()
-	if (!user || !user.data.user) {
-		throw new Error('User is not authenticated')
+	const { user, idToken } = useAuth()
+	const router = useRouter()
+
+	// Wait for user authentication
+	if (!user?.data.user || !idToken) {
+		return (
+			<View>
+				<Text>aaa</Text>
+			</View>
+		)
 	}
 
-	const router = useRouter()
 	const userId = user.data.user.id
-	const [friends, setFriends] = useState<string[]>(['aaaa', 'bbbb'])
-	const [friendsStatus, setFriendsStatus] = useState<Record<string, string>>(
-		{},
-	)
+	const [friends, setFriends] = useState<string[]>([])
+	const [friendStatusMap, setFriendStatusMap] = useState<
+		Record<string, FriendStatus>
+	>({})
+
+	// Fetch friends data when component mounts
+	useEffect(() => {
+		const fetchFriends = async () => {
+			try {
+				const userData = await get(idToken)
+				const friendIds = userData.friends.map((friend) => friend.id)
+				setFriends(friendIds)
+			} catch (error) {
+				console.error('Failed to fetch friends:', error)
+			}
+		}
+		fetchFriends()
+	}, [idToken])
 
 	const [client] = useState(
 		mqtt.connect(process.env.EXPO_PUBLIC_WS_URL!, {
@@ -34,36 +61,97 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 		}),
 	)
 
+	// Handle online status updates and cleanup
 	useEffect(() => {
-		try {
-			client.on('connect', () => {
-				client.publish(`${userId}/status`, 'online', { retain: true })
+		// Send online status every 3 seconds
+		const statusInterval = setInterval(() => {
+			const status: SendStatus = { status: 'online' }
+			client.publish(`${userId}/status`, JSON.stringify(status), {
+				retain: true,
+			})
+		}, 3000)
 
-				// フレンドのステータスを購読
-				friends.forEach((friendId) => {
-					client.subscribe(`${friendId}/#`)
+		// Check for offline friends every second
+		const cleanupInterval = setInterval(() => {
+			const now = Date.now()
+			setFriendStatusMap((prevMap) => {
+				const newMap = { ...prevMap }
+				let hasChanges = false
+
+				Object.entries(newMap).forEach(([friendId, status]) => {
+					if (
+						status.status === 'online' &&
+						now - status.lastUpdate > 5000
+					) {
+						newMap[friendId] = {
+							status: 'offline',
+							lastUpdate: now,
+						}
+						hasChanges = true
+					}
 				})
 
-				client.subscribe(`${userId}/call`)
+				return hasChanges ? newMap : prevMap
+			})
+		}, 1000)
+
+		return () => {
+			clearInterval(statusInterval)
+			clearInterval(cleanupInterval)
+			const status: SendStatus = { status: 'offline' }
+			client.publish(`${userId}/status`, JSON.stringify(status), {
+				retain: true,
+			})
+		}
+	}, [])
+
+	useEffect(() => {
+		if (!client) return
+
+		const handleConnect = () => {
+			// Subscribe to friend statuses
+			friends.forEach((friendId) => {
+				client.subscribe(`${friendId}/#`)
 			})
 
-			client.on('message', (topic, message) => {
-				const [friendId, dataType] = topic.split('/')
-				if (dataType == 'status') {
-					const data = JSON.parse(message.toString()) as SendStatus
-					setFriendsStatus((prev) => ({
-						...prev,
-						[friendId]: data.status,
-					}))
-				} else if (dataType == 'call') {
-					const data = JSON.parse(message.toString()) as SendCall
-					router.push(`/call/${data.roomId}`)
-				}
-			})
-		} catch (e) {
-			console.error('error:' + e)
+			client.subscribe(`${userId}/call`)
 		}
-	}, [friends])
+
+		const handleMessage = (topic: string, message: Buffer) => {
+			const [friendId, dataType] = topic.split('/')
+			if (dataType === 'status') {
+				const data = JSON.parse(message.toString()) as SendStatus
+				const now = Date.now()
+
+				setFriendStatusMap((prev) => ({
+					...prev,
+					[friendId]: { status: data.status, lastUpdate: now },
+				}))
+			} else if (dataType === 'call') {
+				const data = JSON.parse(message.toString()) as SendCall
+				router.push(`/call/${data.roomId}`)
+			}
+		}
+
+		try {
+			// Register event handlers
+			client.on('connect', handleConnect)
+			client.on('message', handleMessage)
+
+			// Initial connection might already be established
+			if (client.connected) {
+				handleConnect()
+			}
+
+			// Cleanup event handlers
+			return () => {
+				client.off('connect', handleConnect)
+				client.off('message', handleMessage)
+			}
+		} catch (e) {
+			console.error('MQTT error:', e)
+		}
+	}, [client, friends, userId, router])
 
 	const setFriendList = (friends: string[]) => {
 		setFriends(friends)
@@ -75,7 +163,7 @@ export const PubSubProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	return (
 		<PubSubContext.Provider
-			value={{ friendsStatus, setFriendList, sendMessage }}
+			value={{ friendStatusMap, setFriendList, sendMessage }}
 		>
 			{children}
 		</PubSubContext.Provider>

@@ -17,8 +17,17 @@ import { useState, useEffect } from 'react'
 import FloatingActionButton from '@/components/FloatActionButton'
 import * as Users from '@/utils/users'
 import { useAuth } from '../../utils/authContext'
+import { usePubSub } from '@/utils/PubSubContext'
 export default function HomeScreen() {
 	const { currentUserInfo, idToken, updateCurrentUserInfo } = useAuth()
+	if (!idToken) {
+		return (
+			<View>
+				<Text>loading...</Text>
+			</View>
+		)
+	}
+	const { friendStatusMap } = usePubSub()
 	const [statusMessage, setStatusMessage] = useState<string>('')
 	const [isFocused, setIsFocused] = useState(false)
 	const [userData, setUserData] =
@@ -165,17 +174,23 @@ export default function HomeScreen() {
 						</Text>
 						<View style={profileStyles.friendsBox}>
 							{userData ? (
-								userData.friends.map((friend) => {
-									return (
-										<FriendItem
-											key={friend.id}
-											id={friend.id}
-											name={friend.username}
-											message={friend.status_message}
-											icon_url={friend.icon_url}
-										/>
+								userData.friends
+									.filter(
+										(friend) =>
+											friendStatusMap[friend.id]
+												?.status === 'online',
 									)
-								})
+									.map((friend) => {
+										return (
+											<FriendItem
+												key={friend.id}
+												id={friend.id}
+												name={friend.username}
+												message={friend.status_message}
+												icon_url={friend.icon_url}
+											/>
+										)
+									})
 							) : (
 								<Text>loading...</Text>
 							)}

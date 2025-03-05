@@ -28,7 +28,7 @@ export async function get(
 			{},
 			{
 				headers: {
-					Authorization: `Beaner ${idToken}`,
+					Authorization: `Bearer ${idToken}`,
 				},
 			},
 		)
