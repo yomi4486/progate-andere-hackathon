@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { usePubSub } from '@/utils/PubSubContext'
 import {
 	View,
 	Text,
@@ -24,7 +25,8 @@ import ModalProfileInfo from '@/app/components/ModalProfileInfo'
 import SimpleModal from '@/components/simpleModal'
 
 export default function FriendsScreen() {
-	const { idToken } = useAuth()
+const { idToken } = useAuth()
+const { friendStatusMap } = usePubSub()
 	const [selectedTab, setSelectedTab] = useState('friends')
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [isTwoModalVisible, setTwoModalVisible] = useState(false)
@@ -76,32 +78,33 @@ export default function FriendsScreen() {
 					)
 				}
 
-				// フレンドをアクティブ状態で振り分け
+				// フレンドをオンライン状態で振り分け
 				if (res?.friends) {
-					const active = res.friends
-						.filter((friend) => friend.status === 'ACTIVE')
-						.map((friend) => ({
-							username: friend.username,
-							isActive: true,
-							statusMessage: friend.status_message,
-							icon_url: friend.icon_url,
-						}))
+				  
+				  const active = res.friends
+				    .filter((friend) => friendStatusMap[friend.id]?.status === 'online')
+				    .map((friend) => ({
+				      username: friend.username,
+				      isActive: true,
+				      statusMessage: friend.status_message,
+				      icon_url: friend.icon_url,
+				    }))
 
-					const inactive = res.friends
-						.filter((friend) => friend.status !== 'ACTIVE')
-						.map((friend) => ({
-							username: friend.username,
-							isActive: false,
-							statusMessage: friend.status_message,
-							icon_url: friend.icon_url,
-						}))
+				  const inactive = res.friends
+				    .filter((friend) => !friendStatusMap[friend.id] || friendStatusMap[friend.id].status === 'offline')
+				    .map((friend) => ({
+				      username: friend.username,
+				      isActive: false,
+				      statusMessage: friend.status_message,
+				      icon_url: friend.icon_url,
+				    }))
 
-					setActiveFriends(active)
-					setInactiveFriends(inactive)
+				  setActiveFriends(active)
+				  setInactiveFriends(inactive)
 				}
 			}
 		})()
-	}, [reload])
+	}, [reload, friendStatusMap])
 
 	return (
 		<View style={{ height: '100%', backgroundColor: '#fff' }}>
